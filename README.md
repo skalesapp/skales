@@ -2,7 +2,7 @@
 
 # 🦎 Skales
 
-### Your Local AI Agent — Desktop App for Windows & macOS
+### Your Local AI Agent - Desktop App for Windows & macOS
 
 **Download. Install. Done.**
 **No Terminal. No Docker. No Node.js. No npm.**
@@ -32,61 +32,61 @@
 
 ## 🚀 Features
 
-**🖥️ Native Desktop App** — Runs as a proper desktop application. System tray, auto-start, graceful shutdown. No browser needed.
+**🖥️ Native Desktop App** - Runs as a proper desktop application. System tray, auto-start, graceful shutdown. No browser needed.
 
-**Multi-Provider Hub** — 11+ LLM providers: OpenRouter, OpenAI, Groq, Anthropic, Google, Mistral, Together AI, xAI, DeepSeek, Cerebras, and local Ollama.
+**Multi-Provider Hub** - 11+ LLM providers: OpenRouter, OpenAI, Groq, Anthropic, Google, Mistral, Together AI, xAI, DeepSeek, Cerebras, and local Ollama.
 
-**🦁 Lio AI — Code Builder** — Multi-AI code builder. Architect designs, Reviewer improves, Builder executes. Live preview. Build entire projects from plain language.
+**🦁 Lio AI - Code Builder** - Multi-AI code builder. Architect designs, Reviewer improves, Builder executes. Live preview. Build entire projects from plain language.
 
-**🌐 Browser Control** — Headless Chromium automation via Playwright. Navigate, click, fill forms, scrape, screenshot any website.
+**🌐 Browser Control** - Headless Chromium automation via Playwright. Navigate, click, fill forms, scrape, screenshot any website.
 
-**👁️ Vision & Screenshots** — Desktop screenshot analysis, image recognition, vision-capable model fallback across all channels.
+**👁️ Vision & Screenshots** - Desktop screenshot analysis, image recognition, vision-capable model fallback across all channels.
 
-**💬 Telegram & WhatsApp** — Chat with Skales on the go. Full remote control via Telegram with admin menus.
+**💬 Telegram & WhatsApp** - Chat with Skales on the go. Full remote control via Telegram with admin menus.
 
-**📧 Gmail Integration** — Read, compose, reply, search, manage emails. IMAP/SMTP with safety gates.
+**📧 Gmail Integration** - Read, compose, reply, search, manage emails. IMAP/SMTP with safety gates.
 
-**📅 Google Calendar** — Read/write access via OAuth. Schedule events, get reminders.
+**📅 Google Calendar** - Read/write access via OAuth. Schedule events, get reminders.
 
-**𝕏 Twitter/X Integration** — Post tweets, read timeline, reply to mentions. OAuth 1.0a.
+**𝕏 Twitter/X Integration** - Post tweets, read timeline, reply to mentions. OAuth 1.0a.
 
-**🛡️ Safety Mode** — Three-level command safety: Safe / Advanced / Unrestricted.
+**🛡️ Safety Mode** - Three-level command safety: Safe / Advanced / Unrestricted.
 
-**🧠 Bi-Temporal Memory** — Auto-extracts facts and preferences from conversations. Injected as context before every reply.
+**🧠 Bi-Temporal Memory** - Auto-extracts facts and preferences from conversations. Injected as context before every reply.
 
-**👥 Group Chat** — Multiple AI personas debate your questions in configurable rounds.
+**👥 Group Chat** - Multiple AI personas debate your questions in configurable rounds.
 
-**⚡ Autonomous Execute Mode** — Multi-step task execution with approve/reject checkpoints.
+**⚡ Autonomous Execute Mode** - Multi-step task execution with approve/reject checkpoints.
 
-**🛑 Killswitch** — Emergency stop via dashboard, Telegram, or automatic trigger.
+**🛑 Killswitch** - Emergency stop via dashboard, Telegram, or automatic trigger.
 
-**🎨 Image & Video Generation** — Google Imagen 3 and Veo 2 built into the chat.
+**🎨 Image & Video Generation** - Google Imagen 3 and Veo 2 built into the chat.
 
-**🔍 Live Web Search** — Real-time, cited search results via Tavily.
+**🔍 Live Web Search** - Real-time, cited search results via Tavily.
 
-**🗣️ Voice (TTS/STT)** — Speak to Skales and hear replies.
+**🗣️ Voice (TTS/STT)** - Speak to Skales and hear replies.
 
-**🔒 Security** — Sandboxed file access, command blacklist, domain blocklist, VirusTotal scanning.
+**🔒 Security** - Sandboxed file access, command blacklist, domain blocklist, VirusTotal scanning.
 
-**⭐ Autopilot — Chief of Staff** — Fully autonomous background agent. Conducts a Deep-Dive Interview, generates a Master Plan, executes tasks while you sleep. OODA self-correction loop rewrites tasks on new context. Human-in-the-loop approval gates for sensitive actions.
+**⭐ Autopilot - Chief of Staff** - Fully autonomous background agent. Conducts a Deep-Dive Interview, generates a Master Plan, executes tasks while you sleep. OODA self-correction loop rewrites tasks on new context. Human-in-the-loop approval gates for sensitive actions.
 
-**🎙️ Voice Chat** — Full duplex voice interface. Speak to Skales and hear replies via ElevenLabs TTS or browser speech synthesis. Whisper (Groq / OpenAI) for transcription.
+**🎙️ Voice Chat** - Full duplex voice interface. Speak to Skales and hear replies via ElevenLabs TTS or browser speech synthesis. Whisper (Groq / OpenAI) for transcription.
 
-**🧠 Skill AI — Custom Skill Ecosystem** — Upload .skill.zip packages to add completely new capabilities. AI-generated skill scaffolding. Hot-reload without restart. Isolated sandboxed execution.
+**🧠 Skill AI - Custom Skill Ecosystem** - Upload .skill.zip packages to add completely new capabilities. AI-generated skill scaffolding. Hot-reload without restart. Isolated sandboxed execution.
 
-**📄 Document Generation** — Create Excel (.xlsx), Word (.docx), and PDF files from natural language. Output files saved to the workspace and linked in chat.
+**📄 Document Generation** - Create Excel (.xlsx), Word (.docx), and PDF files from natural language. Output files saved to the workspace and linked in chat.
 
-**🗺️ Google Places** — Search nearby places, geocode addresses, get directions, fetch business details and photos via Google Places REST API.
+**🗺️ Google Places** - Search nearby places, geocode addresses, get directions, fetch business details and photos via Google Places REST API.
 
-**🌐 Network Scanner** — Discover all devices on your LAN. Detects other Skales instances on the same network.
+**🌐 Network Scanner** - Discover all devices on your LAN. Detects other Skales instances on the same network.
 
-**📺 Media Casting** — Cast any media URL to DLNA/UPnP renderers on your network (smart TVs, speakers, Chromecast).
+**📺 Media Casting** - Cast any media URL to DLNA/UPnP renderers on your network (smart TVs, speakers, Chromecast).
 
-**🦎 Desktop Buddy** — A transparent, frameless Electron window that sits in the corner of your desktop. Animated mascot with a Finite State Machine (Intro → Idle → Action). Click to open a glassmorphism Spotlight input — ask Skales anything from your desktop without opening the main window. Responses appear as auto-dismissing speech bubbles. Enable in **Settings → Desktop App → 🦎 Desktop Buddy**.
+**🦎 Desktop Buddy** - A transparent, frameless Electron window that sits in the corner of your desktop. Animated mascot with a Finite State Machine (Intro → Idle → Action). Click to open a glassmorphism Spotlight input - ask Skales anything from your desktop without opening the main window. Responses appear as auto-dismissing speech bubbles. Enable in **Settings → Desktop App → 🦎 Desktop Buddy**.
 
-**🤝 Agent-to-Agent Protocol** — `/api/agent-sync` endpoint for multi-Skales collaboration. Supports `ping`, `handshake`, `delegate`, and `status` operations so multiple Skales instances can coordinate on the same local network.
+**🤝 Agent-to-Agent Protocol** - `/api/agent-sync` endpoint for multi-Skales collaboration. Supports `ping`, `handshake`, `delegate`, and `status` operations so multiple Skales instances can coordinate on the same local network.
 
-**💾 Export / Import Backup** — One-click ZIP backup of all settings, memories, and integrations.
+**💾 Export / Import Backup** - One-click ZIP backup of all settings, memories, and integrations.
 
 ---
 
@@ -101,7 +101,7 @@
 1. Download for your platform from **[skales.app](https://skales.app)**
 2. Run the installer (EXE or DMG)
 3. Skales opens as a desktop app
-4. Follow the setup wizard — add your API key and start chatting
+4. Follow the setup wizard - add your API key and start chatting
 
 **No Terminal. No Node.js. No Docker. No npm.**
 
@@ -184,14 +184,14 @@ Please read the [BSL-1.1 license](./LICENSE) before contributing. All contributi
 
 ## 📖 The Story
 
-Skales started in early 2025 as a bloated Laravel SaaS project. I scrapped it all and rebuilt it via "Vibe Coding" — the result is a local-first AI companion that feels like a real product, not a developer tool.
+Skales started in early 2025 as a bloated Laravel SaaS project. I scrapped it all and rebuilt it via "Vibe Coding" - the result is a local-first AI companion that feels like a real product, not a developer tool.
 
-I'm **Mario Simic** — 10+ years in Marketing & Design. I know how software should look and feel. I got tired of agents that require Terminal setups and Docker containers. So I built something better.
+I'm **Mario Simic** - 10+ years in Marketing & Design. I know how software should look and feel. I got tired of agents that require Terminal setups and Docker containers. So I built something better.
 
 ### 🏆 Credits
 
-- **Claude & Google Gemini** — For powering the Vibe Coding workflow.
-- **OpenRouter** — The best hub for accessing the world's greatest LLMs.
+- **Claude & Google Gemini** - For powering the Vibe Coding workflow.
+- **OpenRouter** - The best hub for accessing the world's greatest LLMs.
 
 ---
 
@@ -203,7 +203,7 @@ I'm **Mario Simic** — 10+ years in Marketing & Design. I know how software sho
 
 See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md) for details.
 
-**Open Source release — v5.0.0 is the first publicly released version under BSL-1.1.**
+**Local AI Agent (Source Available)e release - v5.0.0 is the first publicly released version under BSL-1.1.**
 
 ---
 
