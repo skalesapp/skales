@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Skales Roadmap - v6.0.0</title>
+<title>Skales Roadmap - v6.0.1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
@@ -350,7 +350,7 @@
 
 <nav>
   <a href="https://skales.app" class="nav-logo"><span>🦎</span> Skales</a>
-  <span class="nav-badge">v6.0.0 - BSL 1.1</span>
+  <span class="nav-badge">v6.0.1 - BSL 1.1</span>
   <a href="https://docs.skales.app" class="nav-link">Docs</a>
   <a href="https://skales.app" class="nav-link">Download</a>
 </nav>
@@ -362,7 +362,7 @@
   <div class="hero-meta">
     <div class="hero-meta-item">
       <span class="hero-meta-label">Current Release</span>
-      <span class="hero-meta-value">v6.0.0</span>
+      <span class="hero-meta-value">v6.0.1</span>
     </div>
     <div class="hero-meta-item">
       <span class="hero-meta-label">Status</span>
@@ -616,6 +616,92 @@
       </div>
       <div class="card-status status-shipped">✓ Shipped</div>
     </div>
+
+  <!-- ═══════════════════════════════════════════════
+       v6.0.1 – BUGFIX RELEASE
+  ════════════════════════════════════════════════ -->
+  <div class="release-header">
+    <span class="release-tag">v6.0.1</span>
+    <div>
+      <div class="release-title">Bugfix Release</div>
+      <div class="release-sub">Agent Execution Mandate · Safety Mode Simplified · Telegram Fixes · Platform-Aware Commands · Approval Loop Fix</div>
+    </div>
+    <span class="release-date">March 2026</span>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-body">
+        <div class="card-title">Agent Execution Mandate</div>
+        <div class="card-desc">Agent now acts immediately instead of explaining what it could do. EXECUTION MANDATE prepended to all system prompts forces tool calls over text responses. Platform-aware commands: PowerShell on Windows, bash on macOS/Linux.</div>
+        <div class="card-tags"><span class="tag">Agent</span><span class="tag">Behavior</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <div class="card-body">
+        <div class="card-title">Safety Mode Simplified</div>
+        <div class="card-desc">Removed confusing Advanced mode. Now two levels only: Safe (all actions require approval) and Unrestricted (full autonomy, user responsible). Cleaner, easier to understand.</div>
+        <div class="card-tags"><span class="tag">Safety</span><span class="tag">UX</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">✅</div>
+      <div class="card-body">
+        <div class="card-title">Approval Flow Continues After Confirmation</div>
+        <div class="card-desc">After the user approves a tool action, the agent now feeds results back to the LLM and continues the ReAct loop until the task is complete. Previously the agent stopped after one approval.</div>
+        <div class="card-tags"><span class="tag">Approval</span><span class="tag">Agent Loop</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📱</div>
+      <div class="card-body">
+        <div class="card-title">Telegram Bot Fixes</div>
+        <div class="card-desc">Raw translation keys replaced with hardcoded English strings. Approve/Decline inline buttons now always appear. Message text cleaned of markdown before sending to prevent silent API failures.</div>
+        <div class="card-tags"><span class="tag">Telegram</span><span class="tag">Bug Fix</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎨</div>
+      <div class="card-body">
+        <div class="card-title">Replicate API Updated</div>
+        <div class="card-desc">Dual-endpoint logic: official models use the /models/ predictions endpoint, versioned models use the standard /predictions endpoint. Fixes broken image generation for all non-versioned Replicate models.</div>
+        <div class="card-tags"><span class="tag">Replicate</span><span class="tag">API</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-body">
+        <div class="card-title">Enhanced Telemetry</div>
+        <div class="card-desc">Tool usage, provider type, language selection, feature usage, and skill runs now tracked (opt-in only). 60-second cooldown deduplication prevents duplicate events.</div>
+        <div class="card-tags"><span class="tag">Telemetry</span><span class="tag">Privacy</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📄</div>
+      <div class="card-body">
+        <div class="card-title">PDF Handling + Custom Skill Input</div>
+        <div class="card-desc">System prompt now guides the agent to try read_file before shell tools for PDFs. Custom Skill pages now have a working textarea input field for all skills.</div>
+        <div class="card-tags"><span class="tag">PDF</span><span class="tag">Custom Skills</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🧠</div>
+      <div class="card-body">
+        <div class="card-title">Identity Maintenance + Mascot Discovery</div>
+        <div class="card-desc">Identity maintenance cron now runs silently using built-in tools only (cross-platform safe). Mascot video discovery fully dynamic - no hardcoded filenames anywhere.</div>
+        <div class="card-tags"><span class="tag">Memory</span><span class="tag">Mascot</span></div>
+      </div>
+      <div class="card-status status-shipped">✓ Shipped</div>
+    </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════
@@ -625,7 +711,7 @@
     <span class="release-tag">v5.0.0</span>
     <div>
       <div class="release-title">The Autopilot Update</div>
-      <div class="release-sub">Autonomous Chief of Staff · Voice Chat · Custom Skill Ecosystem · Documents · Google Places · Network Scanner · Media Casting</div>
+      <div class="release-sub">Autonomous Autopilot · Voice Chat · Custom Skill Ecosystem · Documents · Google Places · Network Scanner · Media Casting</div>
     </div>
     <span class="release-date">March 2026</span>
   </div>
@@ -633,7 +719,7 @@
   <div class="card featured">
     <div class="card-icon">⭐</div>
     <div class="card-body">
-      <div class="card-title">Autopilot - Autonomous Chief of Staff <span style="font-size:11px;color:var(--text-dim);font-weight:400;font-family:'DM Mono',monospace;">Autonomy · New Feature</span></div>
+      <div class="card-title">Autopilot - Autonomous Agent <span style="font-size:11px;color:var(--text-dim);font-weight:400;font-family:'DM Mono',monospace;">Autonomy · New Feature</span></div>
       <div class="card-desc">Full autonomous background agent with a 4-section dashboard. Conducts a Deep-Dive Interview to learn your goals, generates a Master Plan with task breakdown, executes tasks with OODA self-correction loop, cost controls, human-in-the-loop approval gates, anti-loop protocol (max 3 retries), and daily stand-up reports.</div>
       <div class="card-tags"><span class="tag">Autonomy</span><span class="tag">OODA</span><span class="tag">Planning</span></div>
     </div>
@@ -750,20 +836,12 @@
     <span class="release-tag" style="color:var(--amber);background:var(--amber-dim);border-color:var(--amber-border);">v4.1.0</span>
     <div>
       <div class="release-title">The Polish Update</div>
-      <div class="release-sub">Auto-Update · Code Signing · Badges · Marketplace · Plugin API · Themes</div>
+      <div class="release-sub">Code Signing · Notification Badges · Marketplace · Plugin API · Themes</div>
     </div>
     <span class="release-date">Planned</span>
   </div>
 
   <div class="card-grid">
-    <div class="card">
-      <div class="card-icon">🔄</div>
-      <div class="card-body">
-        <div class="card-title">Auto-Update via electron-updater</div>
-        <div class="card-desc">One-click in-app updates without reinstalling.</div>
-      </div>
-      <div class="card-status status-planned">Planned</div>
-    </div>
     <div class="card">
       <div class="card-icon">🔏</div>
       <div class="card-body">
@@ -889,7 +967,7 @@
       <div class="card-icon">🛡️</div>
       <div class="card-body">
         <div class="card-title">Safety Mode (Handbrake)</div>
-        <div class="card-desc">Three-level shell command safety. Safe (blocks dangerous cmds), Advanced (pause + approve), Unrestricted (power users).</div>
+        <div class="card-desc">Two-level shell command safety. Safe (all actions require your approval before execution) and Unrestricted (full autonomy, power users only).</div>
         <div class="card-tags"><span class="tag">Safety</span><span class="tag">Shell</span></div>
       </div>
       <div class="card-status status-shipped">✓ Shipped</div>
@@ -1289,7 +1367,7 @@
 
 <footer>
   <span class="gecko">🦎</span>
-  Built by <strong>Mario Simic</strong> · Skales v6.0.0 · BSL 1.1<br>
+  Built by <strong>Mario Simic</strong> · Skales v6.0.1 · BSL 1.1<br>
   <span style="margin-top:6px;display:block;">This roadmap is a living document and subject to change.</span>
 </footer>
 

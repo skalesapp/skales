@@ -14,6 +14,7 @@ import fs                              from 'fs';
 import path                            from 'path';
 import { SKILLS_DIR, SKILLS_MANIFEST } from '@/lib/paths';
 import { loadSettings }                from '@/actions/chat';
+import { sendTelemetryEvent }          from '@/lib/telemetry';
 
 export const dynamic    = 'force-dynamic';
 export const revalidate = 0;
@@ -109,6 +110,7 @@ export async function POST(req: Request) {
         };
 
         const result = await mod.execute(input, context);
+        sendTelemetryEvent('skill_run', { skill: skillId }).catch(() => {});
         return NextResponse.json(result ?? { success: false, error: 'No result returned' });
 
     } catch (e: any) {

@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v6.0.1 (2026-03-15)
+
+### Fixed
+- Safety Mode simplified to Safe + Unrestricted (removed confusing Advanced mode)
+- Approval flow no longer stalls after confirming tool execution
+- Safe Mode now continues the agent loop after approval (ReAct continuation)
+- Telegram bot shows proper messages instead of raw translation keys
+- Telegram approve/decline inline buttons now appear correctly
+- Telegram messages cleaned of markdown formatting before sending (prevents silent API failures)
+- Custom Skill pages now have a working input field for all skills
+- Replicate image generation works with new API format (official models endpoint)
+- Telemetry ping limited to once per minute per event (no duplicate entries)
+- Capabilities check now reports always-active features honestly
+- Identity maintenance cron uses built-in tools instead of shell commands (cross-platform safe)
+- Locale files verified: all 4 languages have identical key structures (970 keys each)
+
+### Improved
+- Agent execution mandate: agent now acts immediately instead of explaining what it could do
+- Platform-aware system prompt: dynamic PowerShell vs bash rules based on OS
+- Unrestricted mode injects execution override into system prompt for full autonomy
+- PDF handling instructions added to system prompt (try read_file before shell tools)
+- Custom skill creation instructions included in system prompt
+- Enhanced anonymous telemetry: tool usage, provider type, language, feature usage
+- All telemetry remains opt-in, anonymous, and GDPR compliant
+
+---
+
 ## v6.0.0 - "The Living Agent" (March 2026)
 
 ### Multilingual

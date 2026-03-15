@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skales v6.0.0 - Complete Guide</title>
+    <title>Skales v6.0.1 - Complete Guide</title>
     <style>
         /* --- CSS VARIABLES & RESET --- */
         :root {
@@ -595,8 +595,7 @@
                     <span>Integrations ▾</span>
                     <div class="dropdown-menu">
                         <a href="#integrations">Overview</a>
-                        <a href="#advanced">Advanced</a>
-                        <a href="#killswitch" style="color: var(--accent-red);">⚠ Killswitch</a>
+                                                <a href="#killswitch" style="color: var(--accent-red);">⚠ Killswitch</a>
                     </div>
                 </div>
                 <a href="#privacy">Privacy</a>
@@ -608,9 +607,9 @@
     <!-- HERO SECTION -->
     <section class="hero">
         <div class="container">
-            <div class="badge">v6.0.0 - Complete Guide</div>
+            <div class="badge">v6.0.1 - Complete Guide</div>
             <div class="hero-logo">🦎</div>
-            <h1>Skales v6.0.0<br>Your AI Companion<br>For Everyday Life</h1>
+            <h1>Skales v6.0.1<br>Your AI Companion<br>For Everyday Life</h1>
             <p class="hero-subtitle">
                 A powerful native desktop AI agent with memory, integrations, and an emergency brake. Runs entirely on your computer as a native app - no browser, no terminal, no cloud. Just your AI, your way.
             </p>
@@ -679,7 +678,7 @@
                 <div class="card">
                     <h3>🪟 Windows</h3>
                     <ol class="step-list">
-                        <li>Download <code>Skales-Setup-6.0.0.exe</code> from skales.app</li>
+                        <li>Download <code>Skales-Setup-6.0.1.exe</code> from skales.app</li>
                         <li>Double-click the installer</li>
                         <li>Windows may show <em>"Windows protected your PC"</em> - this appears because Skales is not code-signed yet (code signing costs $200–400/year). Click <strong>More info → Run anyway</strong>. This is safe.</li>
                         <li>Skales installs and creates a Desktop shortcut</li>
@@ -689,7 +688,7 @@
                 <div class="card">
                     <h3>🍏 macOS (Apple Silicon M1–M4)</h3>
                     <ol class="step-list">
-                        <li>Download <code>Skales-6.0.0-arm64.dmg</code> from skales.app</li>
+                        <li>Download <code>Skales-6.0.1-arm64.dmg</code> from skales.app</li>
                         <li>Open the DMG and drag Skales into Applications</li>
                         <li>First launch: macOS will say <em>"Skales can't be opened because it is from an unidentified developer"</em></li>
                         <li>Fix: Right-click Skales in Applications → click <strong>Open</strong> → click <strong>Open</strong> in the dialog. This is only needed once.</li>
@@ -805,7 +804,8 @@
                     <li>You type a request: <em>"Send a reminder email to John about our 3pm call"</em></li>
                     <li>The buddy processes the request and detects it needs to send an email.</li>
                     <li>The speech bubble shows the action description + <strong>Approve</strong> and <strong>Decline</strong> buttons.</li>
-                    <li>Click <strong>Approve</strong> - the email is sent. Click <strong>Decline</strong> - nothing happens.</li>
+                    <li>Click <strong>Approve</strong> - the email is sent. The agent then continues the task if more steps are needed.</li>
+                    <li>Click <strong>Decline</strong> - nothing happens, the action is cancelled.</li>
                 </ol>
             </div>
 
@@ -1477,17 +1477,16 @@
     <section id="safety-mode" class="section">
         <div class="container">
             <h2>🛡️ Safety Mode</h2>
-            <p>Safety Mode controls how Skales handles potentially dangerous shell commands (mass deletion, system shutdown, disk formatting, fork bombs, etc.). Configure it in <strong>Settings → Safety Mode</strong>.</p>
+            <p>Safety Mode controls how much autonomy Skales has when executing actions. Configure it in <strong>Settings → Safety Mode</strong>. In v6.0.1, Safety Mode was simplified to two clear levels.</p>
 
-            <h3 style="margin-top: 2rem;">Three Levels</h3>
+            <h3 style="margin-top: 2rem;">Two Levels</h3>
             <table class="cmd-table">
                 <thead>
                     <tr><th>Mode</th><th>Behaviour</th><th>Use Case</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>🟢 <strong>Safe</strong> (default)</td><td>Dangerous commands are blocked outright. Skales explains why and suggests safe alternatives.</td><td>Daily use - recommended for most users</td></tr>
-                    <tr><td>🟡 <strong>Advanced</strong></td><td>Dangerous commands are paused and shown to you. You approve or reject before execution.</td><td>Power users who want control without auto-blocking</td></tr>
-                    <tr><td>🔴 <strong>Unrestricted</strong></td><td>No blocking. Skales runs any command without asking. Full responsibility on the user.</td><td>Trusted automation pipelines, advanced scripting</td></tr>
+                    <tr><td>🟢 <strong>Safe</strong> (default)</td><td>All actions require your explicit approval before execution. Skales shows you what it wants to do and waits for you to approve or decline.</td><td>Daily use - recommended for most users</td></tr>
+                    <tr><td>🔴 <strong>Unrestricted</strong></td><td>Skales executes everything without asking. Full autonomy - you are responsible for reviewing what you ask it to do.</td><td>Trusted automation pipelines, advanced scripting, power users</td></tr>
                 </tbody>
             </table>
 
@@ -1785,7 +1784,7 @@
         <div class="container">
             <div style="font-size: 3rem; margin-bottom: 1rem;">🦎</div>
             <p>
-                <strong>Skales v6.0.0</strong><br>
+                <strong>Skales v6.0.1</strong><br>
                 A powerful AI companion for everyday humans.
             </p>
             <p style="margin-top: 1rem;">

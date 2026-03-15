@@ -71,15 +71,20 @@ export async function POST(req: Request) {
         'Prefer': 'wait',
     };
 
-    // Build prediction payload
-    // If model contains ":" treat it as owner/model:version — use `version` field
-    // Otherwise treat it as an official model slug — use `model` field
+    // Build prediction payload and endpoint URL.
+    // Official models (e.g. "black-forest-labs/flux-1.1-pro") use the models endpoint.
+    // Versioned models (e.g. "owner/model:abc123") use the predictions endpoint.
+    const isOfficialModel = !model.includes(':');
+    const predictionUrl = isOfficialModel
+        ? `https://api.replicate.com/v1/models/${model}/predictions`
+        : 'https://api.replicate.com/v1/predictions';
+
     let predictionPayload: Record<string, unknown>;
-    if (model.includes(':') && !model.startsWith('http')) {
+    if (isOfficialModel) {
+        predictionPayload = { input };
+    } else {
         const [, versionHash] = model.split(':');
         predictionPayload = { version: versionHash, input };
-    } else {
-        predictionPayload = { model, input };
     }
 
     // ── Step 1: Create prediction ─────────────────────────────────────────────
@@ -88,7 +93,7 @@ export async function POST(req: Request) {
     let initialOutput: unknown;
 
     try {
-        const createRes = await fetch('https://api.replicate.com/v1/predictions', {
+        const createRes = await fetch(predictionUrl, {
             method: 'POST',
             headers: authHeaders,
             body: JSON.stringify(predictionPayload),

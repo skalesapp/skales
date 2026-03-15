@@ -17,7 +17,7 @@ const crypto = require('crypto');
 const os = require('os');
 
 const http = require('http');
-const { t } = require('./telegram-i18n');
+// const { t } = require('./telegram-i18n'); // Replaced with hardcoded strings in v6.0.1
 
 const DATA_DIR = process.env.SKALES_DATA_DIR || path.join(os.homedir(), '.skales-data');
 
@@ -155,29 +155,57 @@ async function telegramRequest(token, method, body = null) {
     return res.json();
 }
 
+/**
+ * Clean text for safe Telegram delivery.
+ * Removes markdown formatting that Telegram's parser can't handle,
+ * collapses excessive whitespace, and trims to a safe length.
+ */
+function cleanForTelegram(text) {
+    if (!text) return '';
+    return text
+        // Remove code blocks (``` ... ```)
+        .replace(/```[\s\S]*?```/g, (m) => m.replace(/```/g, '').trim())
+        // Remove inline code backticks
+        .replace(/`([^`]+)`/g, '$1')
+        // Remove bold/italic markers
+        .replace(/\*\*(.+?)\*\*/g, '$1')
+        .replace(/\*(.+?)\*/g, '$1')
+        .replace(/__(.+?)__/g, '$1')
+        .replace(/_(.+?)_/g, '$1')
+        // Remove strikethrough
+        .replace(/~~(.+?)~~/g, '$1')
+        // Remove markdown links, keep text: [text](url) → text (url)
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1 ($2)')
+        // Remove heading markers
+        .replace(/^#{1,6}\s+/gm, '')
+        // Remove horizontal rules
+        .replace(/^[-*_]{3,}\s*$/gm, '')
+        // Collapse multiple blank lines into one
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+}
+
 async function sendMessage(token, chatId, text) {
     if (!text || !text.trim()) return;
+    const cleaned = cleanForTelegram(text);
+    if (!cleaned) return;
 
     // Split long messages
-    if (text.length > 4000) {
+    if (cleaned.length > 4000) {
         const chunks = [];
-        for (let i = 0; i < text.length; i += 4000) {
-            chunks.push(text.slice(i, i + 4000));
+        for (let i = 0; i < cleaned.length; i += 4000) {
+            chunks.push(cleaned.slice(i, i + 4000));
         }
         for (const chunk of chunks) {
             await telegramRequest(token, 'sendMessage', {
-                chat_id: chatId, text: chunk, parse_mode: 'Markdown',
-            }).catch(() =>
-                telegramRequest(token, 'sendMessage', { chat_id: chatId, text: chunk })
-            );
+                chat_id: chatId, text: chunk,
+            }).catch(() => {});
         }
         return;
     }
     await telegramRequest(token, 'sendMessage', {
-        chat_id: chatId, text, parse_mode: 'Markdown',
-    }).catch(() =>
-        telegramRequest(token, 'sendMessage', { chat_id: chatId, text })
-    );
+        chat_id: chatId, text: cleaned,
+    }).catch(() => {});
 }
 
 async function sendTyping(token, chatId) {
@@ -259,9 +287,13 @@ async function sendMessageWithKeyboard(token, chatId, text, keyboard) {
     // (inline keyboard) when the message text contains emojis or special
     // characters — which approval messages always do. Sending as plain text
     // guarantees the inline keyboard is always delivered.
+    //
+    // Strip markdown special chars from text to prevent Telegram API from
+    // silently dropping the inline keyboard (BUG 4 fix).
+    const safeText = text.replace(/[*_`\[\]()~>#+\-=|{}.!]/g, '');
     const payload = {
         chat_id: chatId,
-        text,
+        text: safeText,
         reply_markup: { inline_keyboard: keyboard },
     };
     try {
@@ -907,7 +939,7 @@ async function processCallbackQuery(token, callbackQuery, config) {
     // ── Killswitch: Cancel ────────────────────────────────────
     if (data === 'ks:cancel') {
         await answerCbQuery(token, cbId, '✅ Cancelled');
-        await sendMessage(token, chatId, t('system.killswitch.deactivated'));
+        await sendMessage(token, chatId, 'Killswitch cancelled. Skales continues running.');
         return;
     }
 
@@ -916,7 +948,7 @@ async function processCallbackQuery(token, callbackQuery, config) {
         const shutdownPC = data.endsWith(':1');
         await answerCbQuery(token, cbId, '🛑 Triggering killswitch...');
         await sendMessage(token, chatId,
-            `🛑 *${t('system.killswitch.activated')}*\n\n` +
+            `🛑 *Killswitch Activated*\n\n` +
             `Skales is shutting down now.\n` +
             (shutdownPC ? '⚠️ PC shutdown also initiated.' : '💻 PC will stay on.') + '\n\n' +
             `_A killswitch log has been written to your Desktop._`
@@ -951,7 +983,7 @@ async function processCallbackQuery(token, callbackQuery, config) {
                 signal:  AbortSignal.timeout(120_000),
             });
             const data = await res.json();
-            const reply = data.response || (decision === 'approve' ? t('system.approval.approved') : t('system.approval.declined'));
+            const reply = data.response || (decision === 'approve' ? '✅ Approved and executed.' : '❌ Action declined.');
             await sendMessage(token, chatId, reply);
         } catch (e) {
             await sendMessage(token, chatId, `⚠️ Could not process approval: ${e.message}`);
@@ -1560,23 +1592,23 @@ async function processUpdate(token, update, config) {
             config.pairedUserName = fullName || userName;
             saveTelegramConfig(config);
             log(`✅ PAIRED with ${userName} (chat ${chatId})`);
-            await sendMessage(token, chatId, t('system.telegram.pairingSuccess', { name: userName }));
+            await sendMessage(token, chatId, `Successfully connected! Hi ${userName}, you are now paired with Skales. Just send me a message and I will respond.`);
             return;
         } else {
-            await sendMessage(token, chatId, t('system.telegram.pairingFailed'));
+            await sendMessage(token, chatId, 'Pairing failed. Please check your code and try again.');
             return;
         }
     }
 
     // ── Check if user is paired ──
     if (!config.pairedChatId || config.pairedChatId !== chatId) {
-        await sendMessage(token, chatId, t('system.telegram.notPaired'));
+        await sendMessage(token, chatId, 'Not paired yet. Use /pair <code> to connect.');
         return;
     }
 
     // ── /clear command ──
     if (userText === '/clear') {
-        await sendMessage(token, chatId, t('system.telegram.contextCleared'));
+        await sendMessage(token, chatId, 'Context cleared. Starting fresh.');
         return;
     }
 
@@ -1692,11 +1724,11 @@ async function processUpdate(token, update, config) {
         if (result.requiresApproval && result.approvalId) {
             const keyboard = [
                 [
-                    { text: `✅ ${t('system.telegram.approve')}`,  callback_data: `approval:approve:${result.approvalId}` },
-                    { text: `❌ ${t('system.telegram.decline')}`, callback_data: `approval:deny:${result.approvalId}` },
+                    { text: 'Approve', callback_data: `approval:approve:${result.approvalId}` },
+                    { text: 'Decline', callback_data: `approval:deny:${result.approvalId}` },
                 ],
             ];
-            await sendMessageWithKeyboard(token, chatId, result.response || `🔐 ${t('system.telegram.approvalPrompt')}`, keyboard);
+            await sendMessageWithKeyboard(token, chatId, result.response || 'Approval required - Skales wants to perform an action:', keyboard);
             return;
         }
 

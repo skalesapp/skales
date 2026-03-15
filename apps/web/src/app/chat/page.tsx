@@ -50,6 +50,7 @@ interface DisplayMessage {
     telegramUser?: string;
     timestamp?: number;      // ms since epoch - used for chronological sorting
     memoriesRecalled?: number; // > 0 → show pulsing recall indicator briefly
+    isApprovalResult?: boolean; // true → render as plain text, not inside "Reasoning Process" collapse
 }
 
 const SLASH_COMMAND_KEYS = [
@@ -592,7 +593,12 @@ const MessageListArea = memo(function MessageListArea({
                                     }
                                     return null;
                                 })()}
-                                {!(msg.role === 'user' && parseUserFileMsg(typeof msg.content === 'string' ? msg.content : '')) && (hasToolResults ? (() => {
+                                {/* Approval results bypass the Reasoning Process collapse */}
+                                {!(msg.role === 'user' && parseUserFileMsg(typeof msg.content === 'string' ? msg.content : '')) && ((msg as any).isApprovalResult ? (
+                                    <div className="prose dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 max-w-none break-words overflow-x-auto">
+                                        <Markdown content={_contentStr} />
+                                    </div>
+                                ) : hasToolResults ? (() => {
                                     // Extract any GIF/Image/Video results to show INLINE (not hidden in reasoning)
                                     const inlineMedia = msg.toolResults!.filter(r =>
                                         r.displayMessage?.startsWith('GIF_URL:') ||
@@ -943,10 +949,207 @@ export default function ChatPage() {
                     role: 'assistant',
                     content: confirmSummary,
                     timestamp: Date.now(),
+                    isApprovalResult: true,
                 } as any,
             ]);
+
+            // ── FIX 8: Continue the agent loop after approval ────────────────────
+            // Feed the tool results back to the LLM so it can decide if more
+            // actions are needed (ReAct loop continuation).
+            // Build history from current messages + tool results for context.
+            const currentSessionId = sessionId;
+            if (currentSessionId) {
+                // Save tool results to session first
+                const sess = await loadSession(currentSessionId);
+                if (sess) {
+                    confirmedResults.forEach((res, i) => {
+                        sess.messages.push({
+                            role: 'tool',
+                            tool_call_id: pendingCalls[i]?.id || `approved_${i}`,
+                            name: res.toolName,
+                            content: JSON.stringify(res.result),
+                            display_message: res.displayMessage,
+                            timestamp: Date.now(),
+                        } as any);
+                    });
+                    // Also save the summary message
+                    sess.messages.push({
+                        role: 'assistant',
+                        content: confirmSummary,
+                        timestamp: Date.now(),
+                    } as any);
+                    await saveSession(sess);
+                }
+
+                // Now continue the agent loop: build context and call agentDecide
+                // to let the LLM decide if more actions are needed.
+                const session = await loadSession(currentSessionId);
+                if (session?.messages) {
+                    let loopCount = 0;
+                    const MAX_LOOPS = 15; // slightly lower than main loop to prevent runaway
+
+                    // Build running history from session messages
+                    let currentMessages: DisplayMessage[] = session.messages
+                        .filter((m: any) => ['user', 'assistant', 'tool'].includes(m.role))
+                        .slice(-40)
+                        .map((m: any) => ({
+                            role: m.role,
+                            content: typeof m.content === 'string' ? m.content : JSON.stringify(m.content),
+                            toolCalls: m.tool_calls,
+                            toolCallId: m.tool_call_id,
+                        }));
+
+                    while (loopCount < MAX_LOOPS) {
+                        loopCount++;
+
+                        // Show thinking status
+                        setMessages(prev => [
+                            ...prev.filter(m => m.role !== 'tool-status'),
+                            {
+                                role: 'tool-status',
+                                content: `Continuing... (step ${loopCount})`,
+                                toolsExecuting: ['thinking'],
+                            }
+                        ]);
+
+                        const apiMessages = currentMessages
+                            .filter(m => m.role !== 'tool-status' && m.role !== 'system')
+                            .slice(-40)
+                            .map(m => ({
+                                role: m.role as string,
+                                content: m.content,
+                                tool_calls: m.toolCalls,
+                                tool_call_id: m.toolCallId,
+                            }));
+
+                        const decision = await agentDecide(apiMessages as any);
+
+                        if (decision.decision === 'error') {
+                            setMessages(prev => [
+                                ...prev.filter(m => m.role !== 'tool-status'),
+                                { role: 'assistant', content: `⚠️ Error: ${decision.error}` }
+                            ]);
+                            break;
+                        }
+
+                        if (decision.decision === 'response') {
+                            // LLM is done — show final response
+                            const assistantMsg: DisplayMessage = {
+                                role: 'assistant',
+                                content: decision.response || '',
+                                tokensUsed: decision.tokensUsed,
+                                model: decision.model,
+                                timestamp: Date.now(),
+                                memoriesRecalled: decision.memoriesRecalled,
+                            };
+                            setMessages(prev => [
+                                ...prev.filter(m => m.role !== 'tool-status'),
+                                assistantMsg,
+                            ]);
+
+                            // Save to session
+                            const s = await loadSession(currentSessionId);
+                            if (s) {
+                                s.messages.push({
+                                    role: 'assistant',
+                                    content: assistantMsg.content,
+                                    timestamp: Date.now(),
+                                    ...(assistantMsg.tokensUsed ? { tokensUsed: assistantMsg.tokensUsed } : {}),
+                                    ...(assistantMsg.model ? { model: assistantMsg.model } : {}),
+                                } as any);
+                                await saveSession(s);
+                            }
+                            break;
+                        }
+
+                        if (decision.decision === 'tool') {
+                            // More tools to run — execute them
+                            const toolNames = decision.toolCalls!.map(t => t.function.name);
+                            setMessages(prev => [
+                                ...prev.filter(m => m.role !== 'tool-status'),
+                                {
+                                    role: 'assistant',
+                                    content: decision.response || '',
+                                    toolCalls: decision.toolCalls,
+                                    timestamp: Date.now(),
+                                },
+                                {
+                                    role: 'tool-status',
+                                    content: `Executing ${toolNames.join(', ')}...`,
+                                    toolsExecuting: toolNames,
+                                }
+                            ]);
+
+                            // Execute — first pass to check approval
+                            const results = await agentExecute(decision.toolCalls!, []);
+                            const needsMoreApproval = results.filter(r => r.requiresConfirmation);
+
+                            if (needsMoreApproval.length > 0) {
+                                // Another approval needed — pause again
+                                const newPendingIds = decision.toolCalls!
+                                    .filter((_, i) => results[i]?.requiresConfirmation)
+                                    .map(tc => tc.id);
+                                setPendingApproval({
+                                    toolCalls: decision.toolCalls!,
+                                    confirmedIds: decision.toolCalls!
+                                        .filter((_, i) => !results[i]?.requiresConfirmation)
+                                        .map(tc => tc.id),
+                                    pendingIds: newPendingIds,
+                                    messages: needsMoreApproval.map(r => r.confirmationMessage || r.displayMessage || ''),
+                                });
+                                setMessages(prev => prev.filter(m => m.role !== 'tool-status'));
+                                setLoading(false);
+                                return; // Pause again for approval
+                            }
+
+                            // All auto-executed — update UI and continue loop
+                            const toolMsgs: DisplayMessage[] = results.map((res, i) => ({
+                                role: 'tool' as const,
+                                toolCallId: decision.toolCalls![i].id,
+                                content: JSON.stringify(res.result),
+                            }));
+                            currentMessages.push(
+                                { role: 'assistant', content: decision.response || '', toolCalls: decision.toolCalls },
+                                ...toolMsgs,
+                            );
+
+                            // Save to session
+                            const s2 = await loadSession(currentSessionId);
+                            if (s2) {
+                                s2.messages.push({
+                                    role: 'assistant',
+                                    content: decision.response || '',
+                                    tool_calls: decision.toolCalls,
+                                    timestamp: Date.now(),
+                                } as any);
+                                results.forEach((res, i) => {
+                                    s2.messages.push({
+                                        role: 'tool',
+                                        tool_call_id: decision.toolCalls![i].id,
+                                        name: decision.toolCalls![i].function.name,
+                                        content: JSON.stringify(res.result),
+                                        display_message: res.displayMessage,
+                                        timestamp: Date.now(),
+                                    } as any);
+                                });
+                                await saveSession(s2);
+                            }
+
+                            // Trim history if growing too large
+                            if (currentMessages.length > 80) {
+                                currentMessages = currentMessages.slice(-60);
+                            }
+
+                            // Continue loop...
+                        }
+                    }
+
+                    // Clean up any lingering tool-status
+                    setMessages(prev => prev.filter(m => m.role !== 'tool-status'));
+                }
+            }
         } catch (e) {
-            setMessages(prev => [...prev, { role: 'assistant', content: '⚠️ Error executing approved tools.' }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: '⚠️ Error executing approved tools.', isApprovalResult: true }]);
         } finally {
             setLoading(false);
         }
@@ -3346,7 +3549,7 @@ export default function ChatPage() {
                                     type="text"
                                     value={genPrompt}
                                     onChange={e => setGenPrompt(e.target.value)}
-                                    onKeyDown={e => { if (e.key === 'Enter') handleGenerate(); }}
+                                    onKeyDown={e => { if (e.key === 'Enter') (genProvider === 'replicate' ? handleGenerateReplicate : handleGenerate)(); }}
                                     placeholder={genMode === 'image' ? 'Describe the image to generate…' : 'Describe the video to generate…'}
                                     className="flex-1 bg-transparent border-none outline-none text-sm"
                                     style={{ color: 'var(--text-primary)' }}

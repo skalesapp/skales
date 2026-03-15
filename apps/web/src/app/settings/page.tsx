@@ -433,7 +433,7 @@ export default function SettingsPage() {
     const [taskTimeoutSeconds, setTaskTimeoutSeconds] = useState<number>(300);
 
     // Safety Mode
-    const [safetyMode, setSafetyMode] = useState<'safe' | 'advanced' | 'unrestricted'>('safe');
+    const [safetyMode, setSafetyMode] = useState<'safe' | 'unrestricted'>('safe');
 
     // Autonomous Mode — background heartbeat that processes tasks proactively
     const [isAutonomousMode, setIsAutonomousMode] = useState(false);
@@ -2280,19 +2280,13 @@ export default function SettingsPage() {
                                 {
                                     key: 'safe',
                                     label: '🟢 Safe (default)',
-                                    desc: 'Dangerous commands are blocked outright. Skales will explain why and suggest alternatives.',
+                                    desc: 'All actions require your approval before execution.',
                                     color: '#22c55e',
-                                },
-                                {
-                                    key: 'advanced',
-                                    label: '🟡 Advanced',
-                                    desc: 'Dangerous commands are paused and shown to you. You approve or reject before execution.',
-                                    color: '#eab308',
                                 },
                                 {
                                     key: 'unrestricted',
                                     label: '🔴 Unrestricted',
-                                    desc: 'No blocking. Skales runs any command without asking. Use with caution - you are responsible.',
+                                    desc: 'Skales executes everything without asking. You are responsible.',
                                     color: '#ef4444',
                                 },
                             ] as const).map(opt => (
@@ -2325,7 +2319,7 @@ export default function SettingsPage() {
                             </div>
                         )}
                         <p className="mt-4 text-xs" style={{ color: 'var(--text-muted)' }}>
-                            ⚠️ <strong>Disclaimer:</strong> Safety Mode is a best-effort measure to limit potentially harmful commands. We cannot guarantee that the AI agent will never make mistakes or execute unintended actions. By using Advanced or Unrestricted mode, you accept full responsibility. Skales is provided as-is without warranty.
+                            ⚠️ <strong>Disclaimer:</strong> Safety Mode is a best-effort measure to limit potentially harmful commands. We cannot guarantee that the AI agent will never make mistakes or execute unintended actions. By using Unrestricted mode, you accept full responsibility. Skales is provided as-is without warranty.
                         </p>
                     </section>
 

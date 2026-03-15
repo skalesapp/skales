@@ -16,7 +16,7 @@ import {
     Loader2, RefreshCw, X, ChevronLeft, ChevronRight,
     ImageIcon, AlertCircle, Puzzle, ZoomIn, ArrowLeft,
     // Lucide icons for skill icon rendering
-    Wrench, Code, Image, Quote, Music, Globe, Search, FileText, BarChart3, Zap,
+    Wrench, Code, Image, Quote, Music, Globe, Search, FileText, BarChart3,
     Shield, Camera, Heart, Star, Briefcase, Database, Mail, Bell, Bookmark,
     Calculator, Calendar, Compass, Cpu, Film, Hash, Headphones, Key, Layers,
     Link as LinkIcon, Lock, Map, Monitor, Package, PenTool, Rocket, Server, Terminal,
@@ -26,7 +26,7 @@ import {
 import { isEmoji } from '@/lib/skill-icons';
 
 const SKILL_ICON_MAP: Record<string, any> = {
-    Wrench, Code, Image, Quote, Music, Globe, Search, FileText, BarChart3, Zap,
+    Wrench, Code, Image, Quote, Music, Globe, Search, FileText, BarChart3,
     Shield, Camera, Heart, Star, Briefcase, Database, Mail, Bell, Bookmark,
     Calculator, Calendar, Compass, Cpu, Film, Hash, Headphones, Key, Layers,
     Link: LinkIcon, Lock, Map, Monitor, Package, PenTool, Rocket, Server, Terminal,
@@ -212,10 +212,10 @@ export default function CustomSkillPage() {
     const router   = useRouter();
     const skillId  = params?.skillId ?? '';
 
-    const [meta,    setMeta]    = useState<SkillMeta | null>(null);
-    const [result,  setResult]  = useState<SkillResult | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error,   setError]   = useState<string | null>(null);
+    const [meta,      setMeta]      = useState<SkillMeta | null>(null);
+    const [result,    setResult]    = useState<SkillResult | null>(null);
+    const [loading,   setLoading]   = useState(true);
+    const [error,     setError]     = useState<string | null>(null);
 
     // Load skill metadata
     useEffect(() => {

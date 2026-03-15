@@ -94,6 +94,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     // before sending anything. Fire-and-forget, never blocks the UI.
     useEffect(() => {
         fetch('/api/telemetry/ping').catch(() => {});
+        // Also report UI language on startup
+        const lang = document.documentElement.lang || navigator.language?.slice(0, 2) || 'en';
+        fetch(`/api/telemetry/ping?event=language&lang=${lang}`).catch(() => {});
     }, []);
 
     const toggleSidebar = useCallback(() => {

@@ -230,6 +230,11 @@ export default function BuddyPage() {
     // ── Step 1: Fetch clip lists from the API ─────────────────────────────────
     // Runs once on mount.  Reads the active skin from settings (defaults to
     // 'skales' if not set).  All three categories are fetched in parallel.
+    // Telemetry: buddy page opened
+    useEffect(() => {
+        fetch('/api/telemetry/ping?event=feature_used&feature=buddy').catch(() => {});
+    }, []);
+
     // When the response arrives the refs are updated and clipsReady is set to
     // true, which triggers the boot FSM useEffect below.
     useEffect(() => {

@@ -1117,7 +1117,7 @@
       "network": "Network error. Check your connection.",
       "apiKey": "Invalid API key. Please check your settings.",
       "modelNotFound": "Model not available. Try a different one.",
-      "permissionDenied": "Blocked by safety mode. Switch to Advanced or Unrestricted in Settings.",
+      "permissionDenied": "Blocked by safety mode. Switch to Unrestricted in Settings.",
       "blacklisted": "🚫 **{{domain}}** is blocked by your blacklist.",
       "fileNotFound": "File not found: {{path}}",
       "toolNotFound": "Tool not available: {{name}}",

@@ -95,6 +95,7 @@ export default function GroupChatPage() {
     // Load config on mount
     useEffect(() => {
         loadGroupChatConfig().then(setConfig);
+        fetch('/api/telemetry/ping?event=feature_used&feature=group_chat').catch(() => {});
     }, []);
 
     // Auto-scroll to bottom as messages arrive

@@ -218,6 +218,56 @@ You have access to powerful tools that let you interact with the user's computer
 
 You are the same Skales as in the Dashboard. Same brain, same tools, same capabilities. Act accordingly.`;
 
+        // ── Prepend EXECUTION MANDATE so Telegram uses the same agent behavior as Dashboard ──
+        const safetyMode: string = (settings as any).safetyMode || 'safe';
+        const platformBlock = process.platform === 'win32'
+            ? `PLATFORM: You are running on WINDOWS.\nWINDOWS RULES:\n- Use PowerShell syntax for ALL commands\n- Paths use backslash: C:\\Users\\...\n- NEVER use: head, tail, grep, cat, ls, rm, cp, mv, touch\n- ALWAYS use: Select-Object, Select-String, Get-Content, Get-ChildItem, Remove-Item, Copy-Item, Move-Item, New-Item\n- Home directory: $env:USERPROFILE\n`
+            : `PLATFORM: You are running on macOS.\nmacOS RULES:\n- Use bash/zsh syntax for ALL commands\n- Paths use forward slash: /Users/...\n- Home directory: $HOME or ~\n`;
+
+        const executionMandate = `EXECUTION MANDATE — THIS OVERRIDES EVERYTHING BELOW:
+
+You are an AGENT. Your job is to EXECUTE tasks, not DISCUSS them.
+
+RULES:
+1. When a user asks you to do something: DO IT IMMEDIATELY.
+   Do not explain what you will do. Do not list your capabilities.
+   Do not ask for confirmation unless Safety Mode requires it.
+   Just execute the task.
+
+2. If a task fails: TRY AN ALTERNATIVE APPROACH immediately.
+   Do not say "I can't do this because..."
+   Say "That approach failed. Trying alternative..." and DO IT.
+
+3. NEVER respond with just text when a tool call would accomplish
+   the task. If the user says "create a file" — call write_file.
+   If the user says "check my email" — call list_emails.
+   If the user says "search for X" — call search_web.
+   ALWAYS prefer action over explanation.
+
+4. After completing a task: REPORT THE RESULT briefly, then
+   SUGGEST THE NEXT STEP.
+
+5. If you genuinely cannot do something (no tool exists, no API
+   configured): say so in ONE sentence, then OFFER the closest
+   alternative you CAN do.
+
+6. NEVER list your capabilities unprompted. If the user asks
+   what you can do, demonstrate by doing something useful
+   instead of listing features.
+
+${platformBlock}
+`;
+
+        const unrestrictedBlock = safetyMode === 'unrestricted' ? `
+UNRESTRICTED MODE ACTIVE: You have full permission to execute ANY action
+without asking. When you decide to do something, CALL THE TOOL IMMEDIATELY.
+Do not say "I will do X" — just do X. Every message from you should
+contain at least one tool call if the task requires action. Text-only
+responses are only acceptable for pure questions or conversations.
+` : '';
+
+        telegramSystemPrompt = `${executionMandate}${unrestrictedBlock}${telegramSystemPrompt}`;
+
         // ── Vision Provider pre-analysis ─────────────────────────────────────
         // When an image arrives via Telegram, check if:
         //   (a) The Vision Provider is configured with visionUseForTelegram=true, OR
@@ -350,6 +400,27 @@ You are the same Skales as in the Dashboard. Same brain, same tools, same capabi
 
             if (decision.decision === 'response') {
                 finalResponse = decision.response || '';
+
+                // ── Safe Mode reinforcement: if the agent returned a text-only
+                // response on the FIRST loop for a message that looks like an
+                // action request, push a reinforcement message and retry ONCE so
+                // weaker models actually emit tool calls instead of describing
+                // what they *would* do. ──────────────────────────────────────
+                const ACTION_WORDS = /\b(create|delete|open|send|make|search|find|write|read|list|schedule|remind|check|generate|fetch|run|execute|set|add|remove|show|get|play|download|upload|pair|start|stop|turn|install)\b/i;
+                if (loopCount === 1 && ACTION_WORDS.test(message)) {
+                    // Add the assistant's text response to context, then inject a
+                    // reinforcement user message and loop again.
+                    currentMessages.push({
+                        role: 'assistant',
+                        content: finalResponse,
+                    } as ChatMessage);
+                    currentMessages.push({
+                        role: 'user',
+                        content: 'You MUST use tools to complete this task. Do NOT describe what you would do — call the appropriate tool NOW. If the task needs approval, return the tool call with requiresConfirmation: true.',
+                    } as ChatMessage);
+                    continue; // re-enter the while loop for one more agentDecide() call
+                }
+
                 const assistantMsg: ChatMessage = {
                     role: 'assistant',
                     content: finalResponse,

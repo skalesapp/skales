@@ -243,12 +243,13 @@ export default function MemoryPage() {
                 name: 'Identity Maintenance',
                 schedule: '0 3 * * *',
                 task:
-                    'Perform a full identity maintenance cycle. Execute ALL of these steps in order:\n\n' +
-                    '1. Read the file .skales-data/identity/human.json — note the user\'s name, interests, projects, relationship.interactionCount.\n\n' +
-                    '2. Read the last 10 files from .skales-data/memory/short-term/ (list the folder, sort by filename descending, read the newest ones) — analyze patterns in topics, questions, tone.\n\n' +
-                    '3. Update human.json: improve the "content" field with a 3-5 sentence summary of who the user is. Increment relationship.interactionCount by 1. Save back to .skales-data/identity/human.json.\n\n' +
-                    '4. Update soul.json: read .skales-data/identity/soul.json, then set memory.totalInteractions to the current interactionCount from human.json, add any new learnings to personality.learnings (max 8 entries total, keep the most relevant), update lastUpdated to current timestamp in ms. Save back to .skales-data/identity/soul.json.\n\n' +
-                    '5. Write a long-term memory entry: create .skales-data/memory/long-term/identity-update-TIMESTAMP.json (use current Unix timestamp in ms as TIMESTAMP) with structure: { "type": "identity-update", "timestamp": <now ms>, "summary": "<2-3 sentences>", "changes": ["<change1>", "<change2>"] }\n\n' +
+                    'BACKGROUND TASK — This runs silently. Do NOT write to chat or notify the user.\n\n' +
+                    'Perform a full identity maintenance cycle. Use ONLY built-in tools (read_file, write_file, list_directory). Do NOT use execute_command or shell commands.\n\n' +
+                    '1. Use read_file to read .skales-data/identity/human.json — note the user\'s name, interests, projects, relationship.interactionCount.\n\n' +
+                    '2. Use list_directory on .skales-data/memory/short-term/ then read_file on the 10 newest files — analyze patterns in topics, questions, tone.\n\n' +
+                    '3. Update human.json: improve the "content" field with a 3-5 sentence summary of who the user is. Increment relationship.interactionCount by 1. Use write_file to save back to .skales-data/identity/human.json.\n\n' +
+                    '4. Update soul.json: use read_file on .skales-data/identity/soul.json, then set memory.totalInteractions to the current interactionCount from human.json, add any new learnings to personality.learnings (max 8 entries total, keep the most relevant), update lastUpdated to current timestamp in ms. Use write_file to save back.\n\n' +
+                    '5. Use write_file to create .skales-data/memory/long-term/identity-update-TIMESTAMP.json (use current Unix timestamp in ms as TIMESTAMP) with structure: { "type": "identity-update", "timestamp": <now ms>, "summary": "<2-3 sentences>", "changes": ["<change1>", "<change2>"] }\n\n' +
                     'When done, respond ONLY with a single short English summary like: "Identity updated: [2-3 word change summary]". Do NOT send Telegram notifications — the system handles that automatically.',
                 enabled: true,
             });

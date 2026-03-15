@@ -41,6 +41,8 @@ export const revalidate = 0;
 // agentDecide to skip its own comprehensive prompt — leading to wrong-tool
 // selection (e.g. web_search instead of write_file) and wrong DATA_DIR paths.
 const BUDDY_SYSTEM_PROMPT =
+    'EXECUTE tasks immediately. Never explain what you could do — just do it. ' +
+    'If something fails, try an alternative. Always prefer tool calls over text responses.\n\n' +
     '## Desktop Buddy — Skales\n' +
     'You are Skales, a proactive desktop AI assistant living in a compact overlay widget.\n' +
     'Keep ALL answers to 1-3 sentences maximum unless a tool result requires more.\n\n' +

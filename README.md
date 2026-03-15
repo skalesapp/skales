@@ -10,7 +10,7 @@ If you find this useful, a ⭐ helps others discover it
 
 **Download. Install. Done**
 
-[![Version](https://img.shields.io/badge/version-6.0.0-1DB954?style=for-the-badge&labelColor=0D1117)](https://skales.app)
+[![Version](https://img.shields.io/badge/version-6.0.1-1DB954?style=for-the-badge&labelColor=0D1117)](https://skales.app)
 [![License](https://img.shields.io/badge/license-BSL_1.1-1DB954?style=for-the-badge&labelColor=0D1117)](./LICENSE)
 [![Platform](https://img.shields.io/badge/Windows_+_macOS-1DB954?style=for-the-badge&labelColor=0D1117&logo=windows&logoColor=white)](https://skales.app)
 [![GitHub](https://img.shields.io/badge/GitHub-skalesapp%2Fskales-1DB954?style=for-the-badge&labelColor=0D1117&logo=github&logoColor=white)](https://github.com/skalesapp/skales)
@@ -53,7 +53,7 @@ If you find this useful, a ⭐ helps others discover it
 
 **𝕏 Twitter/X Integration** - Post tweets, read timeline, reply to mentions. OAuth 1.0a.
 
-**🛡️ Safety Mode** - Three-level command safety: Safe / Advanced / Unrestricted.
+**🛡️ Safety Mode** - Two-level command safety: Safe (all actions require approval) and Unrestricted (full autonomy).
 
 **🧠 Bi-Temporal Memory** - Auto-extracts facts and preferences from conversations. Injected as context before every reply.
 
@@ -77,7 +77,7 @@ If you find this useful, a ⭐ helps others discover it
 
 **🔒 Security** - Sandboxed file access, command blacklist, domain blocklist, VirusTotal scanning.
 
-**⭐ Autopilot - Chief of Staff** - Fully autonomous background agent. Conducts a Deep-Dive Interview, generates a Master Plan, executes tasks while you sleep. OODA self-correction loop rewrites tasks on new context. Human-in-the-loop approval gates for sensitive actions.
+**⭐ Autopilot** - Fully autonomous background agent. Conducts a Deep-Dive Interview, generates a Master Plan, executes tasks while you sleep. OODA self-correction loop rewrites tasks on new context. Human-in-the-loop approval gates for sensitive actions.
 
 **🎙️ Voice Chat** - Full duplex voice interface. Speak to Skales and hear replies via ElevenLabs TTS or browser speech synthesis. Whisper (Groq / OpenAI) for transcription.
 
@@ -167,7 +167,17 @@ Output is in `dist/`.
 
 ---
 
+## What's New in v6.0.1
+
+- **Agent Execution Mandate** - Agent now acts immediately instead of explaining what it could do. Platform-aware commands: PowerShell on Windows, bash on macOS
+- **Safety Mode Simplified** - Two levels only: Safe (all actions require approval) and Unrestricted (full autonomy)
+- **Approval Loop Fix** - After approval, the agent continues the ReAct loop until the task is complete
+- **Telegram Fixes** - Real messages instead of raw translation keys, Approve/Decline buttons fixed, markdown cleaned before sending
+- **Replicate API Fix** - Official models now use the correct endpoint
+- **Enhanced Telemetry** - Tool usage, provider, language, feature usage tracked (opt-in, with deduplication)
+
 ## What's New in v6.0
+
 
 - **4 Languages** - Full UI in English, Deutsch, Espanol, and Francais. Language picker on first launch, switcher always in Settings
 - **Replicate (BYOK)** - 50+ image and video models with one API key. SDXL, FLUX, Stable Video Diffusion, and more
@@ -228,7 +238,7 @@ I'm **Mario Simic** - 10+ years in Marketing & Design. I know how software shoul
 
 See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md) for details.
 
-**Local AI Agent (Source Available) - v6.0.0 is the latest release under BSL-1.1.**
+**Local AI Agent (Source Available) - v6.0.1 is the latest release under BSL-1.1.**
 
 ---
 

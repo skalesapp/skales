@@ -19,6 +19,22 @@ import { APP_VERSION } from './meta';
 
 const TELEMETRY_ENDPOINT = 'https://skales.app/api/collect.php';
 
+// ─── Telemetry event types ────────────────────────────────────────────────────
+export type TelemetryEvent =
+    | 'app_start'
+    | 'tool_used'       // which tool: email, calendar, browser, etc
+    | 'session_end'     // duration in minutes
+    | 'provider_type'   // openrouter, ollama, openai, etc (NOT the key)
+    | 'language'        // ui language: en, de, es, fr
+    | 'feature_used'    // buddy, group_chat, voice, lio, skills
+    | 'skill_run'       // skill name only
+    | 'error'           // error type only, no stack trace
+    ;
+
+// ─── Cooldown dedup (1 minute between same event+payload) ─────────────────────
+const COOLDOWN_MS = 60_000;
+const lastSent: Record<string, number> = {};
+
 // ─── Telemetry event sender ────────────────────────────────────────────────────
 
 export async function sendTelemetryEvent(
@@ -26,6 +42,11 @@ export async function sendTelemetryEvent(
     extra?: Record<string, string>
 ): Promise<void> {
     try {
+        // Dedup: skip if same event+payload sent within cooldown window
+        const dedupeKey = event + JSON.stringify(extra || {});
+        const now = Date.now();
+        if (lastSent[dedupeKey] && now - lastSent[dedupeKey] < COOLDOWN_MS) return;
+        lastSent[dedupeKey] = now;
         const settingsPath = path.join(DATA_DIR, 'settings.json');
         if (!fs.existsSync(settingsPath)) return;
 

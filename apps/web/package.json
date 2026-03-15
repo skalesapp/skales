@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "author": "Mario Simic",
   "private": true,
   "scripts": {
@@ -26,6 +26,7 @@
     "next-themes": "^0.4.6",
     "node-ssdp": "^4.0.1",
     "node-telegram-bot-api": "^0.66.0",
+    "nodeify": "^1.0.1",
     "nodemailer": "^6.9.14",
     "pdf-lib": "^1.17.1",
     "pdf-parse": "^1.1.1",
@@ -37,6 +38,7 @@
     "remark-gfm": "^4.0.1",
     "tailwind-merge": "^2.2.1",
     "twitter-api-v2": "^1.17.0",
+    "uuencode": "^0.0.4",
     "whatsapp-web.js": "^1.26.1-alpha.3",
     "xlsx": "^0.18.5"
   },

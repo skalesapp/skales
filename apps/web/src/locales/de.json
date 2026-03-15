@@ -1117,7 +1117,7 @@
       "network": "Netzwerkfehler. Überprüfe deine Verbindung.",
       "apiKey": "Ungültiger API Key. Bitte überprüfe deine Einstellungen.",
       "modelNotFound": "Modell nicht verfügbar. Versuche ein anderes.",
-      "permissionDenied": "Durch Sicherheitsmodus blockiert. Wechsle zu Erweitert oder Uneingeschränkt in den Einstellungen.",
+      "permissionDenied": "Durch Sicherheitsmodus blockiert. Wechsle zu Uneingeschränkt in den Einstellungen.",
       "blacklisted": "🚫 **{{domain}}** ist durch deine Blacklist gesperrt.",
       "fileNotFound": "Datei nicht gefunden: {{path}}",
       "toolNotFound": "Tool nicht verfügbar: {{name}}",

@@ -1117,7 +1117,7 @@
       "network": "Error de red. Verifica tu conexión.",
       "apiKey": "API key inválida. Por favor verifica tu configuración.",
       "modelNotFound": "Modelo no disponible. Prueba con uno diferente.",
-      "permissionDenied": "Bloqueado por el modo de seguridad. Cambia a Avanzado o Sin restricciones en Configuración.",
+      "permissionDenied": "Bloqueado por el modo de seguridad. Cambia a Sin restricciones en Configuración.",
       "blacklisted": "🚫 **{{domain}}** está bloqueado por tu lista negra.",
       "fileNotFound": "Archivo no encontrado: {{path}}",
       "toolNotFound": "Herramienta no disponible: {{name}}",
