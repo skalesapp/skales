@@ -126,9 +126,6 @@ function setupUpdater(getMainWindow) {
   });
 
   // ── Initial check + periodic poll ─────────────────────────────────────────
-  // TEMPORARILY DISABLED FOR LINUX TESTING
-  // TODO: Re-enable after Linux update feed is ready
-  /*
   autoUpdater.checkForUpdates().catch((err) => {
     console.error('[Updater] Initial check failed:', err.message);
   });
@@ -138,7 +135,6 @@ function setupUpdater(getMainWindow) {
       console.error('[Updater] Periodic check failed:', err.message);
     });
   }, 4 * 60 * 60 * 1000); // every 4 hours
-  */
 }
 
 module.exports = { setupUpdater };
