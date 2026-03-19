@@ -37,6 +37,7 @@ export const SUPPORTED_LOCALES: LocaleInfo[] = [
     { code: 'ru', name: 'Русский',   flag: '🇷🇺' },
     { code: 'zh', name: '中文',      flag: '🇨🇳' },
     { code: 'ja', name: '日本語',    flag: '🇯🇵' },
+    { code: 'ko', name: '한국어',    flag: '🇰🇷' },
     // Add more here as translation files are created
 ];
 
