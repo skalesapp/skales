@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v7.0.1 — Hotfix (March 2026)
+
+### Bug Fixes
+- **Telegram Bot:** Fixed bot process crash on end-user machines. Bot now uses Electron's built-in Node runtime (`fork()`) instead of requiring system Node.js installation (`spawn('node')`). Affects all platforms. Same fix applied to WhatsApp bot.
+- **Chat Frozen:** Fixed chat becoming unresponsive after vision model error. Session history is now sanitized before every API call, preventing corrupted message blocks from breaking subsequent requests.
+- **Streaming Timeout:** Added 60-second inactivity timeout to prevent chat UI from hanging permanently on broken API responses.
+- **Vision Fallback:** When a model doesn't support vision, images are now stripped gracefully and the message is sent as text-only instead of corrupting the session.
+
+---
+
 ## V7.0.0 - "The Foundation" (March 2026)
 
 ### New Features

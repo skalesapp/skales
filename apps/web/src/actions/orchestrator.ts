@@ -4735,6 +4735,28 @@ export async function analyzeTaskComplexity(message: string): Promise<{
     return { shouldDispatch: false, reason: 'Single-item or conversational task', estimatedItems: 1 };
 }
 
+/**
+ * Sanitize messages before sending to the LLM API.
+ * Removes broken/empty messages and invalid image_url blocks that can corrupt
+ * the session history (e.g. after a failed vision call).
+ */
+function sanitizeMessages(messages: any[]): any[] {
+    return messages.filter(msg => {
+        if (!msg.role) return false;
+        if (msg.content === undefined || msg.content === null) return false;
+        if (Array.isArray(msg.content)) {
+            msg.content = msg.content.filter((block: any) => {
+                if (block.type === 'image_url' && !block.image_url?.url) return false;
+                if (block.type === 'text' && block.text === undefined) return false;
+                return true;
+            });
+            if (msg.content.length === 0) return false;
+        }
+        if (typeof msg.content === 'string' && msg.content.trim() === '') return false;
+        return true;
+    });
+}
+
 export async function agentDecide(
     messages: { role: string; content: string }[],
     options?: {
@@ -4958,6 +4980,27 @@ responses are only acceptable for pure questions or conversations.
     }
 
     await addLog({ level: 'info', message: `Thinking via ${effectiveProvider}...`, context: 'orchestrator' });
+
+    // ── Vision fallback: strip image blocks if model doesn't support vision ──
+    const modelForVision = providerConfig.model || '';
+    if (!options?.forceVision && !isVisionCapableModel(modelForVision)) {
+        finalMessages = finalMessages.map(msg => {
+            if (Array.isArray(msg.content)) {
+                const hasImages = msg.content.some((b: any) => b.type === 'image_url');
+                if (hasImages) {
+                    const textParts = msg.content
+                        .filter((b: any) => b.type === 'text')
+                        .map((b: any) => b.text)
+                        .join('\n');
+                    return { ...msg, content: textParts || '[Image sent — vision not available with this model]' };
+                }
+            }
+            return msg;
+        });
+    }
+
+    // ── Sanitize messages: remove broken/empty blocks that corrupt sessions ──
+    finalMessages = sanitizeMessages(finalMessages);
 
     // Dynamically load all available tools (Core + Skills)
     // noTools: true skips tools entirely (used for vision-only calls where tool routing breaks image analysis)

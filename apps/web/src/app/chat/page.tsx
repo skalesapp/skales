@@ -2270,12 +2270,30 @@ export default function ChatPage() {
                         tool_call_id: m.toolCallId
                     }));
 
-                // 1. DECIDE
-                const decision = await agentDecide(apiMessages as any, {
-                    systemPrompt: systemPromptOverride,
-                    provider: agentProvider as any,
-                    model: agentModel,
-                });
+                // 1. DECIDE (with 60s inactivity timeout to prevent frozen UI)
+                const DECIDE_TIMEOUT_MS = 60_000;
+                let decision: Awaited<ReturnType<typeof agentDecide>>;
+                try {
+                    decision = await Promise.race([
+                        agentDecide(apiMessages as any, {
+                            systemPrompt: systemPromptOverride,
+                            provider: agentProvider as any,
+                            model: agentModel,
+                        }),
+                        new Promise<never>((_, reject) =>
+                            setTimeout(() => reject(new Error('STREAM_TIMEOUT')), DECIDE_TIMEOUT_MS)
+                        ),
+                    ]);
+                } catch (timeoutErr: any) {
+                    if (timeoutErr?.message === 'STREAM_TIMEOUT') {
+                        setMessages(prev => [
+                            ...prev.filter(m => m.role !== 'tool-status'),
+                            { role: 'assistant', content: '⚠️ Response timed out after 60 seconds. Try again or start a new chat.' }
+                        ]);
+                        break;
+                    }
+                    throw timeoutErr;
+                }
 
                 if (decision.decision === 'error') {
                     setMessages(prev => [

@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { spawn } from 'child_process';
+import { fork } from 'child_process';
 import { unstable_noStore as noStore } from 'next/cache';
 
 import { DATA_DIR } from '@/lib/paths';
@@ -405,9 +405,11 @@ export async function startTelegramBot(): Promise<{ success: boolean; error?: st
             return { success: false, error: `telegram-bot.js not found at: ${botPath}` };
         }
 
-        const child = spawn('node', [botPath], {
+        // fork() uses Electron's built-in Node runtime — no system PATH lookup needed.
+        // spawn('node', ...) breaks for end users without Node.js installed.
+        const child = fork(botPath, [], {
             detached: true,
-            stdio: 'ignore',
+            silent: true,
             cwd: webDir,
             env: {
                 ...process.env,
@@ -416,8 +418,6 @@ export async function startTelegramBot(): Promise<{ success: boolean; error?: st
                 // process.env.PORT is set by electron/main.js before spawning Next.js.
                 SKALES_PORT: process.env.PORT || '3000',
             },
-            // windowsHide prevents the CMD flash on Windows
-            windowsHide: true,
         });
         child.unref();
 

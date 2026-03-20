@@ -123,8 +123,8 @@ mac:
   # These keys are merged into the generated Info.plist inside the .app bundle.
   extendInfo:
     NSHumanReadableCopyright: "Copyright © 2026 Skales. All rights reserved."
-    CFBundleShortVersionString: "7.0.0"
-    CFBundleVersion: "7.0.0"
+    CFBundleShortVersionString: "7.0.1"
+    CFBundleVersion: "7.0.1"
     # Required for Login Items (auto-launch) via SMLoginItemSetEnabled / LSUIElement
     LSUIElement: false
     # Declare usage descriptions required by macOS privacy prompts

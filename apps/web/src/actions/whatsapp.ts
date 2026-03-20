@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { spawn } from 'child_process';
+import { fork } from 'child_process';
 import { unstable_noStore as noStore } from 'next/cache';
 
 import { DATA_DIR } from '@/lib/paths';
@@ -99,12 +99,11 @@ export async function startWhatsAppBot(): Promise<{ success: boolean; error?: st
             return { success: false, error: 'whatsapp-bot.js not found in app directory' };
         }
 
-        const child = spawn('node', [botPath], {
+        // fork() uses Electron's built-in Node runtime — no system PATH lookup needed.
+        const child = fork(botPath, [], {
             detached: true,
-            stdio: 'ignore',
+            silent: true,
             cwd: process.cwd(),
-            // windowsHide prevents the CMD flash on Windows when spawning child processes
-            windowsHide: true,
         });
         child.unref();
 
