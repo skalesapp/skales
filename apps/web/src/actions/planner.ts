@@ -261,10 +261,19 @@ async function callLLMForPlanner(prompt: string, settings: any): Promise<string>
     // Use agentDecide from orchestrator — simplest path
     try {
         const { agentDecide } = await import('./orchestrator');
+
+        // ── OpenClaw Relay Mode ──────────────────────────────────────────
+        // If the active provider's model is an OpenClaw agent, relay the plan
+        // request without injecting Skales' scheduling system prompt.
+        // The OpenClaw gateway's agent already has its own planning persona.
+        const activeModel = settings?.providers?.[settings.activeProvider]?.model || '';
+        const isOpenClaw = activeModel.startsWith('openclaw:');
+
         const result = await agentDecide(
             [{ role: 'user', content: prompt }],
             {
-                systemPrompt: 'You are a scheduling assistant. Respond only with valid JSON arrays. No markdown, no commentary.',
+                // Skip Skales system prompt for OpenClaw — the gateway handles identity
+                systemPrompt: isOpenClaw ? undefined : 'You are a scheduling assistant. Respond only with valid JSON arrays. No markdown, no commentary.',
                 noTools: true,
             }
         );

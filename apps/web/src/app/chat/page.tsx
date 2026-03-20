@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import {
     loadSettings, createSession, loadSession,
-    saveSession, listSessions, listSessionsByAgent, deleteSession,
+    saveSession, listSessions, deleteSession, migrateSessionsToDefaultAgent,
     type ChatMessage, type Provider
 } from '@/actions/chat';
 import Markdown from '@/components/Markdown';
@@ -864,8 +864,10 @@ export default function ChatPage() {
 
     // Agent selector
     const [agents, setAgents] = useState<AgentDefinition[]>([]);
-    const [selectedAgent, setSelectedAgent] = useState<string>('skales');
+    const [selectedAgent, setSelectedAgent] = useState<string>('');
     const [showAgentDropdown, setShowAgentDropdown] = useState(false);
+    // Resolve the default agent dynamically from the loaded agents list
+    const defaultAgentId = useMemo(() => agents.find(a => a.isDefault)?.id || 'skales', [agents]);
 
     // ── Voice Chat Mode ──────────────────────────────────────────────────────
     const [isVoiceChatMode,  setIsVoiceChatMode]  = useState(false);
@@ -1338,9 +1340,48 @@ export default function ChatPage() {
             const data = await res.json();
 
             if (!data.success || !data.text) {
-                setVoiceError(data.error ?? 'Transcription failed.');
-                setVoiceStatus('idle');
-                return;
+                // If server has no cloud STT, fall back to browser SpeechRecognition
+                const errMsg = data.error || '';
+                if (errMsg.includes('NO_CLOUD_STT') || errMsg.includes('No speech-to-text')) {
+                    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                    if (SR) {
+                        setVoiceStatus('transcribing');
+                        const recognition = new SR();
+                        recognition.lang = 'en-US';
+                        recognition.interimResults = false;
+                        recognition.maxAlternatives = 1;
+                        const transcriptPromise = new Promise<string>((resolve, reject) => {
+                            recognition.onresult = (e: any) => resolve(e.results[0][0].transcript);
+                            recognition.onerror = (e: any) => reject(new Error(e.error));
+                            recognition.onend = () => reject(new Error('No speech detected'));
+                        });
+                        recognition.start();
+                        try {
+                            const browserTranscript = await transcriptPromise;
+                            if (browserTranscript.trim()) {
+                                // Continue with browser transcript below
+                                data.text = browserTranscript;
+                                data.success = true;
+                            } else {
+                                setVoiceError('No speech detected. Try again.');
+                                setVoiceStatus('idle');
+                                return;
+                            }
+                        } catch {
+                            setVoiceError('Browser speech recognition failed. Try again or add a Groq API key in Settings.');
+                            setVoiceStatus('idle');
+                            return;
+                        }
+                    } else {
+                        setVoiceError('No speech-to-text available. Add a Groq API key in Settings for voice chat.');
+                        setVoiceStatus('idle');
+                        return;
+                    }
+                } else {
+                    setVoiceError(errMsg || 'Transcription failed.');
+                    setVoiceStatus('idle');
+                    return;
+                }
             }
 
             const transcript = data.text as string;
@@ -1501,6 +1542,22 @@ export default function ChatPage() {
             setActiveSkills(skills);
             if (human?.emoji) setUserEmoji(human.emoji);
 
+            // Resolve default agent from loaded agents
+            const resolvedDefaultId = agentList.find(a => a.isDefault)?.id || 'skales';
+
+            // Migrate old 'skales' sessions to the new default agent (one-time, idempotent)
+            if (resolvedDefaultId !== 'skales') {
+                try {
+                    const count = await migrateSessionsToDefaultAgent(resolvedDefaultId);
+                    if (count > 0) {
+                        console.log(`[Skales] Migrated ${count} sessions to ${resolvedDefaultId}`);
+                        // Refresh session list after migration
+                        const freshSessions = await listSessions();
+                        setSessions(freshSessions);
+                    }
+                } catch (e) { console.warn('[Skales] Session migration failed:', e); }
+            }
+
             // Log any init failures for debugging
             [settingsResult, agentListResult, sessionListResult, skillsResult, lastActiveIdResult, humanResult]
                 .forEach((r, i) => {
@@ -1516,6 +1573,8 @@ export default function ChatPage() {
 
                 if (urlAgent) {
                     setSelectedAgent(urlAgent);
+                } else if (!selectedAgent) {
+                    setSelectedAgent(resolvedDefaultId);
                 }
 
                 if (urlSession) {
@@ -1587,7 +1646,7 @@ export default function ChatPage() {
                                 const candidate = await loadSession(s.id);
                                 if (!candidate) continue;
                                 if (activeAgentId) {
-                                    const sessionAgent = candidate.agentId || 'skales';
+                                    const sessionAgent = candidate.agentId || resolvedDefaultId;
                                     if (sessionAgent !== activeAgentId) continue;
                                 }
                                 targetSession = candidate;
@@ -1637,7 +1696,7 @@ export default function ChatPage() {
                         if (!urlAgent && targetSession.agentId) {
                             setSelectedAgent(targetSession.agentId);
                         } else if (!urlAgent && !targetSession.agentId) {
-                            setSelectedAgent('skales');
+                            setSelectedAgent(resolvedDefaultId);
                         }
 
                         // Advance Telegram poll cursor to prevent old inbox messages from re-appending
@@ -1820,7 +1879,8 @@ export default function ChatPage() {
 
 
     function getWelcomeMessage(agentId?: string | null): DisplayMessage {
-        const agent = agentId ? agents.find(a => a.id === agentId) : null;
+        const id = agentId || defaultAgentId;
+        const agent = agents.find(a => a.id === id);
         if (agent) {
             return {
                 role: 'assistant',
@@ -1829,20 +1889,22 @@ export default function ChatPage() {
         }
         return {
             role: 'assistant',
-            content: "Hey! I'm Skales - your AI buddy. I can **actually do things** now! 🦎\n\nTry asking me to:\n• Create a folder\n• Write a file\n• List your tasks\n• Look up a website\n• Run a command\n\nOr just chat - I'm here either way! Type `/` for commands.",
+            content: "Hey! I'm your AI assistant. I can **actually do things**!\n\nTry asking me to:\n• Create a folder\n• Write a file\n• List your tasks\n• Look up a website\n• Run a command\n\nOr just chat - I'm here either way! Type `/` for commands.",
         };
     }
 
     const getActiveAgentName = () => {
-        if (selectedAgent === 'skales') return 'Skales';
         const agent = agents.find(a => a.id === selectedAgent);
-        return agent?.name || 'Skales';
+        if (agent) return agent.name;
+        const def = agents.find(a => a.isDefault);
+        return def?.name || 'Skales';
     };
 
     const getActiveAgentEmoji = () => {
-        if (selectedAgent === 'skales') return '🦎';
         const agent = agents.find(a => a.id === selectedAgent);
-        return agent?.emoji || '🦎';
+        if (agent) return agent.emoji;
+        const def = agents.find(a => a.isDefault);
+        return def?.emoji || '🦎';
     };
 
     // Stable emoji value for MessageListArea — only changes when agent actually switches
@@ -1989,7 +2051,7 @@ export default function ChatPage() {
         setSessionId(null);
         // Refresh sessions list so history panel is up to date
         try { setSessions(await listSessions()); } catch { /* non-critical */ }
-        setMessages([getWelcomeMessage(selectedAgent !== 'skales' ? selectedAgent : null)]);
+        setMessages([getWelcomeMessage(selectedAgent !== defaultAgentId ? selectedAgent : null)]);
         setShowSessions(false);
     };
 
@@ -2075,21 +2137,22 @@ export default function ChatPage() {
         setShowAgentDropdown(false);
 
         const agent = agents.find(a => a.id === agentId);
-        const name = agentId === 'skales' ? 'Skales' : (agent?.name || 'Unknown');
-        const emoji = agentId === 'skales' ? '🦎' : (agent?.emoji || '🤖');
+        const name = agent?.name || 'Unknown';
+        const emoji = agent?.emoji || '🤖';
 
-        // Load the most recent session for this specific agent
+        // Find the most recent session for this agent from the full sessions list
         try {
-            const agentSessions = await listSessionsByAgent(agentId);
-            if (agentSessions.length > 0) {
-                const lastSession = await loadSession(agentSessions[0].id);
+            const allSessions = await listSessions();
+            setSessions(allSessions);
+            const agentSession = allSessions.find(s => (s.agentId || defaultAgentId) === agentId);
+            if (agentSession) {
+                const lastSession = await loadSession(agentSession.id);
                 if (lastSession && lastSession.messages.length > 0) {
                     setSessionId(lastSession.id);
                     const msgsToShow = lastSession.messages.length > 80
                         ? lastSession.messages.slice(-80)
                         : lastSession.messages;
                     setMessages(reconstructDisplayMessages(msgsToShow));
-                    setSessions(await listSessions());
                     return; // Session loaded, no welcome message needed
                 }
             }
@@ -2101,7 +2164,7 @@ export default function ChatPage() {
         setSessionId(null);
         setMessages([
             { role: 'system', content: `${emoji} Switched to **${name}**. Ready to help!` },
-            getWelcomeMessage(agentId !== 'skales' ? agentId : null),
+            getWelcomeMessage(agentId !== defaultAgentId ? agentId : null),
         ]);
     };
 
@@ -2207,25 +2270,27 @@ export default function ChatPage() {
                 }
             }
 
-            // Determine system prompt override and provider/model for custom agents
+            // Determine system prompt override and provider/model for the active agent.
+            // Always apply overrides when the agent has a custom provider (e.g. OpenClaw gateway),
+            // even if it's the default agent — Sherlock routes through OpenClaw, not Skales settings.
             let systemPromptOverride: string | undefined;
             let agentProvider: string | undefined;
             let agentModel: string | undefined;
-            if (selectedAgent !== 'skales') {
+            {
                 const agent = agents.find(a => a.id === selectedAgent);
-                if (agent) {
-                    systemPromptOverride = agent.systemPrompt;
+                if (agent && (agent.provider || selectedAgent !== defaultAgentId)) {
+                    systemPromptOverride = agent.systemPrompt || undefined;
                     agentProvider = agent.provider || undefined;
                     agentModel = agent.model || undefined;
                 }
             }
 
             // ─── PRE-ANALYSIS: Auto-route complex tasks to Multi-Agent ──
-            // Only apply routing for the main Skales agent (not custom agents with their own prompts).
+            // Only apply routing for the default agent (not custom agents with their own prompts).
             // If the task looks like it involves multiple independent items, inject a FORCE_DISPATCH
             // directive into the system prompt so the LLM immediately calls dispatch_subtasks
             // instead of grinding through items sequentially in chat.
-            if (selectedAgent === 'skales') {
+            if (selectedAgent === defaultAgentId) {
                 try {
                     const routing = await analyzeTaskComplexity(rawText);
                     if (routing.shouldDispatch) {
@@ -2260,15 +2325,28 @@ export default function ChatPage() {
                 // rebuilds the full identity/memory context from human.json + soul.json.
                 // (UI system messages like "/help" output or model-switch notices must not
                 //  replace the real system prompt inside the orchestrator.)
+                const isOpenClawRelay = agentModel?.startsWith('openclaw:');
                 const apiMessages = currentMessages
                     .filter(m => m.role !== 'tool-status' && m.role !== 'system')
                     .slice(-40)
-                    .map(m => ({
-                        role: m.role as string,
-                        content: m.content,
-                        tool_calls: m.toolCalls?.map((tc: any) => ({ ...tc, type: 'function' as const })),
-                        tool_call_id: m.toolCallId
-                    }));
+                    .map(m => {
+                        let content = m.content;
+                        // For OpenClaw relay: scrub any "Skales" identity from old assistant messages
+                        // so the gateway agent doesn't continue the wrong persona
+                        if (isOpenClawRelay && m.role === 'assistant' && typeof content === 'string') {
+                            content = content
+                                .replace(/\bI'm Skales\b/gi, '')
+                                .replace(/\bI am Skales\b/gi, '')
+                                .replace(/\bSkales here\b/gi, '')
+                                .replace(/\bAs Skales\b/gi, '');
+                        }
+                        return {
+                            role: m.role as string,
+                            content,
+                            tool_calls: m.toolCalls?.map((tc: any) => ({ ...tc, type: 'function' as const })),
+                            tool_call_id: m.toolCallId,
+                        };
+                    });
 
                 // 1. DECIDE (with 60s inactivity timeout to prevent frozen UI)
                 const DECIDE_TIMEOUT_MS = 60_000;
@@ -2897,9 +2975,10 @@ export default function ChatPage() {
                     { role: 'tool-status', content: visionNote, toolsExecuting: ['vision'] }
                 ]);
 
+                const activeAgent = agents.find(a => a.id === selectedAgent);
                 const decision = await agentDecide(apiMessages as any, {
-                    provider: selectedAgent !== 'skales' ? agents.find(a => a.id === selectedAgent)?.provider as any : undefined,
-                    model: selectedAgent !== 'skales' ? agents.find(a => a.id === selectedAgent)?.model : undefined,
+                    provider: activeAgent?.provider as any || undefined,
+                    model: activeAgent?.model || undefined,
                     forceVision: true, // Auto-switch to vision-capable model if needed
                     noTools: true,     // Don't offer tools - model must analyze the image directly
                 });
@@ -3085,7 +3164,7 @@ export default function ChatPage() {
                             background: 'linear-gradient(135deg, rgba(132,204,22,0.2) 0%, rgba(34,197,94,0.1) 100%)',
                             border: '1px solid rgba(132,204,22,0.3)',
                         }}>
-                        <span className="text-2xl" style={{ animation: 'float 3s ease-in-out infinite' }}>🦎</span>
+                        <span className="text-2xl" style={{ animation: 'float 3s ease-in-out infinite' }}>{agents.find(a => a.isDefault)?.emoji || '🦎'}</span>
                     </div>
                 </div>
 
@@ -3139,41 +3218,75 @@ export default function ChatPage() {
                             {showAgentDropdown && (
                                 <div className="absolute top-full left-0 mt-1 z-50 w-64 rounded-xl border shadow-xl overflow-hidden animate-scaleIn"
                                     style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}>
-                                    {/* Skales (default) */}
+                                    {/* Default agent (dynamically resolved from OpenClaw or fallback) */}
                                     <button
-                                        onClick={() => handleAgentSwitch('skales')}
-                                        className={`w-full text-left px-3 py-2.5 flex items-center gap-3 transition-colors ${selectedAgent === 'skales' ? 'bg-lime-500/10' : 'hover:bg-[var(--surface-light)]'}`}
+                                        onClick={() => handleAgentSwitch(defaultAgentId)}
+                                        className={`w-full text-left px-3 py-2.5 flex items-center gap-3 transition-colors ${selectedAgent === defaultAgentId ? 'bg-lime-500/10' : 'hover:bg-[var(--surface-light)]'}`}
                                     >
-                                        <span className="text-lg">🦎</span>
+                                        <span className="text-lg">{agents.find(a => a.isDefault)?.emoji || '🦎'}</span>
                                         <div>
-                                            <p className="text-xs font-bold" style={{ color: selectedAgent === 'skales' ? '#84cc16' : 'var(--text-primary)' }}>
-                                                Skales (Default)
+                                            <p className="text-xs font-bold" style={{ color: selectedAgent === defaultAgentId ? '#84cc16' : 'var(--text-primary)' }}>
+                                                {agents.find(a => a.isDefault)?.name || 'Skales'} (Default)
                                             </p>
                                             <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{t('chat.defaultAgentDesc')}</p>
                                         </div>
-                                        {selectedAgent === 'skales' && <Icon icon={Check} size={14} className="text-lime-500 ml-auto" />}
+                                        {selectedAgent === defaultAgentId && <Icon icon={Check} size={14} className="text-lime-500 ml-auto" />}
                                     </button>
 
                                     <div className="h-px" style={{ background: 'var(--border)' }} />
 
-                                    {/* Agent list */}
-                                    <div className="max-h-48 overflow-y-auto">
-                                        {agents.map(agent => (
-                                            <button
-                                                key={agent.id}
-                                                onClick={() => handleAgentSwitch(agent.id)}
-                                                className={`w-full text-left px-3 py-2.5 flex items-center gap-3 transition-colors ${selectedAgent === agent.id ? 'bg-lime-500/10' : 'hover:bg-[var(--surface-light)]'}`}
-                                            >
-                                                <span className="text-lg">{agent.emoji}</span>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-xs font-bold truncate" style={{ color: selectedAgent === agent.id ? '#84cc16' : 'var(--text-primary)' }}>
-                                                        {agent.name}
-                                                    </p>
-                                                    <p className="text-[10px] truncate" style={{ color: 'var(--text-muted)' }}>{agent.description}</p>
+                                    {/* Agent list — all agents except the default (shown above) */}
+                                    <div className="max-h-64 overflow-y-auto">
+                                        {/* Skales built-in agents */}
+                                        {agents.filter(a => !a.id.startsWith('oc-') && !a.isDefault).length > 0 && (
+                                            <>
+                                                <div className="px-3 py-1.5 text-[9px] uppercase tracking-wider font-bold" style={{ color: 'var(--text-muted)' }}>
+                                                    Skales Agents
                                                 </div>
-                                                {selectedAgent === agent.id && <Icon icon={Check} size={14} className="text-lime-500" />}
-                                            </button>
-                                        ))}
+                                                {agents.filter(a => !a.id.startsWith('oc-') && !a.isDefault).map(agent => (
+                                                    <button
+                                                        key={agent.id}
+                                                        onClick={() => handleAgentSwitch(agent.id)}
+                                                        className={`w-full text-left px-3 py-2 flex items-center gap-3 transition-colors ${selectedAgent === agent.id ? 'bg-lime-500/10' : 'hover:bg-[var(--surface-light)]'}`}
+                                                    >
+                                                        <span className="text-lg">{agent.emoji}</span>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-xs font-bold truncate" style={{ color: selectedAgent === agent.id ? '#84cc16' : 'var(--text-primary)' }}>
+                                                                {agent.name}
+                                                            </p>
+                                                            <p className="text-[10px] truncate" style={{ color: 'var(--text-muted)' }}>{agent.description}</p>
+                                                        </div>
+                                                        {selectedAgent === agent.id && <Icon icon={Check} size={14} className="text-lime-500" />}
+                                                    </button>
+                                                ))}
+                                            </>
+                                        )}
+
+                                        {/* OpenClaw Agents (excluding default, already shown at top) */}
+                                        {agents.filter(a => a.id.startsWith('oc-') && !a.isDefault).length > 0 && (
+                                            <>
+                                                <div className="h-px my-1" style={{ background: 'var(--border)' }} />
+                                                <div className="px-3 py-1.5 text-[9px] uppercase tracking-wider font-bold flex items-center gap-1.5" style={{ color: '#f97316' }}>
+                                                    <span>🦞</span> OpenClaw Agents
+                                                </div>
+                                                {agents.filter(a => a.id.startsWith('oc-') && !a.isDefault).map(agent => (
+                                                    <button
+                                                        key={agent.id}
+                                                        onClick={() => handleAgentSwitch(agent.id)}
+                                                        className={`w-full text-left px-3 py-2 flex items-center gap-3 transition-colors ${selectedAgent === agent.id ? 'bg-orange-500/10' : 'hover:bg-[var(--surface-light)]'}`}
+                                                    >
+                                                        <span className="text-lg">{agent.emoji}</span>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-xs font-bold truncate" style={{ color: selectedAgent === agent.id ? '#f97316' : 'var(--text-primary)' }}>
+                                                                {agent.name}
+                                                            </p>
+                                                            <p className="text-[10px] truncate" style={{ color: 'var(--text-muted)' }}>{agent.description}</p>
+                                                        </div>
+                                                        {selectedAgent === agent.id && <Icon icon={Check} size={14} className="text-orange-500" />}
+                                                    </button>
+                                                ))}
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -3259,8 +3372,12 @@ export default function ChatPage() {
                                         onClick={() => handleLoadSession(s.id)}>
                                         <Icon icon={MessageCircle} size={14} style={{ color: sessionId === s.id ? '#84cc16' : 'var(--text-muted)' }} />
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>{s.title}</p>
-                                            <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{s.messageCount} messages · {new Date(s.updatedAt).toLocaleDateString()}</p>
+                                            <p className="text-xs font-medium truncate" style={{ color: 'var(--text-primary)' }}>
+                                                {(() => { const sa = agents.find(a => a.id === s.agentId); return sa && !sa.isDefault ? `${sa.emoji} ` : ''; })()}{s.title}
+                                            </p>
+                                            <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                                                {(() => { const sa = agents.find(a => a.id === s.agentId); return sa && !sa.isDefault ? `${sa.name} · ` : ''; })()}{s.messageCount} msgs · {new Date(s.updatedAt).toLocaleDateString()}
+                                            </p>
                                         </div>
                                         <button
                                             onClick={(e) => handleDeleteSession(e, s.id)}

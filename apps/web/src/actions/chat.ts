@@ -393,11 +393,23 @@ async function callProvider(
         headers['HTTP-Referer'] = 'https://skales.app';
         headers['X-Title'] = 'Skales';
     }
+    // OpenClaw gateway: pass agent ID header for routing
+    if (model.startsWith('openclaw:')) {
+        headers['x-openclaw-agent-id'] = model.replace('openclaw:', '');
+    }
 
     // Bug 29: Custom/local endpoints (Ollama, KoboldCpp, vLLM, LM Studio) can take
     // 5-30 s on cold starts. No timeout was set, so this path could hang forever.
-    // Use a 30s floor for custom endpoints; 15s for cloud providers (they're fast).
-    const timeoutMs = provider === 'custom' || provider === 'ollama' ? 30_000 : 15_000;
+    // Read user-configured timeout for custom endpoints; 15s for cloud providers.
+    let timeoutMs = 15_000;
+    if (provider === 'custom' || provider === 'ollama') {
+        try {
+            const _s = await loadSettings();
+            timeoutMs = ((_s as any).customEndpointTimeout || 120) * 1000;
+        } catch { timeoutMs = 120_000; }
+    }
+    // Pass user identifier for OpenClaw gateway session persistence
+    const isOpenClaw = model.startsWith('openclaw:');
     const response = await fetch(`${baseUrl}/chat/completions`, {
         method: 'POST',
         headers,
@@ -406,6 +418,7 @@ async function callProvider(
             messages,
             max_tokens: 2048,
             temperature: 0.7,
+            ...(isOpenClaw ? { user: require('os').userInfo().username || 'user' } : {}),
         }),
         signal: AbortSignal.timeout(timeoutMs),
     });
@@ -585,17 +598,54 @@ function getSessionPath(id: string) {
     return path.join(SESSIONS_DIR, `${id}.json`);
 }
 
+// Migrate old sessions with agentId 'skales' to the current OpenClaw default agent
+export async function migrateSessionsToDefaultAgent(newDefaultId: string): Promise<number> {
+    ensureDirs();
+    if (!newDefaultId || newDefaultId === 'skales') return 0;
+    let migrated = 0;
+    try {
+        const files = fs.readdirSync(SESSIONS_DIR).filter(f => f.endsWith('.json'));
+        for (const f of files) {
+            try {
+                const filePath = path.join(SESSIONS_DIR, f);
+                const raw = fs.readFileSync(filePath, 'utf-8');
+                if (!raw || raw.trim().length === 0) continue;
+                const data = JSON.parse(raw);
+                if (data.agentId === 'skales' || !data.agentId) {
+                    data.agentId = newDefaultId;
+                    const tmpPath = filePath + '.tmp';
+                    fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2));
+                    fs.renameSync(tmpPath, filePath);
+                    migrated++;
+                }
+            } catch { /* skip corrupt files */ }
+        }
+    } catch (e) {
+        console.error('[Skales] Session migration error:', e);
+    }
+    return migrated;
+}
+
 export async function createSession(title?: string, agentId?: string): Promise<ChatSession> {
     ensureDirs();
     const settings = await loadSettings();
     const providerConfig = settings.providers[settings.activeProvider];
+    // Resolve default agent ID dynamically from OpenClaw config
+    let resolvedAgentId = agentId;
+    if (!resolvedAgentId) {
+        try {
+            const { getDefaultAgent } = await import('./agents');
+            const def = await getDefaultAgent();
+            resolvedAgentId = def?.id || 'skales';
+        } catch { resolvedAgentId = 'skales'; }
+    }
     const session: ChatSession = {
         id: `session_${Date.now()}_${(typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2) + Date.now().toString(36)).replace(/-/g, '').slice(0, 12)}`,
         title: title || 'New Chat',
         messages: [],
         provider: settings.activeProvider,
         model: providerConfig.model || 'unknown',
-        agentId: agentId || 'skales',
+        agentId: resolvedAgentId,
         createdAt: Date.now(),
         updatedAt: Date.now(),
     };
@@ -727,11 +777,11 @@ export async function saveSession(session: ChatSession) {
     fs.renameSync(tmpPath, targetPath);
 }
 
-export async function listSessions(): Promise<{ id: string; title: string; updatedAt: number; messageCount: number }[]> {
+export async function listSessions(): Promise<{ id: string; title: string; updatedAt: number; messageCount: number; agentId?: string }[]> {
     ensureDirs();
     try {
         const files = fs.readdirSync(SESSIONS_DIR).filter(f => f.endsWith('.json'));
-        const sessions: { id: string; title: string; updatedAt: number; messageCount: number }[] = [];
+        const sessions: { id: string; title: string; updatedAt: number; messageCount: number; agentId?: string }[] = [];
         for (const f of files) {
             try {
                 const raw = fs.readFileSync(path.join(SESSIONS_DIR, f), 'utf-8');
@@ -748,6 +798,7 @@ export async function listSessions(): Promise<{ id: string; title: string; updat
                     title: data.title || 'Untitled',
                     updatedAt: data.updatedAt || 0,
                     messageCount: data.messages.length,
+                    agentId: data.agentId,
                 });
             } catch {
                 // Skip this file — don't let one bad file break the whole list
@@ -891,17 +942,28 @@ export async function processMessage(
         } catch { /* non-fatal — continue without capabilities block */ }
 
         // Build messages with system prompt + identity
-        const persona = settings.persona || 'default';
-        const systemPrompt = settings.systemPrompt || PERSONA_PROMPTS[persona] || PERSONA_PROMPTS.default;
+        const isOpenClawRelay = providerConfig.model?.startsWith('openclaw:');
+        let messages: Array<{ role: string; content: string }>;
 
-        const suffixBlock = options?.systemPromptSuffix ? `\n\n${options.systemPromptSuffix}` : '';
-        const fullSystemPrompt = `${systemPrompt}\n\n${identityContext}${capsContext}\n\nYou ARE able to send voice messages via Telegram or chat. Use your TTS tool. Never claim you cannot send voice messages.${suffixBlock}`;
-
-        const messages = [
-            { role: 'system', content: fullSystemPrompt },
-            ...history.slice(-20).map(m => ({ role: m.role, content: m.content })),
-            { role: 'user', content: message },
-        ];
+        if (isOpenClawRelay) {
+            // OpenClaw relay: no Skales system prompt — gateway handles identity + tools
+            messages = [
+                ...history.slice(-20)
+                    .filter(m => m.role !== 'system') // strip old Skales system messages
+                    .map(m => ({ role: m.role, content: m.content })),
+                { role: 'user', content: message },
+            ];
+        } else {
+            const persona = settings.persona || 'default';
+            const systemPrompt = settings.systemPrompt || PERSONA_PROMPTS[persona] || PERSONA_PROMPTS.default;
+            const suffixBlock = options?.systemPromptSuffix ? `\n\n${options.systemPromptSuffix}` : '';
+            const fullSystemPrompt = `${systemPrompt}\n\n${identityContext}${capsContext}\n\nYou ARE able to send voice messages via Telegram or chat. Use your TTS tool. Never claim you cannot send voice messages.${suffixBlock}`;
+            messages = [
+                { role: 'system', content: fullSystemPrompt },
+                ...history.slice(-20).map(m => ({ role: m.role, content: m.content })),
+                { role: 'user', content: message },
+            ];
+        }
 
         console.log(`[Skales] Chat → ${provider} (${providerConfig.model})`);
 

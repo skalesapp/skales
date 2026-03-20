@@ -875,7 +875,9 @@ export default function BuddyPage() {
                     to   { opacity: 0; transform: translateY(-5px); }
                 }
                 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-                html, body { background: transparent !important; overflow: hidden; }
+                html, body { background: transparent !important; overflow: hidden; -webkit-app-region: drag; }
+                html { border: none !important; outline: none !important; box-shadow: none !important; }
+                body { border: none !important; outline: none !important; }
             `}</style>
         </div>
     );

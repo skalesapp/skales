@@ -6,6 +6,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased — OpenClaw Gateway Bridge
+
+### Added
+- **OpenClaw Integration** — Auto-discovers agents from `~/.openclaw/openclaw.json`.
+  Syncs agent names, emojis, models, skills, and tools profiles from the gateway config.
+- **Clean Relay Mode** — When talking to OpenClaw agents (`openclaw:<agentId>` model),
+  Skales bypasses all system prompt, tool, and identity injection. The gateway handles
+  everything via the agent's SOUL.md and server-side tools.
+- **Dynamic Default Agent** — The OpenClaw default agent (e.g. Sherlock) replaces the
+  hardcoded Skales agent in the UI. Dropdown, welcome message, and session creation
+  all use the resolved default.
+- **All-Sessions Sidebar** — Session history shows sessions from ALL agents with emoji
+  labels, not filtered per-agent.
+- **Built-in Agent Upgrade** — Code Assistant, Content Writer, Data Analyst, and
+  Strategic Planner auto-upgrade to OpenClaw equivalents (Pixel, Luna, Fundbot, Maestro)
+  when available, with "Powered by X via OpenClaw" indicator.
+- **Session Migration** — Existing sessions with `agentId: 'skales'` are automatically
+  migrated to the new default agent on first load.
+- **Planner Relay** — Day plan generation routes through OpenClaw when active.
+- **Task/Agent Execution Relay** — Scheduled tasks and agent executions use the gateway
+  for OpenClaw agents.
+- **Buddy Multi-Display** — Desktop Buddy positions on the first non-primary monitor
+  (media display) instead of always using the primary.
+- **Browser STT Fallback** — When no cloud STT key is configured, falls back to
+  browser-native SpeechRecognition (Web Speech API).
+
+### Contributors
+- @00xglitch — OpenClaw bridge architecture and implementation
+
+---
+
 ## v7.1.0 — "The Local AI Update" (March 2026)
 
 ### Bug Fixes

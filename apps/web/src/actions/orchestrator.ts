@@ -4211,6 +4211,10 @@ async function callProviderWithTools(
         headers['HTTP-Referer'] = 'https://skales.app';
         headers['X-Title'] = 'Skales';
     }
+    // OpenClaw gateway: pass agent ID header for routing
+    if (model.startsWith('openclaw:')) {
+        headers['x-openclaw-agent-id'] = model.replace('openclaw:', '');
+    }
 
     // Ensure OpenRouter/OpenAI receives Base64 Data-URIs and properly wrapped image payload
     const formattedMessages = messages.map(m => {
@@ -4246,12 +4250,15 @@ async function callProviderWithTools(
     // For the custom provider with tool calling disabled, omit the tools array so
     // models that don't support function calling don't crash or return garbage.
     const includeTools = provider !== 'custom' || customToolCallingEnabled !== false;
+    // Pass user identifier for OpenClaw gateway session persistence
+    const isOpenClaw = model.startsWith('openclaw:');
     const body: any = {
         model,
         messages: formattedMessages,
         max_tokens: 4096,
         temperature: 0.7,
         ...(includeTools ? { tools, tool_choice: 'auto' } : {}),
+        ...(isOpenClaw ? { user: require('os').userInfo().username || 'user' } : {}),
     };
 
     try {
@@ -4830,6 +4837,28 @@ export async function agentDecide(
         providerConfig.model = options.model;
     }
 
+    // ── OpenClaw Relay Mode ──────────────────────────────────────────────────
+    // When talking to OpenClaw agents (model starts with "openclaw:"), bypass ALL
+    // Skales system prompt construction, tool injection, persona, and identity layers.
+    // The gateway handles everything: SOUL.md identity, tools, context, memory.
+    // Skales acts as a clean relay — just forwards the conversation messages.
+    if (providerConfig.model?.startsWith('openclaw:')) {
+        // Strip any system messages from the conversation — they contain Skales identity
+        const relayMessages = messages.filter(m => m.role !== 'system');
+        const result = await callProviderWithTools(
+            provider, providerConfig, relayMessages, [], // no tools — gateway provides its own
+            options?.signal, options?.callTimeoutMs ?? 120_000,
+            undefined
+        );
+        if (!result.success) {
+            return { decision: 'error', error: result.error, tokensUsed: 0, model: providerConfig.model, provider };
+        }
+        if (result.toolCalls && result.toolCalls.length > 0) {
+            return { decision: 'tool', toolCalls: result.toolCalls, response: result.response || '', tokensUsed: result.tokensUsed || 0, model: providerConfig.model, provider };
+        }
+        return { decision: 'response', response: result.response || '', tokensUsed: result.tokensUsed || 0, model: providerConfig.model, provider };
+    }
+
     // Apply provider-specific model defaults BEFORE vision routing so isVisionCapableModel works correctly
     if (!providerConfig.model) {
         if (provider === 'google') providerConfig.model = 'gemini-2.0-flash';
@@ -5328,6 +5357,29 @@ export async function processMessageWithTools(
         onStep?: (step: { type: 'thinking' | 'tool_call' | 'tool_result'; content: string; toolName?: string }) => void;
     }
 ): Promise<OrchestratorResult> {
+
+    // ── OpenClaw Relay Mode ────────────────────────────────────────────────
+    // When the model starts with "openclaw:", skip the entire ReAct loop,
+    // system prompt injection, memory, and tools. Relay the user message
+    // directly through agentDecide (which handles the gateway call).
+    if (options?.model?.startsWith('openclaw:')) {
+        const relayMessages: { role: string; content: string }[] = [
+            ...history.filter(m => m.role !== 'system'),
+            { role: 'user', content: message },
+        ];
+        const result = await agentDecide(relayMessages, {
+            model: options.model,
+            provider: options.provider,
+            noTools: true,
+        });
+        return {
+            response: result.decision === 'error' ? `⚠️ ${result.error}` : (result.response || ''),
+            toolResults: [],
+            tokensUsed: result.tokensUsed ?? 0,
+            model: result.model ?? options.model,
+            provider: result.provider ?? (options.provider || ''),
+        };
+    }
 
     // ── ReAct Loop Configuration ────────────────────────────────────────────
     // Real autonomous execution requires multiple tool-call iterations:

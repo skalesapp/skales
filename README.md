@@ -161,6 +161,8 @@ If you find this useful, a ⭐ helps others discover it
 
 **🤝 Agent-to-Agent Protocol** - `/api/agent-sync` endpoint for multi-Skales collaboration on the same network.
 
+**🦞 OpenClaw Integration** - Connect Skales to an [OpenClaw](https://github.com/nichochar/openclaw) multi-agent gateway running on Docker. Auto-discovers agents from `~/.openclaw/openclaw.json`, syncs emojis and names, and routes conversations through the gateway in clean relay mode — no Skales prompt injection, letting each agent use its own identity (SOUL.md). Built-in agents (Code Assistant, Content Writer, etc.) auto-upgrade to OpenClaw equivalents when available. Fully backward compatible — works without OpenClaw installed.
+
 **💾 Export / Import Backup** - One-click ZIP backup of all settings, memories, and integrations.
 
 ---

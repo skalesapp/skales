@@ -422,16 +422,21 @@ function createWindow() {
 function createBuddyWindow() {
   if (buddyWindow && !buddyWindow.isDestroyed()) return;
 
-  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  console.log('[Skales] Screen workAreaSize:', width, 'x', height);
+  // Place buddy on the "media" display (first non-primary), or fall back to primary
+  const allDisplays = screen.getAllDisplays();
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const mediaDisplay = allDisplays.find(d => d.id !== primaryDisplay.id) || primaryDisplay;
+  const { width, height } = mediaDisplay.workAreaSize;
+  const { x: dispX, y: dispY } = mediaDisplay.workArea;
+  console.log('[Skales] Buddy display:', mediaDisplay.id, '| workArea:', dispX, dispY, width, 'x', height);
 
   // ── Positioning guard: clamp so the window is always fully on-screen ──────
   const WIN_W    = 210;  // narrower — eliminates dead whitespace left of gecko
   const WIN_H    = 400;
   const MARGIN_X = 10;  // px gap from right edge of work area
   const MARGIN_Y = 0;   // 0 = window bottom flush with taskbar top
-  const posX = Math.max(0, width  - WIN_W - MARGIN_X);
-  const posY = Math.max(0, height - WIN_H - MARGIN_Y);
+  const posX = Math.max(dispX, dispX + width  - WIN_W - MARGIN_X);
+  const posY = Math.max(dispY, dispY + height - WIN_H - MARGIN_Y);
   console.log('[Skales] Buddy window position → x:', posX, 'y:', posY);
 
   buddyWindow = new BrowserWindow({

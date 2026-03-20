@@ -148,8 +148,9 @@ export default function AgentsPage() {
         router.push(`/chat?agent=${id}`);
     };
 
-    // Skales is rendered as a separate hardcoded card above — all agents from listAgents() are editable
-    const isBuiltIn = (_id: string) => false;
+    // OpenClaw agents are read-only (managed via OpenClaw config)
+    const isOpenClaw = (id: string) => id.startsWith('oc-');
+    const isBuiltIn = (id: string) => isOpenClaw(id);
 
     if (loading) {
         return (
@@ -184,71 +185,85 @@ export default function AgentsPage() {
             {/* Agents Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
-                {/* Skales — Default Read-Only Agent */}
-                <div className="rounded-2xl border-2 p-4 transition-all relative"
-                    style={{ background: 'var(--surface)', borderColor: 'rgba(132,204,22,0.4)' }}>
-                    <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                            <div className="text-3xl">🦎</div>
-                            <div>
-                                <div className="flex items-center gap-1.5">
-                                    <h3 className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{t('agents.skales.name')}</h3>
-                                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-lime-500/15 text-lime-500 font-bold uppercase">{t('agents.skales.default')}</span>
+                {/* Default Agent — dynamically resolved from OpenClaw or fallback */}
+                {(() => {
+                    const def = agents.find(a => a.isDefault);
+                    const defEmoji = def?.emoji || '🦎';
+                    const defName = def?.name || 'Skales';
+                    const defDesc = def?.description || t('agents.skales.desc');
+                    const defId = def?.id || 'skales';
+                    const defCaps = def?.capabilities || ['chat', 'tasks', 'tools', 'memory'];
+                    return (
+                        <div className="rounded-2xl border-2 p-4 transition-all relative"
+                            style={{ background: 'var(--surface)', borderColor: 'rgba(132,204,22,0.4)' }}>
+                            <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                    <div className="text-3xl">{defEmoji}</div>
+                                    <div>
+                                        <div className="flex items-center gap-1.5">
+                                            <h3 className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{defName}</h3>
+                                            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-lime-500/15 text-lime-500 font-bold uppercase">{t('agents.skales.default')}</span>
+                                            {def?.id?.startsWith('oc-') && (
+                                                <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase" style={{ background: 'rgba(249,115,22,0.15)', color: '#f97316' }}>
+                                                    OpenClaw
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('agents.skales.alwaysAvailable')}</p>
+                                    </div>
                                 </div>
-                                <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{t('agents.skales.alwaysAvailable')}</p>
+                                <div className="relative">
+                                    <button
+                                        onMouseEnter={() => setShowTooltip(true)}
+                                        onMouseLeave={() => setShowTooltip(false)}
+                                        className="p-1 rounded-lg hover:bg-[var(--surface-light)] transition-colors"
+                                    >
+                                        <Icon icon={Info} size={14} style={{ color: 'var(--text-muted)' }} />
+                                    </button>
+                                    {showTooltip && (
+                                        <div className="absolute right-0 top-8 z-50 w-64 p-3 rounded-xl text-xs shadow-xl animate-fadeIn"
+                                            style={{ background: 'var(--surface-light)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
+                                            <p className="font-bold mb-1" style={{ color: 'var(--text-primary)' }}>About {defName}</p>
+                                            <p>{defName} is the default agent. {def?.id?.startsWith('oc-') ? 'Powered by the OpenClaw gateway running on Docker.' : 'Uses the active model from Settings.'} You cannot edit or delete it.</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
+                                {defDesc}
+                            </p>
+                            <div className="flex flex-wrap gap-1 mb-3">
+                                {defCaps.slice(0, 5).map(cap => (
+                                    <span key={cap} className="px-2 py-0.5 rounded-full text-[10px] font-medium"
+                                        style={{ background: 'var(--surface-light)', color: 'var(--text-muted)' }}>
+                                        {cap}
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => handleExecute(defId)}
+                                    className="flex-1 px-3 py-2 rounded-lg font-medium text-xs transition-all hover:bg-lime-500 hover:text-black"
+                                    style={{ background: 'var(--surface-light)', color: 'var(--text-primary)' }}
+                                >
+                                    <Icon icon={Play} size={12} className="inline mr-1" />
+                                    {t('agents.run')}
+                                </button>
+                                <button
+                                    disabled
+                                    className="px-3 py-2 rounded-lg text-xs opacity-40 cursor-not-allowed"
+                                    style={{ background: 'var(--surface-light)', color: 'var(--text-muted)' }}
+                                    title={t('agents.skales.cannotEdit')}
+                                >
+                                    <Icon icon={Lock} size={12} />
+                                </button>
                             </div>
                         </div>
-                        {/* Info Tooltip */}
-                        <div className="relative">
-                            <button
-                                onMouseEnter={() => setShowTooltip(true)}
-                                onMouseLeave={() => setShowTooltip(false)}
-                                className="p-1 rounded-lg hover:bg-[var(--surface-light)] transition-colors"
-                            >
-                                <Icon icon={Info} size={14} style={{ color: 'var(--text-muted)' }} />
-                            </button>
-                            {showTooltip && (
-                                <div className="absolute right-0 top-8 z-50 w-64 p-3 rounded-xl text-xs shadow-xl animate-fadeIn"
-                                    style={{ background: 'var(--surface-light)', border: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
-                                    <p className="font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{t('agents.skales.about')}</p>
-                                    <p>Skales is the main AI agent. It uses the <strong>active model</strong> configured in your Settings. You cannot edit or delete it.</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>
-                        {t('agents.skales.desc')}
-                    </p>
-                    <div className="flex flex-wrap gap-1 mb-3">
-                        {[t('agents.capabilities.chat'), t('agents.capabilities.tasks'), t('agents.capabilities.tools'), t('agents.capabilities.memory')].map(cap => (
-                            <span key={cap} className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-                                style={{ background: 'var(--surface-light)', color: 'var(--text-muted)' }}>
-                                {cap}
-                            </span>
-                        ))}
-                    </div>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => handleExecute('skales')}
-                            className="flex-1 px-3 py-2 rounded-lg font-medium text-xs transition-all hover:bg-lime-500 hover:text-black"
-                            style={{ background: 'var(--surface-light)', color: 'var(--text-primary)' }}
-                        >
-                            <Icon icon={Play} size={12} className="inline mr-1" />
-                            {t('agents.run')}
-                        </button>
-                        <button
-                            disabled
-                            className="px-3 py-2 rounded-lg text-xs opacity-40 cursor-not-allowed"
-                            style={{ background: 'var(--surface-light)', color: 'var(--text-muted)' }}
-                            title={t('agents.skales.cannotEdit')}
-                        >
-                            <Icon icon={Lock} size={12} />
-                        </button>
-                    </div>
-                </div>
+                    );
+                })()}
 
-                {/* All Other Agents */}
-                {agents.map(agent => (
+                {/* Skales Custom Agents (excluding default, shown above) */}
+                {agents.filter(a => !isOpenClaw(a.id) && !a.isDefault).map(agent => (
                     <div key={agent.id}
                         className="rounded-2xl border p-4 hover:border-lime-500/50 transition-all group cursor-pointer"
                         style={{ background: 'var(--surface)', borderColor: 'var(--border)' }}
@@ -319,6 +334,54 @@ export default function AgentsPage() {
                     </div>
                 ))}
             </div>
+
+            {/* OpenClaw Agents Section */}
+            {agents.filter(a => isOpenClaw(a.id) && !a.isDefault).length > 0 && (
+                <>
+                    <div className="flex items-center gap-2 mt-8">
+                        <span className="text-xl">🦞</span>
+                        <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>OpenClaw Agents</h2>
+                        <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase" style={{ background: 'rgba(249,115,22,0.15)', color: '#f97316' }}>
+                            via Gateway
+                        </span>
+                    </div>
+                    <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>
+                        Managed by your local OpenClaw gateway. Edit these in OpenClaw config.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {agents.filter(a => isOpenClaw(a.id) && !a.isDefault).map(agent => (
+                            <div key={agent.id}
+                                className="rounded-2xl border p-4 transition-all group"
+                                style={{ background: 'var(--surface)', borderColor: 'rgba(249,115,22,0.25)' }}>
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex items-center gap-3">
+                                        <div className="text-3xl">{agent.emoji}</div>
+                                        <div>
+                                            <h3 className="font-bold text-sm" style={{ color: 'var(--text-primary)' }}>{agent.name}</h3>
+                                            <p className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>{agent.id.replace('oc-', '')}</p>
+                                        </div>
+                                    </div>
+                                    <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase" style={{ background: 'rgba(249,115,22,0.15)', color: '#f97316' }}>OpenClaw</span>
+                                </div>
+                                <p className="text-xs mb-3" style={{ color: 'var(--text-secondary)' }}>{agent.description}</p>
+                                {agent.model && (
+                                    <p className="text-[10px] mb-3 font-mono" style={{ color: 'var(--text-muted)' }}>
+                                        {agent.model}
+                                    </p>
+                                )}
+                                <button
+                                    onClick={() => handleExecute(agent.id)}
+                                    className="w-full px-3 py-2 rounded-lg font-medium text-xs transition-all hover:bg-orange-500 hover:text-white"
+                                    style={{ background: 'var(--surface-light)', color: 'var(--text-primary)' }}
+                                >
+                                    <Icon icon={Play} size={12} className="inline mr-1" />
+                                    Chat
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                </>
+            )}
 
             {/* Create / Edit Modal */}
             {showModal && (
