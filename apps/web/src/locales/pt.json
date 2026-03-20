@@ -131,7 +131,7 @@
     },
     "summarize": {
       "tooltip": "Resumir mensagem — clique para ativar/desativar",
-      "button": "Resumir",
+      "button": "Resumir"
     },
     "readFile": "Ler o arquivo {{file.name}}",
     "imageGen": {
