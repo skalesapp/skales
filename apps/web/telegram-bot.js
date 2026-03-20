@@ -24,7 +24,7 @@ const DATA_DIR = process.env.SKALES_DATA_DIR || path.join(os.homedir(), '.skales
 // Dynamic API base URL — reads the port Electron/Next.js is actually bound to.
 // SKALES_PORT is injected by telegram.ts when spawning this process.
 // Fallback to 3000 for backwards compatibility and standalone invocations.
-const API_BASE = `http://localhost:${process.env.SKALES_PORT || 3000}`;
+const API_BASE = `http://127.0.0.1:${process.env.SKALES_PORT || 3000}`;
 
 const TELEGRAM_FILE = path.join(DATA_DIR, 'integrations', 'telegram.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');

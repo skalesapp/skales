@@ -66,8 +66,8 @@ function sendToSkales(message, userId, username) {
             username,
         });
         const options = {
-            hostname: 'localhost',
-            port: 3000,
+            hostname: '127.0.0.1', // Use IPv4 to avoid IPv6 resolution issues,
+            port: process.env.SKALES_PORT || 3000,
             path: '/api/chat',
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
