@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LM Studio Setup — Skales Guide</title>
+    <meta name="description" content="How to connect LM Studio to Skales for fully offline, local AI. Step-by-step setup guide with troubleshooting.">
+    <style>
+        :root {
+            --bg-main: #0a0a0f;
+            --bg-surface: #141419;
+            --bg-surface-hover: #1c1c24;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --accent-lime: #84cc16;
+            --accent-lime-dim: rgba(132, 204, 22, 0.1);
+            --accent-blue: #3b82f6;
+            --accent-blue-dim: rgba(59, 130, 246, 0.1);
+            --accent-amber: #f59e0b;
+            --accent-amber-dim: rgba(245, 158, 11, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg-main); color: var(--text-primary); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-lime); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { font-family: var(--font-mono); background: rgba(255,255,255,0.07); border: 1px solid var(--border-subtle); padding: 0.15em 0.45em; border-radius: 4px; font-size: 0.88em; }
+        pre { background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1rem 0; }
+        pre code { background: none; border: none; padding: 0; font-size: 0.9em; }
+        h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; }
+        h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+        h2 { font-size: 1.5rem; margin-bottom: 0.75rem; margin-top: 2.5rem; }
+        h3 { font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+        p { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        ul, ol { padding-left: 1.5rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.5rem; }
+
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 64px; border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; background: rgba(10,10,15,0.95); backdrop-filter: blur(12px); z-index: 100; }
+        .nav-brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
+
+        .hero { padding: 4rem 2rem 3rem; text-align: center; max-width: 860px; margin: 0 auto; }
+        .hero-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+        .hero h1 { margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; max-width: 620px; margin: 0 auto 1.5rem; }
+        .badge { display: inline-block; background: var(--accent-lime-dim); color: var(--accent-lime); border: 1px solid rgba(132,204,22,0.3); border-radius: 20px; padding: 0.25rem 0.75rem; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+
+        .content { max-width: 860px; margin: 0 auto; padding: 0 2rem 5rem; }
+        .section { margin-bottom: 3rem; }
+
+        .step { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.25rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; margin-bottom: 0.75rem; }
+        .step-num { flex-shrink: 0; width: 28px; height: 28px; background: var(--accent-lime-dim); border: 1px solid rgba(132,204,22,0.3); border-radius: 50%; color: var(--accent-lime); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+        .step-body { flex: 1; }
+        .step-body p { margin: 0; }
+
+        .box { border-radius: 10px; padding: 1rem 1.25rem; margin: 1.25rem 0; border: 1px solid; }
+        .box-info { background: var(--accent-blue-dim); border-color: rgba(59,130,246,0.3); }
+        .box-warn { background: var(--accent-amber-dim); border-color: rgba(245,158,11,0.3); }
+        .box-title { font-weight: 600; margin-bottom: 0.35rem; }
+        .box-info .box-title { color: var(--accent-blue); }
+        .box-warn .box-title { color: var(--accent-amber); }
+        .box p { margin: 0; }
+
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+        .feature-item { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1rem; }
+        .feature-item strong { display: block; margin-bottom: 0.25rem; color: var(--text-primary); }
+        .feature-item span { font-size: 0.875rem; color: var(--text-secondary); }
+
+        .trouble { border-collapse: collapse; width: 100%; margin-top: 0.75rem; font-size: 0.9rem; }
+        .trouble th, .trouble td { padding: 0.65rem 0.75rem; border: 1px solid var(--border-subtle); text-align: left; }
+        .trouble th { background: var(--bg-surface); color: var(--text-primary); }
+        .trouble td { color: var(--text-secondary); vertical-align: top; }
+        .trouble td:first-child { color: var(--text-primary); white-space: nowrap; }
+
+        .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem; }
+        .back-link:hover { color: var(--text-primary); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            .hero { padding: 2.5rem 1.25rem 2rem; }
+            .content { padding: 0 1.25rem 3rem; }
+            nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="skales-guide.html" class="nav-brand">🦎 Skales Guide</a>
+    <div class="nav-links">
+        <a href="skales-guide.html#providers">Providers</a>
+        <a href="setup-koboldcpp.html">KoboldCpp</a>
+        <a href="roadmap.html">Roadmap</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="badge">Local AI Setup</div>
+    <div class="hero-icon">🎬</div>
+    <h1>LM Studio + Skales</h1>
+    <p>Desktop app for discovering and running local AI models. Built-in model browser, automatic GPU acceleration, and an OpenAI-compatible server — no command line needed.</p>
+</div>
+
+<div class="content">
+    <a href="skales-guide.html" class="back-link">← Back to Skales Guide</a>
+
+    <!-- STEP 1: DOWNLOAD -->
+    <div class="section">
+        <h2>1 · Download LM Studio</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Go to <a href="https://lmstudio.ai" target="_blank" rel="noopener">lmstudio.ai</a> and download the installer for your OS (Windows, macOS, or Linux).</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>Install and launch LM Studio. The app opens to the <strong>Discover</strong> tab where you can search for models.</p>
+            </div>
+        </div>
+
+        <div class="box box-info">
+            <div class="box-title">💡 Recommended Models</div>
+            <p>For a great first experience, search for: <strong>Llama-3.1-8B-Instruct</strong>, <strong>Mistral-7B-Instruct</strong>, or <strong>Qwen2-7B-Instruct</strong>. Choose a Q4_K_M quantization for a balance of speed and quality.</p>
+        </div>
+    </div>
+
+    <!-- STEP 2: DOWNLOAD A MODEL -->
+    <div class="section">
+        <h2>2 · Download a Model</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>In LM Studio, click the <strong>Search</strong> (🔍) icon in the left sidebar to open the model browser.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>Search for a model name (e.g. <code>llama-3.1-8b-instruct</code>), select a version, and click <strong>Download</strong>.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p>Wait for the download to complete. Models are stored in <code>~/LM Studio/models/</code>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: START THE SERVER -->
+    <div class="section">
+        <h2>3 · Start the Local Server</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Click the <strong>Local Server</strong> icon (↔) in the left sidebar.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>Select your downloaded model from the model dropdown at the top.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p>Click <strong>Start Server</strong>. You'll see a green status: <code>Server running on port 1234</code>.</p>
+            </div>
+        </div>
+
+        <div class="box box-info">
+            <div class="box-title">ℹ️ Default Port</div>
+            <p>LM Studio's default server port is <strong>1234</strong>. You can change this in the server settings if another app is already using that port.</p>
+        </div>
+    </div>
+
+    <!-- STEP 4: CONFIGURE SKALES -->
+    <div class="section">
+        <h2>4 · Configure Skales</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Open Skales → <strong>Settings</strong> → <strong>LLM Provider</strong></p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>Select <strong>OpenAI Compatible</strong> from the provider dropdown.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p>Set the endpoint URL:</p>
+                <pre><code>http://127.0.0.1:1234/v1</code></pre>
+                <p>Use <code>127.0.0.1</code> instead of <code>localhost</code> to avoid IPv6 resolution issues.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+                <p>Leave the <strong>API Key</strong> field empty — LM Studio's local server doesn't require authentication.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+                <p>Click <strong>Fetch Models</strong>. Your loaded model will appear in the dropdown.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+                <p><strong>Tool Calling</strong> is ON by default. Select your model and start chatting.</p>
+            </div>
+        </div>
+
+        <div class="box box-info">
+            <div class="box-title">✅ Verification</div>
+            <p>Send a test message in Skales. If you get a reply, the connection is working. You can also check LM Studio's server log — it shows each incoming request.</p>
+        </div>
+    </div>
+
+    <!-- TIPS -->
+    <div class="section">
+        <h2>Tips &amp; Best Practices</h2>
+
+        <div class="feature-grid">
+            <div class="feature-item">
+                <strong>GPU Acceleration</strong>
+                <span>LM Studio automatically detects and uses your GPU. Check the server settings to configure GPU layer offloading.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Multiple Models</strong>
+                <span>You can have multiple models downloaded. Switch between them in LM Studio's server tab — then click Fetch Models in Skales to update.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Context Size</strong>
+                <span>Reduce the context window in LM Studio's server settings for faster responses on limited hardware.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Use 127.0.0.1</strong>
+                <span>Always use 127.0.0.1 in the endpoint URL, not localhost — avoids IPv6 issues on Windows.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Quantization</strong>
+                <span>Q4_K_M is the sweet spot. Download Q5_K_M if you have extra RAM. Q2_K if you're on a very constrained system.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Keep Server Running</strong>
+                <span>LM Studio's server must be running while you use Skales. It doesn't start automatically — open LM Studio and start the server each session.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="section">
+        <h2>Troubleshooting</h2>
+
+        <table class="trouble">
+            <thead>
+                <tr>
+                    <th>Problem</th>
+                    <th>Fix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Connection refused</td>
+                    <td>Start the local server in LM Studio first. Click the ↔ icon → select a model → click <strong>Start Server</strong>.</td>
+                </tr>
+                <tr>
+                    <td>Fetch Models returns empty</td>
+                    <td>The server is not running, or the port doesn't match. Verify LM Studio shows "Server running on port 1234" and check your Skales endpoint URL.</td>
+                </tr>
+                <tr>
+                    <td>Slow responses</td>
+                    <td>Try a smaller model (3B–7B), or enable more GPU layers in LM Studio's server settings under <strong>GPU Offload</strong>.</td>
+                </tr>
+                <tr>
+                    <td>"Ollama not installed"</td>
+                    <td>Select <strong>OpenAI Compatible</strong> in Skales Settings — not the Ollama provider. LM Studio uses the OpenAI-compatible endpoint.</td>
+                </tr>
+                <tr>
+                    <td>Tool calls failing</td>
+                    <td>Ensure the <strong>Tool Calling</strong> toggle is ON in Skales Settings. Use an instruct-tuned model (not a base model).</td>
+                </tr>
+                <tr>
+                    <td>Wrong port</td>
+                    <td>Check LM Studio's server tab for the actual port in use. Update the endpoint URL in Skales Settings accordingly.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- BACK -->
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; gap: 1.5rem; flex-wrap: wrap;">
+        <a href="skales-guide.html" style="color: var(--text-secondary);">← Back to Skales Guide</a>
+        <a href="setup-koboldcpp.html" style="color: var(--text-secondary);">KoboldCpp Setup Guide →</a>
+        <a href="roadmap.html" style="color: var(--text-secondary);">Roadmap →</a>
+    </div>
+</div>
+
+</body>
+</html>

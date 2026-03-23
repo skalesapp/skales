@@ -580,6 +580,7 @@
                 <span>🦎</span> Skales
             </a>
             <div class="nav-links">
+                <a href="#whats-new" style="color: var(--accent-lime);">What's New</a>
                 <a href="#getting-started">Getting Started</a>
                 <a href="#providers">AI Providers</a>
                 <a href="#features">Features</a>
@@ -593,6 +594,7 @@
     <section class="hero">
         <div class="container">
             <div class="badge">Guide</div>
+            <div class="badge" style="margin-left: 0.5rem; background: var(--surface-2, rgba(132,204,22,0.12)); color: var(--accent-lime, #84cc16); border-color: rgba(132,204,22,0.3);">v7.5.0</div>
             <div class="hero-logo">🦎</div>
             <h1>Skales Guide</h1>
             <p class="hero-subtitle">
@@ -601,6 +603,86 @@
             <div>
                 <a href="#getting-started" class="btn btn-primary">Get Started</a>
                 <a href="#features" class="btn btn-secondary">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT'S NEW IN v7.5.0 -->
+    <section id="whats-new" class="section">
+        <div class="container">
+            <div class="badge" style="background: var(--accent-lime-dim); color: var(--accent-lime); border-color: rgba(132,204,22,0.3); margin-bottom: 1.5rem;">v7.5.0 — The Social Update</div>
+            <h2>What's New in v7.5.0</h2>
+            <p>March 2026 — the biggest Skales update yet. New community features, a global hotkey overlay, smarter Desktop Buddy, and full privacy controls.</p>
+
+            <div class="grid">
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>⚡ Spotlight Bar</h3>
+                    <p>Press <code>Cmd+Shift+S</code> (Mac) or <code>Ctrl+Shift+S</code> (Windows/Linux) anywhere on your desktop. A floating overlay lets you ask Skales a question, capture your screen for visual context, and get an instant answer — without opening the full app. Toggle in Settings → Appearance.</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>🧭 Discover Feed</h3>
+                    <p>Join the anonymous community feed with your own gamertag. See what others are building, upvote entries, and browse by category. Navigate to <strong>Discover</strong> in the sidebar. Your identity stays private — no real names, no personal data.</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>🤝 Agent Swarm (Beta)</h3>
+                    <p>Delegate tasks between Skales instances on your local network. Hub-and-spoke visualization, task history, quick-delegate, and chat integration hints. Enable mDNS in Settings, then navigate to <strong>Swarm</strong>.</p>
+                </div>
+                <div class="card">
+                    <h3>💬 Mini-Chat Mode</h3>
+                    <p>Shrink Skales to a compact, always-on-top chat window. Click <strong>Mini Mode</strong> in the chat toolbar. The window stays on top of other apps so your AI is always one click away.</p>
+                </div>
+                <div class="card">
+                    <h3>🔔 Sound Notifications</h3>
+                    <p>Audible feedback when tasks complete, notifications arrive, or Swarm tasks finish. Includes four sound themes. Toggle in Settings → Notifications.</p>
+                </div>
+                <div class="card">
+                    <h3>🔔 Notification Center</h3>
+                    <p>Dedicated notification page with read/unread state, category filters, and admin broadcast support. Navigate to <strong>Notifications</strong> in the sidebar.</p>
+                </div>
+                <div class="card">
+                    <h3>📅 Calendar Month View + .ics Export</h3>
+                    <p>Full month grid with event previews and click-to-navigate in the Planner. Download your plan as a <code>.ics</code> calendar file without connecting a provider.</p>
+                </div>
+                <div class="card">
+                    <h3>🤖 Desktop Buddy Intelligence</h3>
+                    <p>Proactive messages — morning greetings, idle check-ins, task reminders — now fire independently of Autonomous Mode. Configure frequency in Settings → Friend Mode.</p>
+                </div>
+                <div class="card">
+                    <h3>🔒 Privacy &amp; Security</h3>
+                    <p><strong>Delete My Data</strong> button in Settings → Security &amp; Privacy. Two-step confirmation purges all server-side telemetry, bug reports, and feedback by IP hash. Full GDPR compliance. Signed macOS builds — no more terminal commands at first launch.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 2.5rem;">
+                <h3>🗑️ Retired: Network &amp; DLNA</h3>
+                <p>The Network Scanner and DLNA/UPnP casting features have been retired. The <code>/network</code> route now redirects to Swarm. DLNA casting will return as a dedicated Smart Home Skill in a future update.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW TO USE SPOTLIGHT -->
+    <section id="spotlight" class="section">
+        <div class="container">
+            <h2>How to Use Spotlight</h2>
+            <p>Spotlight is a floating quick-ask overlay accessible from anywhere on your desktop — even when Skales is minimized to the tray.</p>
+
+            <ol class="step-list">
+                <li>Press <strong>Cmd+Shift+S</strong> (Mac) or <strong>Ctrl+Shift+S</strong> (Windows/Linux)</li>
+                <li>Type your question in the input field</li>
+                <li>Click the <strong>👁 eye icon</strong> to capture your current screen for visual context</li>
+                <li>Press <strong>Enter</strong> to send and get an instant answer</li>
+                <li>Press <strong>Escape</strong> or click anywhere outside the bar to close it</li>
+                <li>Press the shortcut again to toggle it closed if already open</li>
+            </ol>
+
+            <div class="highlight-box info">
+                <h3>💡 Screen Capture</h3>
+                <p>The eye icon takes a screenshot of your entire screen and attaches it to your query. Use it to ask "What's this error?" or "Help me understand this diagram" — Skales will analyze what's on screen and respond.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>Settings</h3>
+                <p>Toggle the Spotlight Bar on or off in <strong>Settings → Notifications → Spotlight Bar</strong>. Disabling it also unregisters the global keyboard shortcut so it never interferes with other apps.</p>
             </div>
         </div>
     </section>
@@ -676,6 +758,27 @@
         </div>
     </section>
 
+    <!-- LOCAL AI SETUP GUIDES -->
+    <section id="local-ai" class="section">
+        <div class="container">
+            <h2>Local AI Setup Guides</h2>
+            <p>Skales works with any OpenAI-compatible local LLM server. Choose your preferred runtime:</p>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>🦙 KoboldCpp</h3>
+                    <p>Single-file executable, runs any GGUF model. Built-in TTS, STT, and image generation. Tool calling supported.</p>
+                    <a href="setup-koboldcpp.html" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">KoboldCpp Setup Guide →</a>
+                </div>
+                <div class="card">
+                    <h3>🎬 LM Studio</h3>
+                    <p>Desktop app with model browser and local server. Easy GPU acceleration. OpenAI-compatible endpoint built in.</p>
+                    <a href="setup-lmstudio.html" class="btn btn-secondary" style="margin-top: 1rem; display: inline-block;">LM Studio Setup Guide →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- KOBOLDCPP SETUP -->
     <section id="koboldcpp" class="section">
         <div class="container">
@@ -683,20 +786,23 @@
             <p>KoboldCpp brings local AI to your PC with one-click model loading and built-in features.</p>
 
             <ol class="step-list">
-                <li>Download from <code>koboldai.org/cpp</code></li>
+                <li>Download from <a href="https://github.com/LostRuins/koboldcpp" target="_blank" rel="noopener">github.com/LostRuins/koboldcpp</a></li>
                 <li>Launch KoboldCpp and select a GGUF model to load</li>
-                <li>In Skales, go to Settings > AI Provider and choose <strong>OpenAI Compatible</strong></li>
-                <li>Enter: <code>http://127.0.0.1:5001/v1</code></li>
-                <li>Leave the API key field blank</li>
-                <li>Any model name works when router mode is disabled</li>
+                <li>In Skales, go to Settings &gt; AI Provider and choose <strong>OpenAI Compatible</strong></li>
+                <li>Enter: <code>http://127.0.0.1:5001/v1</code> (use 127.0.0.1, not localhost)</li>
+                <li>Leave the API key field blank — KoboldCpp doesn't require one</li>
+                <li>Click <strong>Fetch Models</strong> to verify connection</li>
             </ol>
+
+            <p style="margin-top: 1rem;"><a href="setup-koboldcpp.html">→ Full KoboldCpp setup guide with Vision, TTS, and troubleshooting</a></p>
 
             <h3 style="margin-top: 2rem;">Features</h3>
             <ul class="feature-list">
                 <li>Built-in Text-to-Speech (TTS)</li>
                 <li>Built-in Speech-to-Text (STT)</li>
                 <li>Built-in image generation</li>
-                <li>Basic tool calling support</li>
+                <li>Tool calling (JSON fixing built in)</li>
+                <li>Multimodal / Vision support</li>
                 <li>Uncapped timeout for slower hardware</li>
             </ul>
         </div>
@@ -788,6 +894,30 @@
                 <div class="card">
                     <h3>✅ Tasks</h3>
                     <p>Native to-do management integrated with your AI.</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>⚡ Spotlight Bar <span style="font-size: 0.7em; background: var(--accent-lime-dim); color: var(--accent-lime); border: 1px solid rgba(132,204,22,0.3); border-radius: 20px; padding: 0.1em 0.5em; margin-left: 0.25em;">NEW</span></h3>
+                    <p>Global hotkey quick-ask overlay with screen capture. Press Cmd/Ctrl+Shift+S from anywhere.</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>🧭 Discover Feed <span style="font-size: 0.7em; background: var(--accent-lime-dim); color: var(--accent-lime); border: 1px solid rgba(132,204,22,0.3); border-radius: 20px; padding: 0.1em 0.5em; margin-left: 0.25em;">NEW</span></h3>
+                    <p>Anonymous community feed. See what others are building, upvote, and join with a gamertag.</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>🤝 Agent Swarm <span style="font-size: 0.7em; background: var(--accent-lime-dim); color: var(--accent-lime); border: 1px solid rgba(132,204,22,0.3); border-radius: 20px; padding: 0.1em 0.5em; margin-left: 0.25em;">NEW</span></h3>
+                    <p>Delegate tasks between Skales instances on your LAN. Hub-and-spoke visualization.</p>
+                </div>
+                <div class="card" style="border-left: 3px solid var(--accent-lime);">
+                    <h3>💬 Mini-Chat Mode <span style="font-size: 0.7em; background: var(--accent-lime-dim); color: var(--accent-lime); border: 1px solid rgba(132,204,22,0.3); border-radius: 20px; padding: 0.1em 0.5em; margin-left: 0.25em;">NEW</span></h3>
+                    <p>Compact always-on-top chat window. Toggle from the chat header.</p>
+                </div>
+                <div class="card">
+                    <h3>🔔 Sound Notifications</h3>
+                    <p>Audible feedback when tasks complete. Four built-in sound themes, configurable in Settings.</p>
+                </div>
+                <div class="card">
+                    <h3>🔔 Notification Center</h3>
+                    <p>Dedicated page for all notifications with read/unread state and admin broadcast support.</p>
                 </div>
             </div>
         </div>

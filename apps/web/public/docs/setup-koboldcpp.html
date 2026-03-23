@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KoboldCpp Setup — Skales Guide</title>
+    <meta name="description" content="How to connect KoboldCpp to Skales for fully offline, local AI. Step-by-step setup for tool calling, Vision, TTS, and troubleshooting.">
+    <style>
+        :root {
+            --bg-main: #0a0a0f;
+            --bg-surface: #141419;
+            --bg-surface-hover: #1c1c24;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --accent-lime: #84cc16;
+            --accent-lime-dim: rgba(132, 204, 22, 0.1);
+            --accent-blue: #3b82f6;
+            --accent-blue-dim: rgba(59, 130, 246, 0.1);
+            --accent-amber: #f59e0b;
+            --accent-amber-dim: rgba(245, 158, 11, 0.1);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg-main); color: var(--text-primary); font-family: var(--font-sans); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+        a { color: var(--accent-lime); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        code { font-family: var(--font-mono); background: rgba(255,255,255,0.07); border: 1px solid var(--border-subtle); padding: 0.15em 0.45em; border-radius: 4px; font-size: 0.88em; }
+        pre { background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1rem 0; }
+        pre code { background: none; border: none; padding: 0; font-size: 0.9em; }
+        h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; }
+        h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+        h2 { font-size: 1.5rem; margin-bottom: 0.75rem; margin-top: 2.5rem; }
+        h3 { font-size: 1.15rem; margin-bottom: 0.5rem; margin-top: 1.5rem; }
+        p { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        ul, ol { padding-left: 1.5rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.5rem; }
+
+        /* Nav */
+        nav { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 64px; border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; background: rgba(10,10,15,0.95); backdrop-filter: blur(12px); z-index: 100; }
+        .nav-brand { font-weight: 700; font-size: 1.1rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+        .nav-links { display: flex; gap: 1.5rem; }
+        .nav-links a { color: var(--text-secondary); font-size: 0.9rem; }
+        .nav-links a:hover { color: var(--text-primary); text-decoration: none; }
+
+        /* Hero */
+        .hero { padding: 4rem 2rem 3rem; text-align: center; max-width: 860px; margin: 0 auto; }
+        .hero-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+        .hero h1 { margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; max-width: 620px; margin: 0 auto 1.5rem; }
+        .badge { display: inline-block; background: var(--accent-lime-dim); color: var(--accent-lime); border: 1px solid rgba(132,204,22,0.3); border-radius: 20px; padding: 0.25rem 0.75rem; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem; }
+
+        /* Content */
+        .content { max-width: 860px; margin: 0 auto; padding: 0 2rem 5rem; }
+        .section { margin-bottom: 3rem; }
+
+        /* Step card */
+        .step { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.25rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px; margin-bottom: 0.75rem; }
+        .step-num { flex-shrink: 0; width: 28px; height: 28px; background: var(--accent-lime-dim); border: 1px solid rgba(132,204,22,0.3); border-radius: 50%; color: var(--accent-lime); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; }
+        .step-body { flex: 1; }
+        .step-body p { margin: 0; }
+
+        /* Info / Warning boxes */
+        .box { border-radius: 10px; padding: 1rem 1.25rem; margin: 1.25rem 0; border: 1px solid; }
+        .box-info { background: var(--accent-blue-dim); border-color: rgba(59,130,246,0.3); }
+        .box-warn { background: var(--accent-amber-dim); border-color: rgba(245,158,11,0.3); }
+        .box-title { font-weight: 600; margin-bottom: 0.35rem; }
+        .box-info .box-title { color: var(--accent-blue); }
+        .box-warn .box-title { color: var(--accent-amber); }
+        .box p { margin: 0; }
+
+        /* Feature grid */
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+        .feature-item { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 0.85rem 1rem; }
+        .feature-item strong { display: block; margin-bottom: 0.25rem; color: var(--text-primary); }
+        .feature-item span { font-size: 0.875rem; color: var(--text-secondary); }
+
+        /* Troubleshoot table */
+        .trouble { border-collapse: collapse; width: 100%; margin-top: 0.75rem; font-size: 0.9rem; }
+        .trouble th, .trouble td { padding: 0.65rem 0.75rem; border: 1px solid var(--border-subtle); text-align: left; }
+        .trouble th { background: var(--bg-surface); color: var(--text-primary); }
+        .trouble td { color: var(--text-secondary); vertical-align: top; }
+        .trouble td:first-child { color: var(--text-primary); white-space: nowrap; }
+
+        /* Back link */
+        .back-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem; }
+        .back-link:hover { color: var(--text-primary); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            .hero { padding: 2.5rem 1.25rem 2rem; }
+            .content { padding: 0 1.25rem 3rem; }
+            nav { padding: 0 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="skales-guide.html" class="nav-brand">🦎 Skales Guide</a>
+    <div class="nav-links">
+        <a href="skales-guide.html#providers">Providers</a>
+        <a href="setup-lmstudio.html">LM Studio</a>
+        <a href="roadmap.html">Roadmap</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <div class="badge">Local AI Setup</div>
+    <div class="hero-icon">🦙</div>
+    <h1>KoboldCpp + Skales</h1>
+    <p>Run any GGUF model locally with one click. Full tool calling, TTS, STT, Vision, and image generation — no subscription, no internet required.</p>
+</div>
+
+<div class="content">
+    <a href="skales-guide.html" class="back-link">← Back to Skales Guide</a>
+
+    <!-- STEP 1: DOWNLOAD -->
+    <div class="section">
+        <h2>1 · Download KoboldCpp</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Go to <a href="https://github.com/LostRuins/koboldcpp" target="_blank" rel="noopener">github.com/LostRuins/koboldcpp</a> and download the latest release for your OS.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p><strong>Windows:</strong> Download <code>koboldcpp.exe</code> — no installation needed, double-click to run.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p><strong>macOS / Linux:</strong> Download the binary, make it executable: <code>chmod +x koboldcpp</code>, then run it.</p>
+            </div>
+        </div>
+
+        <div class="box box-info">
+            <div class="box-title">💡 Which model should I use?</div>
+            <p>Any GGUF instruct model works. Good starting points: <strong>Llama 3.1 8B Instruct</strong>, <strong>Mistral 7B Instruct</strong>, or <strong>Qwen2 7B Instruct</strong>. Download from Hugging Face — search for "Q4_K_M" quantization for a good speed/quality balance.</p>
+        </div>
+    </div>
+
+    <!-- STEP 2: LAUNCH -->
+    <div class="section">
+        <h2>2 · Launch KoboldCpp</h2>
+
+        <div class="step">
+            <div class="step-num">A</div>
+            <div class="step-body">
+                <p><strong>GUI launcher:</strong> Double-click <code>koboldcpp.exe</code>, select your GGUF model file from the file picker, then click <strong>Launch</strong>.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">B</div>
+            <div class="step-body">
+                <p><strong>CLI:</strong> Run from your terminal:</p>
+                <pre><code>koboldcpp model.gguf --port 5001</code></pre>
+            </div>
+        </div>
+
+        <p>Once running, you'll see a message like: <code>Starting Kobold API on port 5001</code>. The web UI is at <code>http://127.0.0.1:5001</code>.</p>
+    </div>
+
+    <!-- STEP 3: CONFIGURE SKALES -->
+    <div class="section">
+        <h2>3 · Configure Skales</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Open Skales → <strong>Settings</strong> → <strong>LLM Provider</strong></p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>Select <strong>OpenAI Compatible</strong> from the provider dropdown.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p>Set the endpoint URL:</p>
+                <pre><code>http://127.0.0.1:5001/v1</code></pre>
+                <p>Use <code>127.0.0.1</code> instead of <code>localhost</code> — this avoids IPv6 resolution issues on some systems.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-body">
+                <p>Leave the <strong>API Key</strong> field empty — KoboldCpp doesn't require authentication.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-body">
+                <p>Click <strong>Fetch Models</strong>. If KoboldCpp is running, the model name will appear in the model dropdown.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-body">
+                <p><strong>Tool Calling</strong> is ON by default. KoboldCpp handles JSON fixing internally, so tools work even with models that don't natively support structured output.</p>
+            </div>
+        </div>
+
+        <div class="box box-info">
+            <div class="box-title">✅ Verification</div>
+            <p>Send a test message in the Skales chat. If you get a response, the connection is working. If "Fetch Models" shows nothing, check that KoboldCpp is running and the port is correct.</p>
+        </div>
+    </div>
+
+    <!-- OPTIONAL: VISION -->
+    <div class="section">
+        <h2>4 · Vision (Optional)</h2>
+        <p>KoboldCpp supports multimodal / vision models (LLaVA, BakLLaVA, etc.).</p>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Load a vision-capable GGUF model in KoboldCpp (must include a <code>mmproj</code> projector file).</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>In Skales Settings → <strong>Vision</strong>, set the Vision URL to the same endpoint:</p>
+                <pre><code>http://127.0.0.1:5001/v1</code></pre>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p>Select the vision model in the Vision model dropdown. You can now send images in chat.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTIONAL: TTS -->
+    <div class="section">
+        <h2>5 · TTS (Optional)</h2>
+        <p>KoboldCpp has a built-in TTS server (also compatible with XTTS-API-Server).</p>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <p>Launch KoboldCpp with a TTS model, or enable the built-in TTS in the launcher UI.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <p>In Skales Settings → <strong>TTS</strong>, set the TTS URL to:</p>
+                <pre><code>http://127.0.0.1:5001</code></pre>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <p>Select <strong>KoboldCpp / XTTS</strong> as the TTS provider and enable voice responses.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERFORMANCE TIPS -->
+    <div class="section">
+        <h2>Performance Tips</h2>
+
+        <div class="feature-grid">
+            <div class="feature-item">
+                <strong>GPU Acceleration</strong>
+                <span>Enable GPU layers in the KoboldCpp launcher for 5–20× faster inference.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Timeout Setting</strong>
+                <span>Increase the request timeout to 120 s+ in Skales Settings for large models on slow hardware.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Context Size</strong>
+                <span>Lower context (2048–4096) speeds up inference significantly on CPU-only setups.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Quantization</strong>
+                <span>Q4_K_M is a good balance. Q5_K_M if you have RAM to spare. Q2_K for very constrained systems.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Tool Call Streaming</strong>
+                <span>KoboldCpp withholds streaming during tool calls to fix JSON — this is normal, not a bug.</span>
+            </div>
+            <div class="feature-item">
+                <strong>Use 127.0.0.1</strong>
+                <span>Always use 127.0.0.1 instead of localhost — avoids IPv6 resolution issues on Windows.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TROUBLESHOOTING -->
+    <div class="section">
+        <h2>Troubleshooting</h2>
+
+        <table class="trouble">
+            <thead>
+                <tr>
+                    <th>Problem</th>
+                    <th>Fix</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>"Ollama is not installed"</td>
+                    <td>You're not using Ollama. Select <strong>OpenAI Compatible</strong> in Settings, not the Ollama provider.</td>
+                </tr>
+                <tr>
+                    <td>Fetch Models returns empty</td>
+                    <td>Ensure KoboldCpp is running and listening on the same port you entered. Try opening <code>http://127.0.0.1:5001</code> in a browser — you should see the KoboldCpp UI.</td>
+                </tr>
+                <tr>
+                    <td>Tool calls not working</td>
+                    <td>Ensure <strong>Tool Calling</strong> toggle is ON in Skales Settings. KoboldCpp handles JSON fixing automatically.</td>
+                </tr>
+                <tr>
+                    <td>Very slow responses</td>
+                    <td>Normal for large models on CPU. Try a smaller model (3B–7B), reduce context size, or enable GPU layers in the KoboldCpp launcher.</td>
+                </tr>
+                <tr>
+                    <td>Connection refused</td>
+                    <td>KoboldCpp isn't running. Launch it and wait for the "Kobold API on port 5001" message before trying again.</td>
+                </tr>
+                <tr>
+                    <td>"Model not found" error</td>
+                    <td>Click <strong>Fetch Models</strong> in Skales Settings to refresh the model list after KoboldCpp loads a model.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- BACK -->
+    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-subtle); display: flex; gap: 1.5rem; flex-wrap: wrap;">
+        <a href="skales-guide.html" style="color: var(--text-secondary);">← Back to Skales Guide</a>
+        <a href="setup-lmstudio.html" style="color: var(--text-secondary);">LM Studio Setup Guide →</a>
+        <a href="roadmap.html" style="color: var(--text-secondary);">Roadmap →</a>
+    </div>
+</div>
+
+</body>
+</html>

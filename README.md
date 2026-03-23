@@ -5,15 +5,25 @@ If you find this useful, a ⭐ helps others discover it
 # 🦎 Skales
 
 ### Your Local AI Agent - Desktop App for Windows, macOS & Linux
-
-[![Skales Demo](https://img.youtube.com/vi/8fXGsQGyxCU/maxresdefault.jpg?=v7)](https://youtube.com/watch?v=8fXGsQGyxCU)
-
+<table border="0">
+  <tr>
+    <td width="50%" align="center">
+      <img src="https://skales.app/magic.gif" width="100%" alt="Skales Magic Animation">
+    </td>
+    <td width="50%" align="center">
+      <a href="https://youtube.com/watch?v=8fXGsQGyxCU">
+        <img src="https://img.youtube.com/vi/8fXGsQGyxCU/maxresdefault.jpg" width="100%" alt="Skales Demo Video">
+      </a>
+    </td>
+  </tr>
+</table>
 **No Terminal. No Docker. No Node.js. No npm.**
 
 **Download. Install. Done.**
 
-[![Version](https://img.shields.io/badge/version-7.2.0-1DB954?style=for-the-badge&labelColor=0D1117)](https://skales.app)
+[![Version](https://img.shields.io/badge/version-7.5.0-1DB954?style=for-the-badge&labelColor=0D1117)](https://skales.app)
 [![License](https://img.shields.io/badge/license-BSL_1.1-1DB954?style=for-the-badge&labelColor=0D1117)](./LICENSE)
+
 [![Platform](https://img.shields.io/badge/Windows_+_macOS_+_Linux-1DB954?style=for-the-badge&labelColor=0D1117&logo=windows&logoColor=white)](https://skales.app)
 [![GitHub](https://img.shields.io/badge/GitHub-skalesapp%2Fskales-1DB954?style=for-the-badge&labelColor=0D1117&logo=github&logoColor=white)](https://github.com/skalesapp/skales)
 [![Signed](https://img.shields.io/badge/macOS-Code_Signed-1DB954?style=for-the-badge&labelColor=0D1117&logo=apple&logoColor=white)](https://skales.app)
@@ -21,8 +31,19 @@ If you find this useful, a ⭐ helps others discover it
 [**Download**](https://skales.app) · [**Documentation**](https://docs.skales.app) · [**Blog**](https://getskales.app) · [**Changelog**](./CHANGELOG.md)
 
 ---
-
 </div>
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=skalesapp%2Fskales&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=skalesapp/skales&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=skalesapp/skales&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=skalesapp/skales&type=date&legend=top-left" />
+ </picture>
+</a>
+
+---
 
 ## ⚡ Why Skales?
 
@@ -37,28 +58,29 @@ If you find this useful, a ⭐ helps others discover it
 
 ---
 
-## 🆕 What's New in v7.2.0 - "The Next Chapter"
+## 🆕 What's New in v7.5.0 — The Social Update
 
-**🌐 Built-in Browser (Beta)** - Browse the web with AI assistance. Skales navigates, scrolls, clicks, and extracts content — all inside a built-in webview. Includes conversation log, session export as Markdown, cookie banner auto-accept, and browser history.
+**🌍 Discover Feed** - Global activity feed showing what the Skales community is building. Gamertag system, upvotes, category filters. Privacy-first: zero personal data collected.
 
-**🎨 4 Themes** - Skales (default, light/dark toggle), Obsidian (dark, top navigation bar), Snowfield (light, icon rail), Neon (dark vibrant, icon rail). Each theme has its own navigation style.
+**🔍 Spotlight + Vision** - Press Cmd/Ctrl+Shift+S to open a floating search bar anywhere on your desktop. Ask Skales anything without opening the main window. Click the eye icon to capture your screen and ask about what's visible. Toggle in Settings → Notifications.
 
-**📊 Dashboard Builder** - Customizable dashboard with status cards, connections overview, memory word cloud, recent sessions, and optional widgets (calendar, weather, buddy, email, tasks, plan, stats). Toggle widgets on and off in edit mode.
+**💬 Mini-Chat Mode** - Shrink Skales to a compact always-on-top chat window. Toggle from the chat header.
 
-**⚡ Always-On Agent (Beta)** - Schedule tasks with cron syntax or natural language. Background execution with log viewer. Identity Maintenance runs daily to keep Skales's memory of you up to date. System jobs are protected from accidental deactivation.
+**🔔 Sound Notifications** - Audible feedback when tasks complete, notifications arrive, or Swarm tasks finish. Theme-aware sounds, configurable in Settings.
 
-**📞 Live Duplex Voice (Beta)** - Talk to Skales naturally with real-time speech recognition (Groq Whisper, OpenAI Whisper, Azure Speech) and text-to-speech (ElevenLabs, OpenAI TTS, Azure Speech). Voice Activity Detection for hands-free conversations.
+**🤖 Agent Swarm Redesign** - Dedicated Swarm page with hub-and-spoke node visualization, task history, and quick delegate.
 
-**📱 PWA Mobile Access (Beta)** - Access Skales from your phone via Tailscale. QR code setup wizard, auto-detect Tailscale IP. Full desktop interface on mobile.
+**🔔 Notification Center** - Dedicated page for all notifications with read/unread state, filters, and admin broadcast support.
 
-**🤖 Agent Swarm (Alpha)** - Multi-instance collaboration via mDNS discovery. Skales instances on the same network can discover each other and delegate tasks.
+**📅 Calendar Month View + .ics Export** - Full month grid with event previews, click-to-navigate, and today highlighting. Download your plan as a calendar file.
 
-**📧 Newsletter & Feedback** - Opt-in for update notifications with explicit consent. Report bugs directly from the app and track their status.
+**🗣️ TTS Local Provider** - Connect KoboldCpp, XTTS-API-Server, or any OpenAI-compatible TTS endpoint with automatic browser fallback.
 
-**✅ Apple Code Signed** - macOS builds are now signed with an Apple Developer ID certificate (Mario Simic, Q5ASU2DB6P). No more Gatekeeper workarounds on most systems.
+**🛡️ Privacy Policy + Delete My Data** - GDPR-ready privacy policy page, in-app Delete My Data with 2-step confirmation. Cookie consent with Google Consent Mode v2.
 
-**🌍 9 Languages** - English, Deutsch, Español, Français, Русский, 中文, 日本語, 한국어 & Português. 1732 translation keys fully synced.
+**👯 Friend Mode + Buddy Intelligence Fix** - Both systems now fire independently of Autonomous Mode.
 
+**🌍 9 Languages** - English, Deutsch, Español, Français, Русский, 中文, 日本語, 한국어 & Português. 1839 translation keys fully synced.
 ---
 
 ## 🚀 Features
@@ -112,10 +134,6 @@ If you find this useful, a ⭐ helps others discover it
 **📄 Document Generation** - Create Excel (.xlsx), Word (.docx), and PDF files from natural language.
 
 **🗺️ Google Places** - Search nearby places, geocode addresses, get directions, fetch business details.
-
-**📺 DLNA Media Casting** - Discover and cast media to smart TVs, speakers, and Chromecast on your network.
-
-**🌐 Network Scanner** - Discover all devices on your LAN. Detects other Skales instances.
 
 **🚀 FTP/SFTP Deploy** - Central server profile management. Deploy Lio AI projects with one click.
 
@@ -238,7 +256,7 @@ I'm **Mario Simic** - 10+ years in Marketing & Design. I got tired of agents tha
 
 See [COMMERCIAL-LICENSE.md](./COMMERCIAL-LICENSE.md) for details.
 
-**Local AI Agent (Source Available) - v7.2.0 "The Next Chapter" is the latest release under BSL-1.1.**
+**Local AI Agent (Source Available) - v7.5.0 (The Social Update) is the latest release under BSL-1.1.**
 
 ---
 

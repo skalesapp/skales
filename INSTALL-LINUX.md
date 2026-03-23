@@ -1,6 +1,6 @@
 # Skales — Linux Installation Guide (Beta)
 
-> **Linux support is in Beta as of v7.1.0.** Core features work well on major distros. See Known Issues below for edge cases.
+> **Linux support is in Beta as of v7.2.0.** Core features work well on major distros. See Known Issues below for edge cases.
 
 ---
 
@@ -23,8 +23,8 @@ Works on any distro without installation. No root required.
 
 ```bash
 # Make executable and run
-chmod +x Skales-7.1.0-x64.AppImage
-./Skales-7.1.0-x64.AppImage
+chmod +x Skales-7.2.0-x64.AppImage
+./Skales-7.2.0-x64.AppImage
 ```
 
 To add to your application launcher, create a `.desktop` file:
@@ -33,7 +33,7 @@ To add to your application launcher, create a `.desktop` file:
 cat > ~/.local/share/applications/skales.desktop << 'EOF'
 [Desktop Entry]
 Name=Skales
-Exec=/path/to/Skales-7.1.0-x64.AppImage
+Exec=/path/to/Skales-7.2.0-x64.AppImage
 Icon=skales
 Type=Application
 Categories=Utility;Development;
@@ -46,7 +46,7 @@ EOF
 
 ```bash
 # Install the package
-sudo dpkg -i Skales-7.1.0-x64.deb
+sudo dpkg -i Skales-7.2.0-x64.deb
 
 # Fix any missing dependencies
 sudo apt-get install -f
@@ -66,7 +66,7 @@ mkdir -p ~/.config/autostart
 cat > ~/.config/autostart/skales.desktop << 'EOF'
 [Desktop Entry]
 Name=Skales
-Exec=/path/to/Skales-7.1.0-x64.AppImage
+Exec=/path/to/Skales-7.2.0-x64.AppImage
 Type=Application
 X-GNOME-Autostart-enabled=true
 EOF
