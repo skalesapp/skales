@@ -6,6 +6,51 @@ const { spawn } = require('child_process');
 const net = require('net');
 const fs = require('fs');
 const path = require('path');
+
+// ─── Timezone Detection ───────────────────────────────────────────────────────
+// Detect system timezone: Linux/macOS from /etc/localtime, Windows via Intl API
+// Falls back to TZ env var, then UTC
+function detectSystemTimezone() {
+  // 1. Check existing TZ environment variable
+  if (process.env.TZ) {
+    console.log('[Skales] Timezone from TZ env:', process.env.TZ);
+    return process.env.TZ;
+  }
+
+  // 2. Read /etc/localtime on Linux and macOS
+  if (process.platform === 'linux' || process.platform === 'darwin') {
+    try {
+      const localtime = '/etc/localtime';
+      if (fs.existsSync(localtime)) {
+        const stats = fs.lstatSync(localtime);
+        if (stats.isSymbolicLink()) {
+          const target = fs.readlinkSync(localtime);
+          const match = target.match(/zoneinfo\/(.+)$/);
+          if (match) {
+            console.log('[Skales] Timezone from /etc/localtime:', match[1]);
+            return match[1];
+          }
+        } else {
+          console.log('[Skales] /etc/localtime is not a symlink');
+        }
+      }
+    } catch (e) {
+      console.warn('[Skales] Could not read /etc/localtime:', e.message);
+    }
+  }
+
+  // 3. Windows: use Intl API (works on all platforms, returns system timezone)
+  const intlTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  if (intlTz && intlTz !== 'UTC') {
+    console.log('[Skales] Timezone from Intl:', intlTz);
+    return intlTz;
+  }
+
+  // 4. Fallback to UTC
+  console.log('[Skales] Timezone fallback: UTC');
+  return 'UTC';
+}
+
 const { createTray } = require('./tray');
 const { setupUpdater } = require('./updater');
 
@@ -119,6 +164,22 @@ ipcMain.on('set-auto-launch', (_event, enabled) => {
   console.log(`[Skales] Auto-launch ${enabled ? 'enabled' : 'disabled'}.`);
 });
 
+// ─── Timezone IPC ───────────────────────────────────────────────────────────
+ipcMain.handle('get-timezone', async () => {
+  const settings = readSettings();
+  if (settings.timezone) return settings.timezone;
+  // detectedTimezone is set at app ready; if not yet set, detect now
+  if (!detectedTimezone) {
+    detectedTimezone = detectSystemTimezone();
+  }
+  return detectedTimezone;
+});
+
+ipcMain.on('set-timezone', (_event, timezone) => {
+  writeSettings({ timezone });
+  console.log('[Skales] Timezone set to:', timezone);
+});
+
 // ─── Export / Save-dialog IPC ─────────────────────────────────────────────────
 // Used by the Export Backup feature so it can save the ZIP to a user-chosen
 // location using a native save dialog — rather than relying on the browser's
@@ -181,6 +242,7 @@ let buddyWindow = null;
 let serverProcess = null;
 let serverReady = false;
 let desktopBuddyEnabled = false;  // loaded from disk below
+let detectedTimezone = undefined;  // set at app ready, or lazily if needed
 
 // ─── Splash Error ─────────────────────────────────────────────────────────────
 // Update the splash screen to show a red error state without closing it.
@@ -507,7 +569,12 @@ async function startServer() {
     // Next.js standalone server resolves to the standalone dir, not apps/web.
     SKALES_WEB_DIR: WEB_DIR,
     // Ensure the server can find native modules in extraResources
-    NODE_PATH: path.join(process.resourcesPath || '', 'apps', 'web', 'node_modules')
+    NODE_PATH: path.join(process.resourcesPath || '', 'apps', 'web', 'node_modules'),
+    // Propagate timezone to Next.js server
+    TZ: (() => {
+      const settings = readSettings();
+      return settings.timezone || detectedTimezone;
+    })()
   };
 
   // On Windows, hide the console window that would otherwise flash up when
@@ -717,6 +784,10 @@ function sendTelemetry(event, extra) {
 
 // ─── App Lifecycle ────────────────────────────────────────────────────────────
 app.on('ready', async () => {
+  // Detect system timezone on startup
+  detectedTimezone = detectSystemTimezone();
+  console.log('[Skales] Detected system timezone:', detectedTimezone);
+
   // Load persisted settings before anything else
   try { desktopBuddyEnabled = !!readSettings().desktopBuddy; } catch { desktopBuddyEnabled = false; }
   console.log('[Skales] Desktop Buddy enabled (persisted):', desktopBuddyEnabled);

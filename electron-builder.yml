@@ -1,5 +1,5 @@
 # electron-builder.yml
-# Skales v7.1.0 — Production Build Configuration
+# Skales v7.6.0 — Production Build Configuration
 # Docs: https://www.electron.build/configuration/configuration
 
 appId: app.skales.desktop
@@ -123,8 +123,8 @@ mac:
   # These keys are merged into the generated Info.plist inside the .app bundle.
   extendInfo:
     NSHumanReadableCopyright: "Copyright © 2026 Skales. All rights reserved."
-    CFBundleShortVersionString: "7.1.0"
-    CFBundleVersion: "7.1.0"
+    CFBundleShortVersionString: "7.6.0"
+    CFBundleVersion: "7.6.0"
     # Required for Login Items (auto-launch) via SMLoginItemSetEnabled / LSUIElement
     LSUIElement: false
     # Declare usage descriptions required by macOS privacy prompts

@@ -39,7 +39,7 @@ contextBridge.exposeInMainWorld('skales', {
       'download-update', // confirm download of the available update
       'install-update',  // quitAndInstall — restart + apply downloaded update
       // ── Other ───────────────────────────────────────────────────────────
-      'set-auto-launch', 'relaunch-app', 'set-desktop-buddy', 'open-chat',
+      'set-auto-launch', 'relaunch-app', 'set-desktop-buddy', 'set-timezone', 'open-chat',
     ];
     if (allowed.includes(channel)) {
       ipcRenderer.send(channel, ...args);
@@ -50,7 +50,7 @@ contextBridge.exposeInMainWorld('skales', {
    * Send a message and await a reply from the main process.
    */
   invoke: (channel, ...args) => {
-    const allowed = ['get-auto-launch', 'show-save-dialog', 'copy-file', 'get-desktop-buddy', 'execute-skill'];
+    const allowed = ['get-auto-launch', 'show-save-dialog', 'copy-file', 'get-desktop-buddy', 'get-timezone', 'execute-skill'];
     if (!allowed.includes(channel)) return Promise.reject(new Error(`Channel '${channel}' not allowed`));
     return ipcRenderer.invoke(channel, ...args);
   },

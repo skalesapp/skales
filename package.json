@@ -1,8 +1,8 @@
 {
   "name": "skales",
-  "version": "7.1.0",
+  "version": "7.6.0",
   "description": "Skales - Your Local AI Agent",
-  "author": "Mario Simic",
+  "author": "Mario Simic <mario@skales.app>",
   "homepage": "https://skales.app",
   "main": "electron/main.js",
   "scripts": {

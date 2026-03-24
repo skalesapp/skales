@@ -50,6 +50,7 @@ import {
 } from '@/actions/backup';
 import { getUserTier, FEATURE_CONFIG, getFeatureTierLabel } from '@/lib/license';
 import { useTranslation, SUPPORTED_LOCALES } from '@/lib/i18n';
+import { timezoneGroups } from '@/lib/timezones';
 import {
     setAutonomousMode,
 } from '@/actions/autonomous';
@@ -564,9 +565,10 @@ export default function SettingsPage() {
         return 'general';
     });
 
-    // Desktop App — auto-launch + desktop buddy (Electron only)
+    // Desktop App — auto-launch + desktop buddy + timezone (Electron only)
     const [autoLaunch, setAutoLaunch] = useState(false);
     const [desktopBuddy, setDesktopBuddy] = useState(false);
+    const [timezone, setTimezone] = useState('');
     const isElectron = typeof window !== 'undefined' && !!(window as any).skales;
 
     // Buddy skins
@@ -598,7 +600,7 @@ export default function SettingsPage() {
         return () => clearInterval(interval);
     }, []);
 
-    // Load auto-launch + desktop-buddy state from Electron (no-op in browser)
+    // Load auto-launch + desktop-buddy + timezone state from Electron (no-op in browser)
     useEffect(() => {
         if (isElectron && (window as any).skales?.invoke) {
             (window as any).skales.invoke('get-auto-launch')
@@ -606,6 +608,9 @@ export default function SettingsPage() {
                 .catch(() => { /* not available */ });
             (window as any).skales.invoke('get-desktop-buddy')
                 .then((enabled: boolean) => setDesktopBuddy(enabled))
+                .catch(() => { /* not available */ });
+            (window as any).skales.invoke('get-timezone')
+                .then((tz: string) => setTimezone(tz || ''))
                 .catch(() => { /* not available */ });
         }
         // Fetch available skins from the API (works in both Electron and browser)
@@ -1977,6 +1982,39 @@ export default function SettingsPage() {
                                 >
                                     <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${desktopBuddy ? 'translate-x-5' : 'translate-x-0'}`} />
                                 </button>
+                            </div>
+
+                            {/* Timezone selector */}
+                            <div className="mt-4 border-t pt-4" style={{ borderColor: 'var(--border)' }}>
+                                <div className="mb-2">
+                                    <p className="text-sm font-medium flex items-center gap-1.5" style={{ color: 'var(--text-primary)' }}>
+                                        🌐 Timezone
+                                    </p>
+                                    <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+                                        Auto-detected from your system. Select a timezone to override.
+                                    </p>
+                                </div>
+                                <select
+                                    value={timezone}
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        setTimezone(value);
+                                        (window as any).skales?.send('set-timezone', value);
+                                    }}
+                                    className="w-full px-3 py-2 rounded-lg text-sm bg-[var(--surface)] border"
+                                    style={{ borderColor: 'var(--border)', color: 'var(--text-primary)' }}
+                                >
+                                    <option value="">Select a timezone...</option>
+                                    {timezoneGroups.map((group) => (
+                                        <optgroup key={group.region} label={group.region}>
+                                            {group.timezones.map((tz) => (
+                                                <option key={tz.value} value={tz.value}>
+                                                    {tz.label}
+                                                </option>
+                                            ))}
+                                        </optgroup>
+                                    ))}
+                                </select>
                             </div>
 
                             {/* Buddy Skin selector — accordion, visible when buddy is ON */}
