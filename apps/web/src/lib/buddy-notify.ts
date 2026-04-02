@@ -13,6 +13,7 @@
 import fs   from 'fs';
 import path from 'path';
 import { DATA_DIR } from '@/lib/paths';
+import { serverT } from '@/lib/server-i18n';
 
 const QUEUE_FILE = path.join(DATA_DIR, 'buddy-queue.json');
 const MAX_QUEUE  = 20; // prevent unbounded growth if buddy window is closed
@@ -71,7 +72,7 @@ export function pushBuddyNotification(
         text.includes('SyntaxError:')
     );
     const cleanText = looksLikeRawError
-        ? "Oops.. something didn't work. Could you take a look?"
+        ? serverT('buddy.errorMessage')
         : text.slice(0, 300);
     const entry: BuddyNotification = {
         text: cleanText,
@@ -89,7 +90,7 @@ export function pushBuddyNotification(
 
 /** Push an error notification — shows friendly message + "Open Chat" button. */
 export function pushBuddyError(rawError?: string): void {
-    pushBuddyNotification(rawError || "Oops.. something didn't work. Could you take a look?", true);
+    pushBuddyNotification(rawError || serverT('buddy.errorMessage'), true);
 }
 
 /**

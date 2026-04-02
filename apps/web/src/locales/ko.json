@@ -846,7 +846,23 @@
         "resultSummary": "완료! {{summary}}",
         "openChatDetails": "자세한 내용은 채팅 열기",
         "approvalNeeded": "이 작업에는 확인이 필요합니다:",
-        "sandboxRestricted": "파일 접근이 제한되었습니다. 설정 → 보안에서 샌드박스 설정을 변경하거나 다른 경로를 사용하세요."
+        "sandboxRestricted": "파일 접근이 제한되었습니다. 설정 → 보안에서 샌드박스 설정을 변경하거나 다른 경로를 사용하세요.",
+        "noResponse": "응답이 없습니다.",
+        "httpError": "오류 {{status}}: {{detail}}",
+        "viewTasks": "작업 보기",
+        "taskDoneBody": "완료: \"{{title}}\"\n{{preview}}",
+        "taskBlockedBody": "차단됨: \"{{title}}\"\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "{{minutes}}분 후 회의: {{title}}{{locationPart}}",
+            "meetingLocationPart": " ({{location}})",
+            "meetingPrep": "{{minutes}}분 후 \"{{title}}\" 준비",
+            "blockedTasks": "차단된 작업이 {{count}}개 있습니다. 확인해 보세요.",
+            "pendingEmails": "처리 대기 중인 메일 {{count}}개",
+            "eodSummary": "오늘 수고하셨습니다! {{count}}개 작업을 완료했습니다.",
+            "idleCheckin": "{{minutes}}분 동안 비활성 상태입니다. 대기 중인 작업 {{count}}개.",
+            "morningWithTasks": "좋은 아침입니다! 오늘 {{count}}개 작업이 있습니다.",
+            "morningSimple": "좋은 아침입니다!"
+        }
     },
     "tasks": {
         "title": "작업",

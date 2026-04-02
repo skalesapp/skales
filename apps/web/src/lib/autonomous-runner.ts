@@ -17,6 +17,8 @@ import {
 } from '@/lib/agent-tasks';
 import { log } from '@/lib/autopilot-logger';
 import { dispatchSkill, parseSkillFromTask, detectCriticalAction } from '@/lib/skill-dispatcher';
+import { serverT } from '@/lib/server-i18n';
+import { normalizeUiLocale } from '@/lib/supported-locales';
 
 // ── Cron dedup map: cronId → last execution timestamp ─────────────────────────
 // Prevents the same cron job from firing twice within its own interval window.
@@ -497,12 +499,14 @@ async function tickFriendMode(settings: any): Promise<void> {
         const { buildContext } = await import('@/actions/identity');
         const identityCtx = await buildContext();
 
+        const uiLang = normalizeUiLocale(settings?.locale || settings?.nativeLanguage);
         const systemPrompt = [
             `You are Skales, a proactive AI companion sending a short check-in message to your user.`,
             identityCtx,
             ``,
             `RULES — READ CAREFULLY:`,
             `- Write EXACTLY ONE short message (1-3 sentences max).`,
+            `- Write the entire message in the language for UI locale "${uiLang}" (BCP-47). Do not use English unless "${uiLang}" is en.`,
             `- Be natural, warm, and varied — never send the same opener twice.`,
             `- DO NOT start with "How are you?" or "How was your day?" — these are boring.`,
             `- Instead: reference recent topics, share a quick insight, make a light joke, or suggest something useful.`,
@@ -719,7 +723,7 @@ async function tick(): Promise<void> {
             const preview = result.length > 80 ? result.slice(0, 77) + '…' : result;
             await routeNotification({
                 type: 'task-complete',
-                message: `Done: "${task.title}"\n${preview}`,
+                message: serverT('buddy.taskDoneBody', { title: task.title, preview }),
                 emoji: '✅',
                 priority: task.priority === 'high' ? 'high' : 'medium',
                 cooldownMinutes: 1, // task completions have minimal cooldown
@@ -729,7 +733,9 @@ async function tick(): Promise<void> {
             try {
                 const { pushBuddyNotification } = await import('@/lib/buddy-notify');
                 const preview = result.length > 80 ? result.slice(0, 77) + '…' : result;
-                pushBuddyNotification(`✅ Done: "${task.title}"\n${preview}`);
+                pushBuddyNotification(
+                    `✅ ${serverT('buddy.taskDoneBody', { title: task.title, preview })}`,
+                );
             } catch { /* non-fatal */ }
         }
 
@@ -766,17 +772,19 @@ async function tick(): Promise<void> {
                 const errPreview = errorMsg.length > 80 ? errorMsg.slice(0, 77) + '…' : errorMsg;
                 await routeNotification({
                     type: 'task-blocked',
-                    message: `Blocked: "${task.title}"\n${errPreview}`,
+                    message: serverT('buddy.taskBlockedBody', { title: task.title, preview: errPreview }),
                     emoji: '🚫',
                     priority: 'high', // blocked = needs attention, bypass quiet hours
                     cooldownMinutes: 1,
-                    action: { label: 'View Tasks', route: '/tasks' },
+                    action: { label: serverT('buddy.viewTasks'), route: '/tasks' },
                 });
             } catch {
                 try {
                     const { pushBuddyNotification } = await import('@/lib/buddy-notify');
                     const errPreview = errorMsg.length > 80 ? errorMsg.slice(0, 77) + '…' : errorMsg;
-                    pushBuddyNotification(`🚫 Blocked: "${task.title}"\n${errPreview}`);
+                    pushBuddyNotification(
+                        `🚫 ${serverT('buddy.taskBlockedBody', { title: task.title, preview: errPreview })}`,
+                    );
                 } catch { /* non-fatal */ }
             }
         } else {

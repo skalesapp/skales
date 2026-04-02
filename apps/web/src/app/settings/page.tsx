@@ -50,6 +50,7 @@ import {
 } from '@/actions/backup';
 import { getUserTier, FEATURE_CONFIG, getFeatureTierLabel } from '@/lib/license';
 import { useTranslation, SUPPORTED_LOCALES } from '@/lib/i18n';
+import { normalizeUiLocale } from '@/lib/supported-locales';
 import {
     setAutonomousMode,
 } from '@/actions/autonomous';
@@ -723,6 +724,9 @@ export default function SettingsPage() {
             setActiveProvider(settings.activeProvider);
             setPersona(settings.persona || 'default');
             setNativeLanguage(settings.nativeLanguage || 'en');
+            if (settings.locale) {
+                setLocale(normalizeUiLocale(settings.locale));
+            }
 
             // Load Active Behavior settings
             if (settings.activeUserBehavior) {
@@ -1706,6 +1710,7 @@ export default function SettingsPage() {
                 persona,
                 systemPrompt: customPromptActive ? systemPrompt : undefined,
                 nativeLanguage,
+                locale,
                 providers,
                 activeUserBehavior: activeBehavior,
                 gifIntegration: gifConfig,

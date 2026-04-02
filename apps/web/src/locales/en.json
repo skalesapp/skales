@@ -846,7 +846,23 @@
         "resultSummary": "Done! {{summary}}",
         "openChatDetails": "Open Chat for details",
         "approvalNeeded": "This action needs your OK:",
-        "sandboxRestricted": "File access restricted. Change sandbox settings in Settings → Security or use a different path."
+        "sandboxRestricted": "File access restricted. Change sandbox settings in Settings → Security or use a different path.",
+        "noResponse": "No response.",
+        "httpError": "Error {{status}}: {{detail}}",
+        "viewTasks": "View Tasks",
+        "taskDoneBody": "Done: \"{{title}}\"\n{{preview}}",
+        "taskBlockedBody": "Blocked: \"{{title}}\"\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "Meeting starting in {{minutes}} min: {{title}}{{locationPart}}",
+            "meetingLocationPart": " at {{location}}",
+            "meetingPrep": "Prep for \"{{title}}\" in {{minutes}} min",
+            "blockedTasks": "You have {{count}} blocked task(s). Review them to get unstuck.",
+            "pendingEmails": "You have {{count}} pending emails",
+            "eodSummary": "Great work today! You completed {{count}} tasks.",
+            "idleCheckin": "You've been idle for {{minutes}} min. You have {{count}} pending task(s).",
+            "morningWithTasks": "Good morning! You have {{count}} task(s) today.",
+            "morningSimple": "Good morning!"
+        }
     },
     "tasks": {
         "title": "Tasks",

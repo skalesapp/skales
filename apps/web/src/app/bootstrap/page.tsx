@@ -21,7 +21,7 @@ const CLOUD_PROVIDERS = [
 
 export default function BootstrapPage() {
     const router = useRouter();
-    const { t, setLocale } = useTranslation();
+    const { t, setLocale, locale } = useTranslation();
     const [showLangPicker, setShowLangPicker] = useState(true); // shown before step 0
     const [step, setStep] = useState(0); // 0 = Security Disclaimer (mandatory)
     const [saving, setSaving] = useState(false);
@@ -196,8 +196,8 @@ export default function BootstrapPage() {
             // Safety mode
             await saveAllSettings({ safetyMode: safetyChoice } as any);
 
-            // Telemetry preference (opt-in only)
-            await saveAllSettings({ telemetry_enabled: formData.telemetryEnabled } as any);
+            // Telemetry preference (opt-in only) + UI language (for Desktop Buddy & server i18n)
+            await saveAllSettings({ telemetry_enabled: formData.telemetryEnabled, locale } as any);
 
             // Identity (completion sentinel — writes both soul.json and human.json)
             await completeBootstrap({
@@ -226,7 +226,7 @@ export default function BootstrapPage() {
         submitting.current = true;
         setSaving(true);
         try {
-            await saveAllSettings({ safetyMode: 'safe' } as any);
+            await saveAllSettings({ safetyMode: 'safe', locale } as any);
             await completeBootstrap({} as any);
             router.push('/chat');
         } finally {

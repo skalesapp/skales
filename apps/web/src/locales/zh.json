@@ -845,8 +845,24 @@
         "cancelled": "Cancelled",
         "resultSummary": "Done! {{summary}}",
         "openChatDetails": "Open Chat for details",
-        "approvalNeeded": "This action needs your OK:",
-        "sandboxRestricted": "文件访问受限。请在设置 → 安全中更改沙盒设置，或使用其他路径。"
+        "approvalNeeded": "此操作需要您确认：",
+        "sandboxRestricted": "文件访问受限。请在设置 → 安全中更改沙盒设置，或使用其他路径。",
+        "noResponse": "暂无回复。",
+        "httpError": "错误 {{status}}：{{detail}}",
+        "viewTasks": "查看任务",
+        "taskDoneBody": "已完成：「{{title}}」\n{{preview}}",
+        "taskBlockedBody": "已阻塞：「{{title}}」\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "{{minutes}} 分钟后会议开始：{{title}}{{locationPart}}",
+            "meetingLocationPart": "，地点 {{location}}",
+            "meetingPrep": "{{minutes}} 分钟后准备「{{title}}」",
+            "blockedTasks": "您有 {{count}} 个被阻塞的任务。请查看以继续推进。",
+            "pendingEmails": "您有 {{count}} 封待处理邮件",
+            "eodSummary": "今天做得很好！您完成了 {{count}} 个任务。",
+            "idleCheckin": "您已闲置 {{minutes}} 分钟。有 {{count}} 个待处理任务。",
+            "morningWithTasks": "早上好！您今天有 {{count}} 个任务。",
+            "morningSimple": "早上好！"
+        }
     },
     "tasks": {
         "title": "任务",

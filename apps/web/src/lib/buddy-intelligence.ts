@@ -15,6 +15,7 @@
 import fs from 'fs';
 import path from 'path';
 import { DATA_DIR } from '@/lib/paths';
+import { serverT } from '@/lib/server-i18n';
 
 // ─── Types ───────────────────────────────────────────────────────
 
@@ -148,7 +149,14 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
             ctx.nextMeeting.minutesUntilStart > 0
         ) {
             if (notificationTypes['meeting-reminder'] !== false) {
-                const msg = `⏰ Meeting starting in ${ctx.nextMeeting.minutesUntilStart} min: ${ctx.nextMeeting.title}${ctx.nextMeeting.location ? ` at ${ctx.nextMeeting.location}` : ''}`;
+                const locationPart = ctx.nextMeeting.location
+                    ? serverT('buddy.proactive.meetingLocationPart', { location: ctx.nextMeeting.location })
+                    : '';
+                const msg = serverT('buddy.proactive.meetingStarting', {
+                    minutes: ctx.nextMeeting.minutesUntilStart,
+                    title: ctx.nextMeeting.title,
+                    locationPart,
+                });
                 return {
                     type: 'meeting-reminder',
                     message: msg,
@@ -167,7 +175,10 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
             ctx.nextMeeting.description
         ) {
             if (notificationTypes['meeting-prep'] !== false) {
-                const msg = `⏰ Prep for "${ctx.nextMeeting.title}" in ${ctx.nextMeeting.minutesUntilStart} min`;
+                const msg = serverT('buddy.proactive.meetingPrep', {
+                    title: ctx.nextMeeting.title,
+                    minutes: ctx.nextMeeting.minutesUntilStart,
+                });
                 return {
                     type: 'meeting-prep',
                     message: msg,
@@ -182,7 +193,7 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
         // (Repurposing since there's no dueAt field)
         if (ctx.tasksCount.blocked > 0) {
             if (notificationTypes['overdue-tasks'] !== false) {
-                const msg = `You have ${ctx.tasksCount.blocked} blocked task${ctx.tasksCount.blocked > 1 ? 's' : ''}. Review them to get unstuck.`;
+                const msg = serverT('buddy.proactive.blockedTasks', { count: ctx.tasksCount.blocked });
                 return {
                     type: 'overdue-tasks',
                     message: msg,
@@ -196,7 +207,7 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
         // Rule d: Unread emails > 3 → 'email-alert' (LOW)
         if (ctx.unreadEmails > 3) {
             if (notificationTypes['email-alert'] !== false) {
-                const msg = `📧 You have ${ctx.unreadEmails} pending emails`;
+                const msg = serverT('buddy.proactive.pendingEmails', { count: ctx.unreadEmails });
                 return {
                     type: 'email-alert',
                     message: msg,
@@ -210,7 +221,7 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
         // Rule e: Completed tasks today >= 3 → 'eod-summary' (only 16:00-19:00)
         if (ctx.tasksCount.completedToday >= 3 && ctx.currentHour >= 16 && ctx.currentHour < 19) {
             if (notificationTypes['eod-summary'] !== false) {
-                const msg = `✅ Great work today! You completed ${ctx.tasksCount.completedToday} tasks.`;
+                const msg = serverT('buddy.proactive.eodSummary', { count: ctx.tasksCount.completedToday });
                 return {
                     type: 'eod-summary',
                     message: msg,
@@ -224,7 +235,10 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
         // Rule f: Idle > 45 min and pending tasks > 0 → 'idle-checkin' (LOW)
         if (ctx.idleMinutes > 45 && ctx.tasksCount.pending > 0) {
             if (notificationTypes['idle-checkin'] !== false) {
-                const msg = `💤 You've been idle for ${ctx.idleMinutes} min. Got ${ctx.tasksCount.pending} pending task${ctx.tasksCount.pending > 1 ? 's' : ''}.`;
+                const msg = serverT('buddy.proactive.idleCheckin', {
+                    minutes: ctx.idleMinutes,
+                    count: ctx.tasksCount.pending,
+                });
                 return {
                     type: 'idle-checkin',
                     message: msg,
@@ -239,8 +253,8 @@ export async function decideBuddyAction(ctx: BuddyContext, settings: any): Promi
         if (ctx.currentHour >= 7 && ctx.currentHour < 9) {
             if (notificationTypes['morning-greeting'] !== false) {
                 const greeting = ctx.tasksCount.pending > 0
-                    ? `☀️ Good morning! You have ${ctx.tasksCount.pending} task${ctx.tasksCount.pending > 1 ? 's' : ''} today.`
-                    : '☀️ Good morning!';
+                    ? serverT('buddy.proactive.morningWithTasks', { count: ctx.tasksCount.pending })
+                    : serverT('buddy.proactive.morningSimple');
                 return {
                     type: 'morning-greeting',
                     message: greeting,

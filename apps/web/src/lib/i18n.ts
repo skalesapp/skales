@@ -20,6 +20,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import en from '@/locales/en.json';
+import { UI_LOCALE_CODES, normalizeUiLocale } from '@/lib/supported-locales';
 
 // ─── Supported locales ────────────────────────────────────────────────────────
 
@@ -40,6 +41,8 @@ export const SUPPORTED_LOCALES: LocaleInfo[] = [
     { code: 'ko', name: '한국어',    flag: '🇰🇷' },
     { code: 'pt', name: 'Português', flag: '🇧🇷' },
 ];
+
+export { UI_LOCALE_CODES, normalizeUiLocale };
 
 // ─── Catalogue (lazy-loaded translation maps) ─────────────────────────────────
 
@@ -114,17 +117,15 @@ export function useTranslation() {
         const stored = typeof localStorage !== 'undefined'
             ? localStorage.getItem(STORAGE_KEY) ?? 'en'
             : 'en';
-        const valid = SUPPORTED_LOCALES.find(l => l.code === stored)?.code ?? 'en';
-        if (valid !== 'en') {
-            loadLocale(valid).then(m => {
-                setMap(m);
-                setLocaleState(valid);
-            });
-        }
+        const valid = normalizeUiLocale(SUPPORTED_LOCALES.find(l => l.code === stored)?.code ?? stored);
+        loadLocale(valid).then(m => {
+            setMap(m);
+            setLocaleState(valid);
+        });
     }, []);
 
     const setLocale = useCallback((code: string) => {
-        const valid = SUPPORTED_LOCALES.find(l => l.code === code)?.code ?? 'en';
+        const valid = normalizeUiLocale(SUPPORTED_LOCALES.find(l => l.code === code)?.code ?? code);
         loadLocale(valid).then(m => {
             setMap(m);
             setLocaleState(valid);

@@ -846,7 +846,23 @@
         "resultSummary": "Fait ! {{summary}}",
         "openChatDetails": "Ouvrir le Chat pour les détails",
         "approvalNeeded": "Cette action nécessite ton accord :",
-        "sandboxRestricted": "Accès aux fichiers restreint. Modifiez les paramètres du bac à sable dans Paramètres → Sécurité ou utilisez un autre chemin."
+        "sandboxRestricted": "Accès aux fichiers restreint. Modifiez les paramètres du bac à sable dans Paramètres → Sécurité ou utilisez un autre chemin.",
+        "noResponse": "Pas de réponse.",
+        "httpError": "Erreur {{status}} : {{detail}}",
+        "viewTasks": "Voir les tâches",
+        "taskDoneBody": "Terminé : « {{title}} »\n{{preview}}",
+        "taskBlockedBody": "Bloqué : « {{title}} »\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "Réunion dans {{minutes}} min : {{title}}{{locationPart}}",
+            "meetingLocationPart": " à {{location}}",
+            "meetingPrep": "Prépare « {{title}} » dans {{minutes}} min",
+            "blockedTasks": "Tu as {{count}} tâche(s) bloquée(s). Jette un œil pour débloquer la situation.",
+            "pendingEmails": "Tu as {{count}} e-mails en attente",
+            "eodSummary": "Beau travail aujourd’hui ! Tu as terminé {{count}} tâches.",
+            "idleCheckin": "Tu es inactif depuis {{minutes}} min. Tu as {{count}} tâche(s) en attente.",
+            "morningWithTasks": "Bonjour ! Tu as {{count}} tâche(s) aujourd’hui.",
+            "morningSimple": "Bonjour !"
+        }
     },
     "tasks": {
         "title": "Tâches",

@@ -846,7 +846,23 @@
         "resultSummary": "Pronto! {{summary}}",
         "openChatDetails": "Abrir Chat para detalhes",
         "approvalNeeded": "Esta ação precisa da sua aprovação:",
-        "sandboxRestricted": "Acesso a arquivos restrito. Altere as configurações de sandbox em Configurações → Segurança ou use um caminho diferente."
+        "sandboxRestricted": "Acesso a arquivos restrito. Altere as configurações de sandbox em Configurações → Segurança ou use um caminho diferente.",
+        "noResponse": "Sem resposta.",
+        "httpError": "Erro {{status}}: {{detail}}",
+        "viewTasks": "Ver tarefas",
+        "taskDoneBody": "Concluído: \"{{title}}\"\n{{preview}}",
+        "taskBlockedBody": "Bloqueado: \"{{title}}\"\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "Reunião em {{minutes}} min: {{title}}{{locationPart}}",
+            "meetingLocationPart": " em {{location}}",
+            "meetingPrep": "Prepare-se para \"{{title}}\" em {{minutes}} min",
+            "blockedTasks": "Você tem {{count}} tarefa(s) bloqueada(s). Revise para destravar.",
+            "pendingEmails": "Você tem {{count}} e-mails pendentes",
+            "eodSummary": "Ótimo trabalho hoje! Você concluiu {{count}} tarefas.",
+            "idleCheckin": "Você está inativo há {{minutes}} min. Há {{count}} tarefa(s) pendente(s).",
+            "morningWithTasks": "Bom dia! Você tem {{count}} tarefa(s) hoje.",
+            "morningSimple": "Bom dia!"
+        }
     },
     "tasks": {
         "title": "Tarefas",

@@ -2,6 +2,7 @@
 
 import path from 'path';
 import fs from 'fs';
+import { clearLocaleCache } from '@/lib/server-i18n';
 
 // ============================================================
 // Skales Chat Server Actions — v2.0
@@ -339,6 +340,9 @@ export async function saveAllSettings(newSettings: Partial<SkalesSettings>) {
                 : current.providers,
         };
         fs.writeFileSync(SETTINGS_FILE, JSON.stringify(merged, null, 2));
+        if (newSettings.locale !== undefined || newSettings.nativeLanguage !== undefined) {
+            clearLocaleCache();
+        }
         return { success: true, settings: merged };
     } catch (e: any) {
         return { success: false, error: e.message };

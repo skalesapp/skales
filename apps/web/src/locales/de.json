@@ -846,7 +846,23 @@
         "resultSummary": "Erledigt! {{summary}}",
         "openChatDetails": "Chat für Details öffnen",
         "approvalNeeded": "Diese Aktion braucht deine Freigabe:",
-        "sandboxRestricted": "Dateizugriff eingeschränkt. Ändere die Sandbox-Einstellungen unter Einstellungen → Sicherheit oder verwende einen anderen Pfad."
+        "sandboxRestricted": "Dateizugriff eingeschränkt. Ändere die Sandbox-Einstellungen unter Einstellungen → Sicherheit oder verwende einen anderen Pfad.",
+        "noResponse": "Keine Antwort.",
+        "httpError": "Fehler {{status}}: {{detail}}",
+        "viewTasks": "Aufgaben anzeigen",
+        "taskDoneBody": "Erledigt: \"{{title}}\"\n{{preview}}",
+        "taskBlockedBody": "Blockiert: \"{{title}}\"\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "Meeting beginnt in {{minutes}} Min.: {{title}}{{locationPart}}",
+            "meetingLocationPart": " bei {{location}}",
+            "meetingPrep": "Vorbereitung für „{{title}}“ in {{minutes}} Min.",
+            "blockedTasks": "Du hast {{count}} blockierte Aufgabe(n). Sieh sie dir an, um weiterzukommen.",
+            "pendingEmails": "Du hast {{count}} ausstehende E-Mails",
+            "eodSummary": "Stark heute! Du hast {{count}} Aufgaben erledigt.",
+            "idleCheckin": "Du warst {{minutes}} Min. inaktiv. Du hast {{count}} ausstehende Aufgabe(n).",
+            "morningWithTasks": "Guten Morgen! Du hast heute {{count}} Aufgabe(n).",
+            "morningSimple": "Guten Morgen!"
+        }
     },
     "tasks": {
         "title": "Aufgaben",

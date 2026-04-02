@@ -845,8 +845,24 @@
         "cancelled": "Cancelled",
         "resultSummary": "Done! {{summary}}",
         "openChatDetails": "Open Chat for details",
-        "approvalNeeded": "This action needs your OK:",
-        "sandboxRestricted": "Доступ к файлам ограничен. Измените настройки песочницы в Настройки → Безопасность или используйте другой путь."
+        "approvalNeeded": "Это действие требует вашего подтверждения:",
+        "sandboxRestricted": "Доступ к файлам ограничен. Измените настройки песочницы в Настройки → Безопасность или используйте другой путь.",
+        "noResponse": "Нет ответа.",
+        "httpError": "Ошибка {{status}}: {{detail}}",
+        "viewTasks": "Открыть задачи",
+        "taskDoneBody": "Готово: «{{title}}»\n{{preview}}",
+        "taskBlockedBody": "Заблокировано: «{{title}}»\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "Встреча через {{minutes}} мин: {{title}}{{locationPart}}",
+            "meetingLocationPart": " в {{location}}",
+            "meetingPrep": "Подготовка к «{{title}}» через {{minutes}} мин",
+            "blockedTasks": "У вас {{count}} заблокированных задач(и). Просмотрите их, чтобы продвинуться.",
+            "pendingEmails": "У вас {{count}} непрочитанных писем",
+            "eodSummary": "Отличная работа сегодня! Вы завершили {{count}} задач(и).",
+            "idleCheckin": "Вы неактивны {{minutes}} мин. У вас {{count}} ожидающих задач(и).",
+            "morningWithTasks": "Доброе утро! У вас сегодня {{count}} задач(и).",
+            "morningSimple": "Доброе утро!"
+        }
     },
     "tasks": {
         "title": "Задачи",

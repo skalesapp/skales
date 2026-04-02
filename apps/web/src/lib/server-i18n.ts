@@ -12,6 +12,7 @@
 import fs from 'fs';
 import path from 'path';
 import { DATA_DIR } from './paths';
+import { normalizeUiLocale } from './supported-locales';
 
 const localeCache: Record<string, Record<string, any>> = {};
 
@@ -19,7 +20,7 @@ function getUserLocale(): string {
     try {
         const settingsPath = path.join(DATA_DIR, 'settings.json');
         const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
-        return settings.language || settings.locale || 'en';
+        return normalizeUiLocale(settings.locale || settings.nativeLanguage);
     } catch {
         return 'en';
     }

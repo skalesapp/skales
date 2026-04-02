@@ -46,6 +46,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from '@/lib/i18n';
+import { normalizeUiLocale } from '@/lib/supported-locales';
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
@@ -76,7 +77,7 @@ type FSM = 'intro' | 'idle' | 'action';
 
 export default function BuddyPage() {
 
-    const { t } = useTranslation();
+    const { t, setLocale } = useTranslation();
 
     // ── Double-buffer: two video slots ────────────────────────────────────────
     // Opacity is managed ONLY by direct DOM manipulation (not React state).
@@ -245,8 +246,23 @@ export default function BuddyPage() {
         fetch('/api/telemetry/ping?event=feature_used&feature=buddy').catch(() => {});
     }, []);
 
+    // When the user changes language in the main window, localStorage updates — the
+    // `storage` event fires in other windows (Desktop Buddy) so we stay in sync.
+    useEffect(() => {
+        const onStorage = (e: StorageEvent) => {
+            if (e.key === 'skales-locale' && e.newValue) {
+                setLocale(normalizeUiLocale(e.newValue));
+            }
+        };
+        window.addEventListener('storage', onStorage);
+        return () => window.removeEventListener('storage', onStorage);
+    }, [setLocale]);
+
     // When the response arrives the refs are updated and clipsReady is set to
     // true, which triggers the boot FSM useEffect below.
+    // Runs once on mount only: `setLocale` is called here to hydrate from
+    // settings, but it is intentionally omitted from deps so we never re-fetch
+    // clip lists when locale changes (clips are not language-specific).
     useEffect(() => {
         const loadClips = async () => {
             // Read active skin from settings; fall back to 'skales'
@@ -257,6 +273,9 @@ export default function BuddyPage() {
                     const s = await settingsRes.json();
                     if (typeof s?.buddy_skin === 'string' && /^[a-z0-9_-]+$/i.test(s.buddy_skin)) {
                         skin = s.buddy_skin;
+                    }
+                    if (typeof s?.locale === 'string') {
+                        setLocale(normalizeUiLocale(s.locale));
                     }
                 }
             } catch { /* non-fatal: use default */ }
@@ -279,6 +298,7 @@ export default function BuddyPage() {
         };
 
         loadClips();
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only; see comment above useEffect
     }, []);
 
     // ── Step 2: Boot FSM — runs once after clips are loaded ───────────────────
@@ -438,7 +458,7 @@ export default function BuddyPage() {
             const data = await res.json().catch(() => ({}));
 
             if (!res.ok) {
-                const errMsg = `Error ${res.status}: ${data.error ?? 'unknown'}`;
+                const errMsg = t('buddy.httpError', { status: res.status, detail: data.error ?? 'unknown' });
                 setBubble(errMsg);
                 setBubbleLong(false);
                 setBubbleIsError(true);
@@ -475,7 +495,7 @@ export default function BuddyPage() {
 
             // ── Tool result (auto-executed) or plain text ─────────────────────
             // Bug 28: strip think/reasoning XML before displaying in the buddy bubble
-            let reply = stripThinkingTags((data.content ?? '').trim() || 'No response.');
+            let reply = stripThinkingTags((data.content ?? '').trim() || t('buddy.noResponse'));
             const wasLong = data.wasLong === true || reply.length > 110;
             if (!data.wasLong && reply.length > 110) reply = reply.slice(0, 107) + '…';
 
@@ -546,7 +566,7 @@ export default function BuddyPage() {
                 const isSandbox = /sandbox|restricted|not allowed|permission|access denied/i.test(rawErr);
                 const errorMsg = isSandbox
                     ? t('buddy.sandboxRestricted')
-                    : (rawErr || (!res.ok ? `Error (${res.status})` : t('buddy.errorMessage')));
+                    : (rawErr || (!res.ok ? t('buddy.httpError', { status: res.status, detail: 'unknown' }) : t('buddy.errorMessage')));
                 setBubble(errorMsg);
                 setBubbleIsError(true);
                 bubbleTimer.current = setTimeout(() => { setBubble(null); setBubbleIsError(false); }, 10_000);

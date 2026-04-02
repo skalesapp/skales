@@ -845,8 +845,24 @@
         "cancelled": "Cancelled",
         "resultSummary": "Done! {{summary}}",
         "openChatDetails": "Open Chat for details",
-        "approvalNeeded": "This action needs your OK:",
-        "sandboxRestricted": "ファイルアクセスが制限されています。設定 → セキュリティでサンドボックス設定を変更するか、別のパスを使用してください。"
+        "approvalNeeded": "この操作には確認が必要です：",
+        "sandboxRestricted": "ファイルアクセスが制限されています。設定 → セキュリティでサンドボックス設定を変更するか、別のパスを使用してください。",
+        "noResponse": "応答がありません。",
+        "httpError": "エラー {{status}}: {{detail}}",
+        "viewTasks": "タスクを見る",
+        "taskDoneBody": "完了: 「{{title}}」\n{{preview}}",
+        "taskBlockedBody": "ブロック中: 「{{title}}」\n{{preview}}",
+        "proactive": {
+            "meetingStarting": "{{minutes}}分後にミーティング: {{title}}{{locationPart}}",
+            "meetingLocationPart": "（{{location}}）",
+            "meetingPrep": "「{{title}}」の準備まであと{{minutes}}分",
+            "blockedTasks": "ブロックされたタスクが{{count}}件あります。確認して進めましょう。",
+            "pendingEmails": "未処理のメールが{{count}}件あります",
+            "eodSummary": "今日はお疲れ様でした！{{count}}件のタスクを完了しました。",
+            "idleCheckin": "{{minutes}}分間操作がありません。保留中のタスクが{{count}}件あります。",
+            "morningWithTasks": "おはようございます！今日は{{count}}件のタスクがあります。",
+            "morningSimple": "おはようございます！"
+        }
     },
     "tasks": {
         "title": "タスク",
