@@ -7,6 +7,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v9.0.2 — Patch (April 2026)
+
+### Fixed
+- Settings: API keys no longer disappear when switching models (useRef fallback)
+- Codework: Project names are now sanitized to valid npm-compatible slugs
+- Organization: Clipboard copy now works in Electron with visual feedback
+- Organization: Agents now respond in the user's configured language
+- Discover: Post templates rewritten to describe user activity (user-centric)
+- Discover: Added events for Codework and Organization completions
+
+### Added
+- YouTube Data API v3 integration (search, video details, channel info, trending, captions)
+- Codework: web_search tool for AI-powered code generation
+
+---
+
 ## v9.0.1 — Hotfix (April 2026)
 
 ### Fixed
