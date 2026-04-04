@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Skales Docs Navigator",
+  "version": "1.0.0",
+  "description": "Live search and code saving for Skales documentation.",
+  "permissions": ["sidePanel", "storage", "scripting", "tabs", "contextMenus"],
+  "host_permissions": [
+    "*://docs.skales.app/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://docs.skales.app/*"],
+      "js": ["src/content.js"]
+    }
+  ],
+  "side_panel": {
+    "default_path": "public/sidepanel.html"
+  },
+  "action": {
+    "default_title": "Open Skales Sidepanel"
+  }
+}

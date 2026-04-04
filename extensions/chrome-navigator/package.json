@@ -1,0 +1,14 @@
+{
+  "name": "chrome-navigator",
+  "version": "1.0.0",
+  "description": "Chrome Extension for Skales Docs",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint src/ public/ tests/",
+    "build": "mkdir -p dist && zip -r dist/extension.zip public src package.json README.md"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0"
+  }
+}
