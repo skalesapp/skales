@@ -268,7 +268,7 @@ export default function Sidebar({
                         ? premium ? `3px solid ${premiumGold}` : '3px solid #84cc16'
                         : '3px solid transparent',
                 }}
-                title={collapsed ? label : undefined}
+                title={label}
                 aria-label={premium ? `${label} (Premium)` : beta ? `${label} (Beta)` : label}
                 aria-current={isActive ? 'page' : undefined}
             >
@@ -421,7 +421,7 @@ export default function Sidebar({
                             color: pathname === item.menuRoute ? undefined : 'var(--text-secondary)',
                             borderLeft: pathname === item.menuRoute && !collapsed ? '3px solid #84cc16' : '3px solid transparent',
                         }}
-                        title={collapsed ? item.menuName : undefined}
+                        title={item.menuName}
                         aria-label={item.menuName}
                         aria-current={pathname === item.menuRoute ? 'page' : undefined}
                     >
