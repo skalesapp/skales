@@ -1,5 +1,6 @@
 'use client';
 
+import { CalendarStatusDot } from '../../components/CalendarStatusDot';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
@@ -4082,9 +4083,9 @@ export default function SettingsPage() {
                         <div className="rounded-xl border overflow-hidden mt-6" style={{ borderColor: 'var(--border)' }}>
                             <div className="p-4 flex items-center justify-between gap-4" style={{ background: 'var(--background)' }}>
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                                        📅 {t('settings.calendar.googleCalendar')}
-                                        {calendarSaved && <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-bold">CONNECTED</span>}
+                                    <p className="font-semibold text-sm flex items-center gap-2 text-[var(--text-primary)]">
+                                    📅 {t('settings.calendar.googleCalendar')}
+                                    <CalendarStatusDot isConnected={calendarSaved} t={t} />
                                     </p>
                                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                         Read and create Google Calendar events via API key or OAuth.
@@ -4197,9 +4198,9 @@ export default function SettingsPage() {
                         <div className="rounded-xl border overflow-hidden mt-6" style={{ borderColor: 'var(--border)' }}>
                             <div className="p-4 flex items-center justify-between gap-4" style={{ background: 'var(--background)' }}>
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                                        🍎 {t('calendar.apple')}
-                                        {appleCalendarSaved && <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-bold">{t('calendar.connected')}</span>}
+                                    <p className="font-semibold text-sm flex items-center gap-2 text-[var(--text-primary)]">
+                                    🍎 {t('calendar.apple')}
+                                    <CalendarStatusDot isConnected={appleCalendarSaved} t={t} />
                                     </p>
                                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                         {t('calendar.appPasswordHelp')}
@@ -4263,9 +4264,9 @@ export default function SettingsPage() {
                         <div className="rounded-xl border overflow-hidden mt-6" style={{ borderColor: 'var(--border)' }}>
                             <div className="p-4 flex items-center justify-between gap-4" style={{ background: 'var(--background)' }}>
                                 <div className="flex-1 min-w-0">
-                                    <p className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-                                        📬 {t('calendar.outlook')}
-                                        {outlookSaved && <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-bold">{t('calendar.connected')}</span>}
+                                    <p className="font-semibold text-sm flex items-center gap-2 text-[var(--text-primary)]">
+                                    📬 {t('calendar.outlook')}
+                                    <CalendarStatusDot isConnected={outlookSaved} t={t} />
                                     </p>
                                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                         Microsoft Graph API — OAuth 2.0
