@@ -7,6 +7,74 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v9.2.1 — Stability & Completeness (April 2026)
+
+### Ollama / Local Models
+- **Tools disabled by default for local models**: Ollama, LM Studio, KoboldCpp, vLLM no longer receive tool definitions. Eliminates timeouts on consumer hardware.
+- **Tool slider**: New "Max tools for local models" slider (0–70, step 5, default 15). Shared across all local providers.
+- **Fast-fail retry**: If a local model doesn't respond within 10s with tools, Skales retries without tools automatically.
+- **Timeout leak fix**: `customEndpointTimeout` (30s) was overriding Ollama's 180s timeout for all providers. Now scoped to custom endpoints only.
+- **Chat hard-kill extended**: Local providers get 200s instead of 60s before the chat page kills the request.
+- **`isLocalProvider()` helper**: Detects Ollama, LM Studio, KoboldCpp, vLLM, and any localhost/127.0.0.1 endpoint. Used across tool stripping, timeouts, and retry logic.
+
+### Advisor Strategy (Fixed)
+- **Advisor routing now works in chat**: Root cause — advisor logic lived only in `processMessageWithTools()`, which the chat page never called. Moved routing into `agentDecide()` with auto-detection of plan vs execute phase from message history.
+- **Custom model text field fix**: Selecting "Custom model..." cleared the model to empty, which hid the text input. Fixed for both advisor and executor selectors.
+
+### Agent Skills (SKILL.md)
+- **Skills now save to disk**: Imported SKILL.md files stored in `~/.skales-data/agent-skills/` with manifest tracking.
+- **Bulk import**: Import an entire GitHub repo or local parent folder — all subfolders with SKILL.md are imported at once.
+- **@-mention in chat**: Type `@` to see a dropdown of installed skills. Select one to inject its SKILL.md content as context for that message. Multiple skills supported.
+- **Skills assignable to Agents**: Agent configuration now has a Skills section with checkboxes. Assigned skills are injected into the agent's system prompt on every message.
+- **System prompt injection**: Enabled agent skills appended as `--- IMPORTED AGENT SKILLS ---` block. Works in Chat, Spotlight, Browser, Codework, and Organization.
+
+### Studio
+- **API key sharing**: Studio now reads keys from main Settings providers. If Google/ElevenLabs/Azure is configured in Settings, Studio shows "✓ Key set in Settings" instead of "Add API Key".
+- **Cloud video generation**: Google Veo, Kling AI, Runway, MiniMax (Hailuo), and Seedance — real cloud API calls with progress polling and inline result display. No longer "Coming Soon".
+- **Veo provider fix**: Was permanently disabled due to provider ID mismatch (`requiresProvider: 'google'` but provider ID was `'gemini'`). Fixed.
+- **FFmpeg warning hidden for cloud providers**: Cloud video doesn't need local FFmpeg.
+
+### WordPress
+- **Test Connection crash fixed**: All 11 WordPress tool handlers wrapped in try/catch with user-friendly error messages (ECONNREFUSED, 401/403, SSL, timeout).
+- **Full-width CSS v2**: `body.skales-page` class added via `body_class` filter. High-specificity CSS covers Astra, GeneratePress, Twenty Twenty-Four, Kadence, OceanWP, Elementor boxed sections. `the_content` wrapper as last-resort override.
+- **`_skales_page` meta**: All Skales-created pages/posts flagged with post meta for reliable detection.
+- **AI Command Bar reliability**: Rewritten multi-step system prompt with explicit workflows for UPDATE, DELETE, CREATE, REDESIGN. "Never guess page IDs" rule. MAX_WP_ITERATIONS increased from 5 to 8.
+- **Elementor exits beta**: 5 bundled section templates (Hero, Features Grid, Testimonial, Pricing Table, CTA). Template JSON examples injected into agent system prompt.
+- **WordPress Connector Plugin bumped to v1.1.0**
+
+### Slash Commands (13 new, 24 total)
+- `/memory` — show memory summary (name, interests, goals, projects)
+- `/skills` — list installed agent skills with enabled/disabled status
+- `/provider` — show active provider, model, and base URL
+- `/version` — show Skales version
+- `/export` — export current chat as markdown file download
+- `/theme` — toggle dark/light mode
+- `/language` — show current locale
+- `/settings`, `/discover`, `/studio`, `/codework`, `/wordpress` — quick navigation
+- `/status` — system status check (provider, Ollama, integrations, WordPress)
+
+### Identity Maintenance
+- **Runs silently**: `silent: true` flag on system tasks. No "SECURITY GATE" approval prompts. No dramatic messaging. One-line summary only.
+
+### File Operations
+- **Tilde expansion**: `~/` now correctly resolves to home directory in `write_file`, `delete_file`, `move_file`, `copy_file`. Previously only worked in `read_file` and `create_directory`.
+
+### Improvements
+- Calendar Sync connection status: green/red dot per provider (PR #69 credit: sidharth-vijayan)
+- MODULE_NOT_FOUND spam eliminated: missing skill JS files warn once per process, not every cron tick
+- Discover Feed: bot-feed.php optimized with `readJsonlTail()` for all feed reads
+- ElevenLabs settings link corrected (pointed to Providers, now points to Integrations)
+- 13 new slash command descriptions added to all 12 locale files
+
+### Technical
+- electron-builder.yml v9.2.1
+- Capabilities/system prompt v9.2.1
+- DNA markers verified intact
+- TypeScript: zero errors (`tsc --noEmit` clean)
+- New files: `lib/studio/video-providers.ts`, `api/studio/video/generate-cloud/route.ts`, `lib/elementor-templates.ts`
+- Contributors: sidharth-vijayan, saagnik23
+
+
 ## v9.2.0 — "The Bridge" (April 2026)
 
 ### WordPress Integration (NEW)
