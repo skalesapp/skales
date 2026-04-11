@@ -158,6 +158,8 @@
         }
     },
     "settings": {
+        "calendarConnected": "Connected",
+        "calendarNotConnected": "Not connected",
         "title": "Settings",
         "save": "Save",
         "saved": "Saved!",

@@ -75,6 +75,7 @@ import {
     loadUpdateSettings, saveUpdateSettings, getCurrentVersion,
     type UpdateSettings,
 } from '@/actions/updates';
+import CalendarStatusDot from './CalendarStatusDot';
 
 const PROVIDER_CONFIG: { id: Provider; label: string; icon: string; desc: string; color: string; needsKey: boolean; primary?: boolean }[] = [
     { id: 'openrouter', label: 'OpenRouter', icon: '🌐', desc: 'Access to GPT-4o, Claude, Gemini & more via one API', color: '#84cc16', needsKey: true, primary: true },
@@ -4084,7 +4085,7 @@ export default function SettingsPage() {
                                 <div className="flex-1 min-w-0">
                                     <p className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                                         📅 {t('settings.calendar.googleCalendar')}
-                                        {calendarSaved && <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-bold">CONNECTED</span>}
+                                        <CalendarStatusDot isConnected={calendarSaved} />
                                     </p>
                                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                         Read and create Google Calendar events via API key or OAuth.
@@ -4199,7 +4200,7 @@ export default function SettingsPage() {
                                 <div className="flex-1 min-w-0">
                                     <p className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                                         🍎 {t('calendar.apple')}
-                                        {appleCalendarSaved && <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-bold">{t('calendar.connected')}</span>}
+                                        <CalendarStatusDot isConnected={!!appleCalendarConfig.caldavUrl && !!appleCalendarConfig.username} />
                                     </p>
                                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                         {t('calendar.appPasswordHelp')}
@@ -4265,7 +4266,7 @@ export default function SettingsPage() {
                                 <div className="flex-1 min-w-0">
                                     <p className="font-semibold text-sm flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                                         📬 {t('calendar.outlook')}
-                                        {outlookSaved && <span className="text-[10px] px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-bold">{t('calendar.connected')}</span>}
+                                        <CalendarStatusDot isConnected={outlookSaved} />
                                     </p>
                                     <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                         Microsoft Graph API — OAuth 2.0
