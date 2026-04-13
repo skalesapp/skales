@@ -17,7 +17,7 @@
   </p>
 
   <p>
-    <a href="https://github.com/skalesapp/skales/releases/tag/v9.2.1"><img src="https://img.shields.io/badge/version-9.2.1-10b981?style=flat-square" alt="Version 9.2.1" /></a>
+    <a href="https://github.com/skalesapp/skales/releases/tag/v9.2.5"><img src="https://img.shields.io/badge/version-9.2.5-10b981?style=flat-square" alt="Version 9.2.5" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/license-BSL_1.1-10b981?style=flat-square" alt="License" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/Windows_+_macOS_+_Linux-10b981?style=flat-square&logo=windows&logoColor=white" alt="Platform" /></a>
     <a href="https://github.com/skalesapp/skales/stargazers"><img src="https://img.shields.io/github/stars/skalesapp/skales?style=flat-square&color=10b981" alt="Stars" /></a>
@@ -105,8 +105,11 @@ Create images, videos, voice, and music with AI from one place. Multiple provide
 ### 🌐 Built-in Browser Agent
 Your AI navigates websites, clicks buttons, fills forms, bypasses cookie banners, and extracts content to Markdown. Workspaces to save sessions. Playbooks for repeatable workflows. Session isolation with privacy controls. Semantic element detection via accessibility tree.
 
-### 🌐 WordPress Integration (NEW in v9.2.1)
-Connect to any WordPress site with the [Skales Connector Plugin](https://github.com/skalesapp/wordpress). Type "create a landing page for my product" and Skales builds it with full HTML/CSS. Manage pages, posts, WooCommerce products, SEO meta, media uploads, and cache clearing through natural language. AI Command Bar with conversational multi-step execution. Elementor support (beta), WooCommerce bulk pricing (beta).
+### 🌐 WordPress 2.0
+Connect to any WordPress site with the [Skales Connector Plugin v1.2.0](https://github.com/skalesapp/wordpress). Type "create a landing page for my product" and Skales builds it with Elementor's Flexbox Container format and professional design templates. 96KB Design Skill with 15 Elementor + 10 Gutenberg templates. Manage pages, posts, WooCommerce products, SEO meta, media uploads, and cache clearing through natural language. Web search available in WordPress agent for current content.
+
+### 🎮 Playground (Beta)
+Your personal AI workspace. A deep onboarding interview (15 questions, 4 phases) learns your work style, goals, and preferences. Based on your answers, Playground suggests personalized Spaces — interactive mini-apps built specifically for you. Spaces persist data locally, connect to AI, and can be shared on the Discover Feed (personal data auto-removed). Glassmorphism UI with animated mesh background.
 
 ### 🔍 Spotlight and Vision
 <p align="center">
@@ -221,7 +224,7 @@ Like Spotify Wrapped for your AI. Auto-generates every Monday. Activities, top t
 | **Styling** | Tailwind CSS |
 | **Language** | TypeScript |
 | **Storage** | `~/.skales-data` (JSON + SQLite) |
-| **AI** | ReAct agent loop, 70+ tools, multi-agent delegation, context-aware tool filtering |
+| **AI** | ReAct agent loop, 70+ tools (including download_file), multi-agent delegation, context-aware tool filtering |
 
 ---
 
@@ -229,7 +232,9 @@ Like Spotify Wrapped for your AI. Auto-generates every Monday. Activities, top t
 
 12 Languages: EN, DE, ES, FR, IT, PT, KO, ZH, JA, VI, HR, TR.
 
-**Contributors:** [@btafoya](https://github.com/btafoya), [@bmp-jaller](https://github.com/bmp-jaller), [@henk717](https://github.com/henk717), [@SohaibKhaliq](https://github.com/SohaibKhaliq), [@VladB-evs](https://github.com/VladB-evs), [@v33-kind](https://github.com/v33-kind), [@sidharth-vijayan](https://github.com/sidharth-vijayan), [@saagnik23](https://github.com/saagnik23).
+**Contributors:** [@btafoya](https://github.com/btafoya), [@bmp-jaller](https://github.com/bmp-jaller), [@henk717](https://github.com/henk717), [@SohaibKhaliq](https://github.com/SohaibKhaliq), [@VladB-evs](https://github.com/VladB-evs), [@v33-kind](https://github.com/v33-kind), [@sidharth-vijayan](https://github.com/sidharth-vijayan), [@saagnik23](https://github.com/saagnik23), [@Kombowz](https://github.com/Kombowz).
+
+Want to contribute? See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 [Discussions](https://github.com/skalesapp/skales/discussions) · [Bug Reports](https://github.com/skalesapp/skales/issues)
 

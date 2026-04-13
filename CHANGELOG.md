@@ -7,6 +7,64 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v9.2.5 — "WordPress 2.0" + Playground (April 13, 2026)
+
+### WordPress 2.0
+- 96KB WordPress Design Skill bundled with 15 Elementor + 10 Gutenberg templates
+- Elementor Flexbox Container format (fixes blank pages on modern Elementor)
+- elementor_canvas page template auto-set
+- Web search available in WordPress agent
+- Selective skill injection (reduces prompt from 96KB to ~13KB)
+- WordPress Connector Plugin v1.2.0 with collision detection
+
+### Playground (Beta)
+- Deep onboarding interview: 15 questions, 4 phases
+- AI-powered personalized Space suggestions
+- Glassmorphism UI with animated mesh background
+- AI-generated interactive Spaces with localStorage persistence
+- AI features via direct /api/playground/ai endpoint
+- Share to Discover Feed with data sanitization
+- Milestone system and growth mechanism
+
+### New Tool
+- download_file — download from URL to local path with auto-filename, redirects, VirusTotal scan
+
+### Fixes
+- Duplicate file tools unified (create_folder → create_directory, list_files → list_directory)
+- Slash commands: typed and clicked now identical (all 24 commands)
+- /theme toggle fixed
+- Memory Consolidation catch-up scheduler
+- Playwright macOS brew PATH resolution + binary verification
+- Discover Feed admin delete + admin free posting
+- Studio: Veo 3.0, Imagen 4, GPT Image 1, Kling v2, Runway Gen4 Turbo
+- Obsidian theme header navigation updated
+- Tool deduplication prevents duplicate function declaration errors
+- Tool-awareness warning for local models with tools disabled
+
+### Contributors
+- @Kombowz — local model testing, Ollama/LM Studio QA
+
+
+## v9.2.3 — File Operations & Stability (April 2026)
+
+### Critical Fixes
+- **File tool routing**: Unified create_folder/create_directory, added tilde expansion to ALL file tool handlers
+- **Model routing**: System prompt now explicitly instructs which tool to use for each file operation
+- **Multi-step tasks**: Agent no longer stops after first tool call — continuation prompt added for incomplete directory+file creation
+- **Sidebar version**: Now shows correct version number (was stuck on 9.2.1)
+- **Slash commands**: All 24 commands audited; /tools list updated to reflect unified tool names
+
+### Improvements
+- Duplicate tools merged (create_folder → create_directory, list_files → list_directory) — old names kept as aliases for backward compat
+- Duplicate tool definitions removed from model payload — models now see one tool per operation
+- create_document handler now expands tilde paths before resolving
+- /tools slash command updated with correct tool names and added missing tools (search_web, download_file, check_system_status)
+
+### Verified (no changes needed)
+- Auto-updater: full check → download → SHA-512 verify → install flow confirmed working
+- Playwright install: PATH resolution, chromium-only install, error handling all solid
+
+
 ## v9.2.2 — Hotfix (April 2026)
 
 ### Critical Fixes
