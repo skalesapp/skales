@@ -1,39 +1,40 @@
 <div align="center">
-  <p>If you find this useful, a ⭐ helps others discover it</p>
-  <h1>Skales 🦎</h1>
+  <p>
+    <a href="https://skales.app/download/latest-windows"><b>Windows</b></a> · 
+    <a href="https://skales.app/download/latest-mac-arm64"><b>macOS (Apple Silicon)</b></a> · 
+    <a href="https://skales.app/download/latest-mac-intel"><b>macOS (Intel)</b></a> · 
+    <a href="https://skales.app/download/latest-linux"><b>Linux</b></a>
+  </p>
 <p align="center">
+    <img src="https://skales.app/readme.gif" alt="Skales AI Desktop Agent Interface" width="100%" />
+
+</p>
+  <p align="center">
   <a href="https://www.youtube.com/watch?v=k83NlptVmfc">
     <img src="https://img.youtube.com/vi/k83NlptVmfc/maxresdefault.jpg" 
          alt="Skales Demo Video" width="100%" />
   </a>
 </p>
+  <h1>Skales 🦎</h1>
   <p>
-    <strong>Your Local AI Desktop Agent for Windows, macOS & Linux</strong>
+    <strong>Local AI Desktop Agent for Windows, macOS & Linux</strong>
   </p>
-
   <p>
-    One-click install. No Docker. No terminal. 15+ AI providers. Runs locally with Ollama.<br/>
-    Chat, code autonomously, create images & videos, control your desktop, browse the web, organize multi-agent teams, manage calendars, send emails, and automate your day.
-  </p>
-
-  <p>
+  <sub>iOS & Android currently in Beta - Q2 2026</sub>
+    </p>
+<p>
     <a href="https://github.com/skalesapp/skales/releases/tag/v10.0.1"><img src="https://img.shields.io/badge/version-10.0.1-10b981?style=flat-square" alt="Version 10.0.1" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/license-BSL_1.1-10b981?style=flat-square" alt="License" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/Windows_+_macOS_+_Linux_+_Android-10b981?style=flat-square&logo=windows&logoColor=white" alt="Platform" /></a>
     <a href="https://github.com/skalesapp/skales/stargazers"><img src="https://img.shields.io/github/stars/skalesapp/skales?style=flat-square&color=10b981" alt="Stars" /></a>
   </p>
-
   <p>
-    <a href="https://skales.app/download/latest-windows"><b>Windows</b></a> · 
-    <a href="https://skales.app/download/latest-mac-arm64"><b>macOS (Apple Silicon)</b></a> · 
-    <a href="https://skales.app/download/latest-mac-intel"><b>macOS (Intel)</b></a> · 
-    <a href="https://skales.app/download/latest-linux"><b>Linux</b></a> · 
-    <a href="https://skales.app/mobile"><b>Android</b></a>
+    One-click install. No Docker. No terminal. 15+ AI providers. Runs locally with Ollama.<br/>
+    Chat, code autonomously, create images & videos, control your desktop, browse the web, organize multi-agent teams, manage calendars, send emails, and automate your day.
   </p>
 
-  <p>
-    <sub>🎉 <b>v10.0.1 "Closing the Gap"</b> — Auto-updater fix, export/import, multi-step tool chains, Gemini tool schema, and 19 more fixes. <a href="./CHANGELOG.md">See what's new →</a></sub>
-  </p>
+
+ <p>If you find this useful, a ⭐ helps others discover it</p>
   <p>
     <a href="https://docs.skales.app">Documentation</a> · <a href="https://getskales.app">Blog</a> · <a href="./CHANGELOG.md">Changelog</a> · <a href="https://github.com/skalesapp/skales/discussions">Community</a>
   </p>
@@ -89,10 +90,10 @@ Select any project folder. Describe the task. Pick your model. Watch the agent r
 Build an AI company. Create departments, assign specialized agents, set team leaders, and delegate complex tasks. The CEO agent auto-routes work to the right team. Export and import Company Packs to share your org setup. Advisor Strategy: use a powerful model for planning and a fast model for execution.
 
 ### 📱 Skales Mobile (NEW in v10)
-Your AI agent in your pocket. Android now, iOS soon. Pair via QR and the phone instantly gets access to THIS desktop's full tool set (139+ tools: shell, files, browser control, email, calendar, Studio, everything). End-to-end encrypted over the Skales relay (TweetNaCl box, keys never leave the devices). Or run the phone **standalone** — 27 native mobile tools, no desktop needed. Shared ecosystem: same Discover Feed, same Custom Agents, same Skills.
+Your AI agent in your pocket. Android now, iOS soon. Pair via QR and the phone instantly gets access to THIS desktop's full tool set (139+ tools: shell, files, browser control, email, calendar, Studio, everything). End-to-end encrypted relay. Keys never leave the devices. Or run the phone **standalone** — 27 native mobile tools, no desktop needed. Shared ecosystem: same Discover Feed, same Custom Agents, same Skills.
 
 ### 🗣️ Voice — Talk to Skales (NEW in v10)
-Per-message speaker icon on every AI reply. Optional "Read responses aloud" for continuous flow. TTS providers: Device voices (free), OpenAI Speech (alloy/echo/fable/onyx/nova/shimmer), ElevenLabs, Azure, or any OpenAI-compatible endpoint. STT via Groq Whisper (free tier) or OpenAI Whisper. Full Voice Chat Mode for hands-free operation.
+Per-message speaker icon on every AI reply. Optional "Read responses aloud" for continuous flow. TTS providers: Device voices (free), OpenAI Speech 6 natural voices, ElevenLabs, Azure, or any OpenAI-compatible endpoint. STT via Groq Whisper (free tier) or OpenAI Whisper. Full Voice Chat Mode for hands-free operation.
 
 ### 🌐 Inline HTML Preview (NEW in v10)
 When the AI writes a ```` ```html ```` block in chat, Skales renders it live in a sandboxed iframe right in the conversation. Perfect for "make me a chart of X", "embed a map", "build an SVG icon", mini-apps. Buttons: Show Code, Download HTML, Save as Image, Mute, Hide. Mute + hide are global and persist across sessions — one click silences every preview in every chat.
@@ -213,7 +214,7 @@ Like Spotify Wrapped for your AI. Auto-generates every Monday. Activities, top t
 - **Sandboxed:** Configurable file operation boundaries.
 - **Signed:** macOS Apple Developer ID. Windows signing coming.
 - **WordPress:** Token-based auth (SHA-256). No data leaves your site. Plugin is MIT-licensed.
-- **Emoji CDN:** Animated emojis served from our CDN (Nürnberg, Germany). Optional Google fallback off by default.
+- **Emoji CDN:** Animated emojis served from our own servers in the EU. Optional Google fallback off by default.
 
 ---
 
@@ -227,7 +228,7 @@ Like Spotify Wrapped for your AI. Auto-generates every Monday. Activities, top t
 
 > 🐧 **Linux:** AppImage. `chmod +x` and run.
 
-> 📱 **Android:** Skales Mobile app — pair to your Desktop via QR, or run standalone. Submitted to Play Store (beta, closed testing). Get it at [skales.app/mobile](https://skales.app/mobile).
+> 📱 **Android:** Skales Mobile app — pair to your Desktop via QR, or run standalone. Submitted to Play Store (beta, closed testing).
 
 > 🔄 **Switching tools?** Import from ChatGPT, Claude, Copilot, Gemini, OpenClaw, Hermes. Settings > Import.
 
@@ -244,7 +245,7 @@ Like Spotify Wrapped for your AI. Auto-generates every Monday. Activities, top t
 | **Storage** | `~/.skales-data` (JSON + SQLite) |
 | **AI** | ReAct agent loop, 139+ tools, multi-agent delegation, context-aware tool filtering |
 | **Motion** | Framer Motion (message stagger, typing wave, FAB, modal springs) with `prefers-reduced-motion` honoured |
-| **Relay** | wss://relay.skales.app — E2E encrypted (TweetNaCl box) for Mobile ↔ Desktop pairing |
+| **Relay** | E2E encrypted relay for Mobile ↔ Desktop pairing |
 
 ---
 
