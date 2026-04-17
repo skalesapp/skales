@@ -7,6 +7,96 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v10.0.0 — "Closing the Gap" (April 16, 2026)
+
+The biggest Skales release ever. Desktop + Mobile + Relay now form one ecosystem: every message you send from your phone routes through Desktop's full tool set, every capability you build on Desktop is reachable from the Mobile companion. Chat feels smoother. Studio speaks video. Settings speaks voice.
+
+### Skales Mobile (NEW)
+- Official Skales Mobile app for Android (iOS coming) — submitted to Play Store (beta, closed testing)
+- Full standalone AI agent in your pocket — 27 mobile tools, works with or without the desktop running
+- Remote Mode: pair via QR over the end-to-end encrypted relay (wss://relay.skales.app, TweetNaCl box, keys never leave the devices)
+- Paired phones get full access to THIS desktop's agentDecide pipeline — all 139+ tools (shell, files, browser control, email, calendar, Studio, etc.)
+- Image upload from mobile now forwards through the bridge as OpenAI-vision multimodal content (Desktop Vision-capable providers analyze it like a local upload)
+- Shared ecosystem: same Discover Feed, same Custom Agents, same Skills
+
+### Studio — LTX-2.3 Video Generation (NEW provider)
+- fal.ai LTX-2.3 integration (text-to-video + image-to-video, standard and fast variants)
+- $0.06/sec at 1080p, native 9:16 portrait support, 5s and 10s durations
+- Added alongside existing Veo/Kling/Runway/Replicate providers — shares the same Cloud-Render pipeline
+- Live "Connected" badge in Studio when fal API key is configured in Settings
+- 4 new localized model labels (`studio.falModels.textToVideo`, `imageToVideo`, `textToVideoFast`, `imageToVideoFast`) across all 12 languages
+
+### Animated Emoji System (NEW)
+- Noto Color Emoji font bundled — all Unicode emojis now render identically on Windows, macOS, and Linux
+- 16 brand and expressive emojis with smooth Lottie animations served from Skales CDN
+- Animated splash screen — Gecko mascot animates during app startup
+- Dashboard wave — hover over the greeting hand for a welcome animation
+- Discover Feed spark picker — emoji reactions animate on hover, play once in the sent confirmation
+- Chat expressiveness — AI messages with creative, memory, video, or web context emojis animate on arrival
+- Big emoji messages — send 1-3 emojis alone and they render larger with animation (iOS/Telegram style)
+- Easter egg shortcuts in chat: `:gecko:`, `:bubbles:`, `:paw:`, `/highfive`, `/bow`
+- Emoji privacy controls — optional Google CDN fallback in Settings → Privacy (off by default, GDPR compliant)
+- Emoji preloading — brand emojis cached on app start for instant rendering
+
+### Voice — TTS + STT
+- OpenAI TTS provider added (voices: alloy, echo, fable, onyx, nova, shimmer) — reuses the existing OpenAI provider key, no extra setup
+- New "Read responses aloud" toggle in Settings → TTS — when enabled, every assistant reply is spoken via the configured provider once streaming completes
+- Smart markdown stripping before TTS so the voice doesn't read ``` or # out loud
+- Per-message speaker button on every assistant bubble — click to listen, click again to stop, visible on hover next to Copy
+- Groq-key hint in the STT section (free Whisper access) with one-click jump to AI Providers tab
+- All voice UI fully localized (readAloud, stopReading, autoReadLabel, autoReadHint, etc. in 12 languages)
+
+### Chat — Smoothness & Inline Preview
+- Message entrance via Framer Motion spring (stiffness 320, damping 30, mass 0.9)
+- AnimatePresence with initial=false — session restores stay instant, only NEW messages fade-lift in
+- Typing indicator rewritten from translate-bounce to smooth wave (scale + opacity, 1.2s loop, 160ms stagger)
+- Typing bubble itself now fades in instead of popping, same style preserved when the agent transitions to tool-status so the indicator never "jumps"
+- Scroll-to-bottom FAB: lime-circle appears bottom-right when user scrolls up ≥200px from latest; click returns to live view + re-enables auto-follow
+- Inline HTML Preview: ```` ```html ```` fenced code blocks now render a sandboxed live iframe with Show Code / Download HTML / Save as Image / Mute / Hide toggles
+- Global mute + hide persist across all chats and sessions via localStorage — "34 webviews, 0 audio" on a single click
+- Save as Image — pixel-exact region capture, works on sandboxed iframes
+- Global `prefers-reduced-motion` CSS guard — OS-level accessibility setting disables all animations across the app
+
+### Capabilities & System Prompt
+- APP_VERSION bumped to 10.0.0, APP_VERSION_NAME = "Closing the Gap"
+- System prompt (Level 0 + Level 1) now explicitly knows about Mobile pairing, Inline HTML Preview, the fal.ai video path, Remote API, and the 12 supported languages
+- Agent is proactive: when the user describes something visual (chart, card, map, SVG, mini-app), it offers inline preview in the user's language before producing it
+- capabilities.json emits a live `mobile` block per rebuild (pairedDeviceCount, relay URL, E2E method, paired-device summary)
+- 6-theme mention (Dark / Light / Midnight / Forest / Amber / Glass) added to prompt
+
+### Bug Fixes
+- Buddy window draggable on Windows via native mousedown cursor tracking (screen.getCursorScreenPoint delta → setPosition), plus Cmd/Ctrl+Shift+B global reset shortcut
+- Agent delete button fixed — sandboxed Electron renderer silently drops window.confirm(); replaced with a two-click armed-state confirmation directly in the button
+- Playwright chromium detection now sorts descending and matches both `chromium-NNNN` and `chromium_headless_shell-NNNN` layouts — always picks the newest version installed
+- Telegram bot auto-restart watchdog: child.on('exit') listener with rate-limit (max 3 respawns per rolling hour), 5s backoff, respects current config enable/disable
+- feed.php `update_profile` now also updates the `tag` field in-place when a new gamertag is requested and not taken by another user — no more duplicate JSONL entries
+- Next.js proxy forwards the new tag in the update_profile JSON body so feed.php can rename in place
+- `settings.stt.help` i18n key re-applied (was hardcoded back to raw text)
+- Hardcoded "(API key required)" badge in Studio video-provider dropdown moved to `studio.apiKeyRequired` i18n key (12 languages)
+- `build-info.json` bumped from 9.3.0 → 10.0.0 so boot log matches package.json
+- External links in browser view now open in the default OS browser
+- Share window overlay responds to Escape key across chat, spotlight, and buddy
+- Browser scroll-to-bottom works reliably on lazy-loading and single-page applications
+- Playbook steps now wait for actual page load before proceeding
+- macOS screen recording permission detected with user-facing guidance in share window
+
+### Under the Hood
+- New fal.ai queue-based client with defensive URL extraction and 6-minute timeout
+- HTML preview preference sync across all open windows
+- Shared Framer-Motion animation presets (spring, stagger, fade variants)
+- New IPC channels for Buddy drag and region capture
+- Global CSS for typing wave dots, scroll FAB, and reduced-motion guard
+- Noto-COLRv1.ttf (4.8 MB, vector emoji font) replaces platform-specific emoji rendering
+- Emoji loader with 5-tier cache: memory → IndexedDB → VPS → Google fallback (opt-in) → Unicode
+- SkalesEmoji React component with loop/once/static/hover animation modes
+- 12 locale files reach perfect parity: 3546 keys each, zero missing, zero extra
+
+### Localization
+- ~60 new i18n keys added across 12 languages (en, de, es, fr, hr, ja, ko, pt, ru, tr, vi, zh) for fal.ai models, HTML preview, voice, Mobile, animated emojis, mute/unmute, scroll-to-latest
+- All new German keys are Du/Sie-neutral (Infinitiv + Substantiv form — "Vorlesen", "Stumm", "Als Bild speichern")
+- ALL new user-facing text goes through the i18n system — zero hardcoded English in new code
+
+
 ## v9.3.0 — Stability Release (April 13, 2026)
 
 ### Stability
