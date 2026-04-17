@@ -1,39 +1,37 @@
 <div align="center">
-  <p>If you find this useful, a ⭐ helps others discover it</p>
-  <h1>Skales 🦎</h1>
+  <p>
+    <a href="https://skales.app/download/latest-windows"><b>Windows</b></a> · 
+    <a href="https://skales.app/download/latest-mac-arm64"><b>macOS (Apple Silicon)</b></a> · 
+    <a href="https://skales.app/download/latest-mac-intel"><b>macOS (Intel)</b></a> · 
+    <a href="https://skales.app/download/latest-linux"><b>Linux</b></a>
+  </p>
 <p align="center">
+    <img src="https://skales.app/readme.gif" alt="Skales AI Desktop Agent Interface" width="100%" />
+
+</p>
+  <p align="center">
   <a href="https://www.youtube.com/watch?v=k83NlptVmfc">
     <img src="https://img.youtube.com/vi/k83NlptVmfc/maxresdefault.jpg" 
          alt="Skales Demo Video" width="100%" />
   </a>
 </p>
+  <h1>Skales 🦎</h1>
   <p>
     <strong>Your Local AI Desktop Agent for Windows, macOS & Linux</strong>
   </p>
-
-  <p>
-    One-click install. No Docker. No terminal. 15+ AI providers. Runs locally with Ollama.<br/>
-    Chat, code autonomously, create images & videos, control your desktop, browse the web, organize multi-agent teams, manage calendars, send emails, and automate your day.
-  </p>
-
-  <p>
+<p>
     <a href="https://github.com/skalesapp/skales/releases/tag/v10.0.0"><img src="https://img.shields.io/badge/version-10.0.0-10b981?style=flat-square" alt="Version 10.0.0" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/license-BSL_1.1-10b981?style=flat-square" alt="License" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/Windows_+_macOS_+_Linux_+_Android-10b981?style=flat-square&logo=windows&logoColor=white" alt="Platform" /></a>
     <a href="https://github.com/skalesapp/skales/stargazers"><img src="https://img.shields.io/github/stars/skalesapp/skales?style=flat-square&color=10b981" alt="Stars" /></a>
   </p>
-
   <p>
-    <a href="https://skales.app/download/latest-windows"><b>Windows</b></a> · 
-    <a href="https://skales.app/download/latest-mac-arm64"><b>macOS (Apple Silicon)</b></a> · 
-    <a href="https://skales.app/download/latest-mac-intel"><b>macOS (Intel)</b></a> · 
-    <a href="https://skales.app/download/latest-linux"><b>Linux</b></a> · 
-    <a href="https://skales.app/mobile"><b>Android</b></a>
+    One-click install. No Docker. No terminal. 15+ AI providers. Runs locally with Ollama.<br/>
+    Chat, code autonomously, create images & videos, control your desktop, browse the web, organize multi-agent teams, manage calendars, send emails, and automate your day.
   </p>
 
-  <p>
-    <sub>🎉 <b>v10.0.0 "Closing the Gap"</b> — Desktop + Mobile + Relay, one ecosystem. Animated emojis, voice in/out, fal.ai video, inline HTML preview. <a href="./CHANGELOG.md">See what's new →</a></sub>
-  </p>
+
+ <p>If you find this useful, a ⭐ helps others discover it</p>
   <p>
     <a href="https://docs.skales.app">Documentation</a> · <a href="https://getskales.app">Blog</a> · <a href="./CHANGELOG.md">Changelog</a> · <a href="https://github.com/skalesapp/skales/discussions">Community</a>
   </p>
