@@ -273,7 +273,7 @@ Want to contribute? See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## 📜 License
 
-**BSL 1.1** — Free for personal and commercial use. See [LICENSE](./LICENSE).
+**BSL 1.1** — Free for personal, educational, and non-commercial use. Commercial SaaS or competing products require written permission. Converts to Apache 2.0 on 2030-04-19. See [LICENSE](./LICENSE) for full terms.
  
 WordPress Plugin: **MIT** — [github.com/skalesapp/wordpress](https://github.com/skalesapp/wordpress)
  
