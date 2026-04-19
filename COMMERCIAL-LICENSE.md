@@ -1,35 +1,51 @@
-# Commercial Licensing - Skales
+# Commercial Licensing — Skales
 
-Skales is released under the **Business Source License 1.1 (BSL)**.
+Skales is released under the **Business Source License 1.1 (BSL)**. This page 
+clarifies what's free and what requires a commercial license.
 
-## Free Use
+## Free Use — No License Required
 
-The following uses are **free of charge** and require no license agreement:
+The following uses are free of charge:
 
-- **Private individuals** using Skales for personal, non-commercial purposes
-- **Students and educational institutions** using Skales for learning or academic work
+- **Personal use** on your own machine, for any purpose
+- **Students and educational institutions** for learning or academic work  
+- **Internal use within a company or team** for research, testing, development, 
+  or as a productivity tool — no revenue generation from Skales itself
+- **Open-source contributors** building on or extending Skales non-commercially
+- **Creating modifications or derivative works** for personal or internal use
 
-## Commercial Use Requires a License
+## Commercial License Required
 
-Any of the following activities require a **written commercial license** from the author:
+A written commercial license is required for:
 
-- Use by a company, organization, or team in a professional or business context
-- Offering Skales or a derivative as a hosted service (SaaS)
-- Redistributing or reselling Skales as part of a commercial product
-- Any use generating direct or indirect commercial revenue
+- **Hosting Skales as a Service (SaaS)** — offering Skales or a modified version 
+  as a hosted product to third parties
+- **Managed hosting / cloud offerings** — running Skales on behalf of customers 
+  for a fee
+- **Redistributing Skales as part of a commercial product** — bundling or 
+  embedding in a paid product sold to others
+- **Building a competing commercial AI agent product** derived from Skales 
+  source code
 
-Using Skales commercially without a license is a violation of the BSL 1.1.
+If you're unsure whether your use case requires a license, just ask.
+
+## Change Date
+
+On **April 19, 2030** (four years after this version's release), Skales v10.0.x 
+converts to the **Apache License 2.0**. From that date, all restrictions above 
+lift for v10.0.x. Future versions (v10.1 and beyond) ship under their own BSL 
+terms with their own Change Dates.
 
 ## Contact
 
-To obtain a commercial license or inquire about pricing:
+For a commercial license or questions:
 
-**Mario Simic**
-Email: dev@mariosimic.at
+**Mario Simic**  
+Email: dev@mariosimic.at  
 Website: https://skales.app
 
-Pricing is determined individually based on use case and scale. Contact us to discuss your needs.
+Pricing is case-by-case based on scale and use.
 
 ---
 
-*© 2026 Skales - Mario Simic. All rights reserved.*
+*© 2026 Mario Simic. BSL 1.1.*
