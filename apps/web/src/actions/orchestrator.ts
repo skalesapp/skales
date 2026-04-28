@@ -5323,6 +5323,7 @@ export async function processMessageWithTools(
         sessionId?: string;
         provider?: Provider;
         model?: string;
+        systemPrompt?: string;
         confirmedToolCalls?: string[]; // Tool call IDs that user confirmed
         /** Optional callback fired on each ReAct step — used by Autopilot Live Execution view */
         onStep?: (step: { type: 'thinking' | 'tool_call' | 'tool_result'; content: string; toolName?: string }) => void;

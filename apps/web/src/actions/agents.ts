@@ -5,6 +5,7 @@ import path from 'path';
 import crypto from 'crypto';
 
 import { DATA_DIR } from '@/lib/paths';
+import { buildAgentExecutionRequest } from '@/lib/agent-execution-request';
 const AGENTS_DIR = path.join(DATA_DIR, 'agents');
 const DEFINITIONS_DIR = path.join(AGENTS_DIR, 'definitions');
 const EXECUTIONS_DIR = path.join(AGENTS_DIR, 'executions');
@@ -180,13 +181,9 @@ export async function executeAgent(agentId: string, task: string): Promise<Agent
         execution.logs.push({ timestamp: Date.now(), message: 'Processing task with AI...', level: 'info' });
         fs.writeFileSync(execPath, JSON.stringify(execution, null, 2));
 
-        // Build a combined prompt using the agent's persona + the task
-        const agentPrompt = `[Agent: ${agent.name}]\n[System: ${agent.systemPrompt}]\n\nTask: ${task}`;
+        const agentRequest = buildAgentExecutionRequest(agent, task);
 
-        const result = await processMessageWithTools(agentPrompt, [], {
-            model: agent.model,
-            provider: agent.provider as any,
-        });
+        const result = await processMessageWithTools(agentRequest.message, [], agentRequest.options);
 
         execution.logs.push({ timestamp: Date.now(), message: `Completed via ${result.provider}/${result.model}`, level: 'info' });
         result.toolResults.forEach(tr => {
