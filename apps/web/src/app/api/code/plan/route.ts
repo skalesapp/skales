@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import { getLioConfig, callLlmSimple, createProject, getProject, saveProject, type LioPlan } from '@/actions/code-builder';
+import { listProjectContextFiles } from '@/lib/lio-project-files';
 
 // ─── Planning API — streams Architect + Reviewer discussion ──
 
@@ -134,21 +135,17 @@ export async function POST(req: NextRequest) {
                     const dir = existingProjectDir || project.projectDir;
                     try {
                         if (fs.existsSync(dir)) {
-                            const files = fs.readdirSync(dir).filter(f =>
-                                !f.startsWith('_') && !f.startsWith('.') &&
-                                (f.endsWith('.html') || f.endsWith('.css') || f.endsWith('.js') ||
-                                 f.endsWith('.ts') || f.endsWith('.tsx') || f.endsWith('.json') ||
-                                 f.endsWith('.py') || f.endsWith('.md'))
-                            );
+                            const files = listProjectContextFiles(dir, { maxFiles: 8 })
+                                .filter(file => file.relativePath !== 'project.json');
                             if (files.length > 0) {
-                                const snippets = files.slice(0, 8).map(f => {
+                                const snippets = files.map(file => {
                                     try {
-                                        const content = fs.readFileSync(path.join(dir, f), 'utf-8');
+                                        const content = fs.readFileSync(file.absolutePath, 'utf-8');
                                         const preview = content.length > 600 ? content.slice(0, 600) + '\n... (truncated)' : content;
-                                        return `### ${f}\n\`\`\`\n${preview}\n\`\`\``;
-                                    } catch { return `### ${f}\n(could not read)`; }
+                                        return `### ${file.relativePath}\n\`\`\`\n${preview}\n\`\`\``;
+                                    } catch { return `### ${file.relativePath}\n(could not read)`; }
                                 });
-                                existingFilesContext = `\n\n## Existing project files (${files.length} total):\n${snippets.join('\n\n')}`;
+                                existingFilesContext = `\n\n## Existing project files (showing ${files.length}):\n${snippets.join('\n\n')}`;
                             }
                         }
                     } catch { /* non-fatal */ }

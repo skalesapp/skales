@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs';
 import { getLioConfig, getProject, saveProject, callLlmSimple } from '@/actions/code-builder';
+import { listProjectContextFiles } from '@/lib/lio-project-files';
 
 // ─── Build API — streams step-by-step build progress ─────────
 
@@ -239,12 +240,12 @@ function buildStepContext(project: any, stepIndex: number, chatMessage?: string)
     // Gather existing files for context
     const existingFiles: string[] = [];
     try {
-        const files = fs.readdirSync(project.projectDir);
-        for (const f of files) {
-            if (f === 'project.json') continue;
+        const files = listProjectContextFiles(project.projectDir, { maxFiles: 12 });
+        for (const file of files) {
+            if (file.relativePath === 'project.json') continue;
             try {
-                const content = fs.readFileSync(path.join(project.projectDir, f), 'utf-8');
-                existingFiles.push(`\n--- ${f} ---\n${content.slice(0, 2000)}`);
+                const content = fs.readFileSync(file.absolutePath, 'utf-8');
+                existingFiles.push(`\n--- ${file.relativePath} ---\n${content.slice(0, 2000)}`);
             } catch { /* skip */ }
         }
     } catch { /* dir not ready */ }
