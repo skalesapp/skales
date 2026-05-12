@@ -295,6 +295,17 @@ export async function rebuildCapabilities(): Promise<void> {
         if (secrets.hasXAI) configuredProviders.push('xAI (Grok)');
         if (secrets.hasOpenRouter) configuredProviders.push('OpenRouter');
 
+        try {
+            const settingsPath = path.join(DATA_DIR, 'settings.json');
+            if (fs.existsSync(settingsPath)) {
+                const st = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+                const qn = st.providers?.qiniu;
+                if (qn?.apiKey && String(qn.apiKey).trim() && !configuredProviders.includes('Qiniu')) {
+                    configuredProviders.push('Qiniu');
+                }
+            }
+        } catch { /* ignore */ }
+
         // Build skill entries
         const skills: Record<string, {
             name: string; enabled: boolean; configured: boolean;

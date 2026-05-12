@@ -147,6 +147,7 @@ export async function callLLM(
         deepseek:   'https://api.deepseek.com/v1/chat/completions',
         xai:        'https://api.x.ai/v1/chat/completions',
         together:   'https://api.together.xyz/v1/chat/completions',
+        qiniu:      'https://api.qnaigc.com/v1/chat/completions',
         ollama:     `${baseUrl || 'http://localhost:11434/v1'}/chat/completions`,
         google:     'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
     };

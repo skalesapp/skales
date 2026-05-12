@@ -243,6 +243,7 @@ export async function callLLMDirect(settings: any, systemPrompt: string, userMsg
         deepseek:   'https://api.deepseek.com/v1/chat/completions',
         xai:        'https://api.x.ai/v1/chat/completions',
         together:   'https://api.together.xyz/v1/chat/completions',
+        qiniu:      'https://api.qnaigc.com/v1/chat/completions',
     }[provider as string] ?? 'https://openrouter.ai/api/v1/chat/completions';
 
     const res = await fetch(url, {

@@ -55,6 +55,7 @@ const PROVIDERS = [
     { value: 'deepseek',   label: 'DeepSeek'      },
     { value: 'xai',        label: 'xAI / Grok'    },
     { value: 'together',   label: 'Together AI'   },
+    { value: 'qiniu',      label: 'Qiniu'          },
     { value: 'ollama',     label: 'Ollama (Local)' },
     { value: 'google',     label: 'Google AI'     },
 ];

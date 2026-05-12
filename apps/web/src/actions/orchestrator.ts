@@ -4836,6 +4836,7 @@ export async function agentDecide(
         else if (provider === 'groq') providerConfig.model = 'llama-3.3-70b-versatile';
         else if (provider === 'openrouter') providerConfig.model = 'openai/gpt-4o-mini';
         else if (provider === 'ollama') providerConfig.model = 'llama3';
+        else if (provider === 'qiniu') providerConfig.model = 'deepseek-v3';
     }
 
     // Vision model routing:

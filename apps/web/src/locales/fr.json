@@ -1040,6 +1040,7 @@
             "anthropic": "Anthropic",
             "google": "Google",
             "ollama": "Ollama (Local)",
+            "qiniu": "Qiniu",
             "custom": "Personnalisé (compatible OpenAI)"
         },
         "defaultModel": "Modèle par défaut",

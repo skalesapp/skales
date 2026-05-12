@@ -45,6 +45,7 @@ const ENDPOINTS = {
   xai:        'https://api.x.ai/v1/chat/completions',
   together:   'https://api.together.xyz/v1/chat/completions',
   google:     'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions',
+  qiniu:      'https://api.qnaigc.com/v1/chat/completions',
 };
 
 // Themes for variety
@@ -93,7 +94,7 @@ module.exports = {
         + `{"quote": "your quote here", "author": "Author Name", "theme": "${theme}"}`;
 
       // Try each configured provider until one works
-      const providerOrder = ['openrouter', 'openai', 'groq', 'google', 'mistral', 'deepseek', 'xai', 'together'];
+      const providerOrder = ['openrouter', 'openai', 'groq', 'google', 'mistral', 'deepseek', 'xai', 'together', 'qiniu'];
       let lastProviderError = '';
 
       for (const provId of providerOrder) {
@@ -110,6 +111,7 @@ module.exports = {
           || (provId === 'google'     ? 'gemini-2.0-flash'    : undefined)
           || (provId === 'mistral'    ? 'mistral-small-latest' : undefined)
           || (provId === 'deepseek'   ? 'deepseek-chat'       : undefined)
+          || (provId === 'qiniu'      ? 'deepseek-v3'         : undefined)
           || 'default';
 
         const headers = {

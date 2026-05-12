@@ -17,6 +17,7 @@ const CLOUD_PROVIDERS = [
     { id: 'deepseek',   name: 'DeepSeek',   placeholder: 'sk-...' },
     { id: 'xai',        name: 'xAI (Grok)', placeholder: 'xai-...' },
     { id: 'together',   name: 'Together AI', placeholder: 'key...' },
+    { id: 'qiniu',      name: 'Qiniu',       placeholder: 'API key...' },
 ];
 
 export default function BootstrapPage() {
@@ -111,6 +112,17 @@ export default function BootstrapPage() {
         }
         if (provider === 'together') {
             return ['meta-llama/Llama-3.3-70B-Instruct-Turbo', 'Qwen/Qwen2.5-72B-Instruct-Turbo', 'mistralai/Mixtral-8x22B-Instruct-v0.1'];
+        }
+        if (provider === 'qiniu') {
+            try {
+                const res = await fetch('https://api.qnaigc.com/v1/models', {
+                    headers: { 'Authorization': `Bearer ${apiKey}` },
+                });
+                const data = await res.json();
+                const ids = (data.data || []).map((m: any) => m.id).filter(Boolean);
+                if (ids.length) return ids.sort();
+            } catch { /* ignore */ }
+            return ['deepseek-v3', 'gemini-2.5-flash'];
         }
         return [];
     }

@@ -491,7 +491,8 @@ async function sendProviderMenu(token, chatId) {
         ['openrouter', 'OpenRouter'], ['openai', 'OpenAI'],
         ['anthropic', 'Anthropic'],   ['google', 'Google'],
         ['groq', 'Groq'],             ['mistral', 'Mistral'],
-        ['deepseek', 'DeepSeek'],     ['ollama', 'Ollama'],
+        ['deepseek', 'DeepSeek'],     ['qiniu', 'Qiniu'],
+        ['ollama', 'Ollama'],
     ];
 
     const rows = [];

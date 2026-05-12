@@ -88,6 +88,7 @@ const PROVIDER_CONFIG: { id: Provider; label: string; icon: string; desc: string
     { id: 'deepseek', label: 'DeepSeek', icon: '🐋', desc: 'DeepSeek V3, R1 - ultra-affordable, strong reasoning', color: '#4d9de0', needsKey: true },
     { id: 'xai', label: 'xAI / Grok', icon: '🌌', desc: 'Grok 2 - real-time knowledge, sharp reasoning', color: '#9b5de5', needsKey: true },
     { id: 'together', label: 'Together AI', icon: '🤝', desc: 'Llama 3, Mixtral, DBRX & 100+ open models - affordable inference', color: '#6366f1', needsKey: true },
+    { id: 'qiniu', label: 'Qiniu', icon: '☁️', desc: 'OpenAI-compatible gateway — DeepSeek, Gemini, and more', color: '#00a870', needsKey: true },
 ];
 
 
@@ -168,6 +169,10 @@ const PROVIDER_MODELS: Record<Provider, { value: string; label: string }[]> = {
         { value: 'Qwen/Qwen2.5-72B-Instruct-Turbo', label: 'Qwen 2.5 72B' },
         { value: 'deepseek-ai/deepseek-r1', label: 'DeepSeek R1 (Reasoning)' },
     ],
+    qiniu: [
+        { value: 'deepseek-v3', label: 'DeepSeek V3 (recommended)' },
+        { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+    ],
     // Custom endpoint — no predefined models; populated dynamically via "Fetch Models"
     custom: [],
 };
@@ -196,7 +201,7 @@ export default function SettingsPage() {
     const [nativeLanguage, setNativeLanguage] = useState('en');
     const [apiKeys, setApiKeys] = useState<Record<Provider, string>>({
         openrouter: '', openai: '', anthropic: '', google: '', ollama: 'ollama', groq: '',
-        mistral: '', deepseek: '', xai: '', together: '', custom: '',
+        mistral: '', deepseek: '', xai: '', together: '', qiniu: '', custom: '',
     });
     const [models, setModels] = useState<Record<Provider, string>>({
         openrouter: 'openai/gpt-3.5-turbo',
@@ -209,6 +214,7 @@ export default function SettingsPage() {
         deepseek: 'deepseek-chat',
         xai: 'grok-2-latest',
         together: 'meta-llama/Llama-3-70b-chat-hf',
+        qiniu: 'deepseek-v3',
         custom: '',
     });
 
@@ -979,6 +985,19 @@ export default function SettingsPage() {
                 models = (data.data || [])
                     .map((m: any) => ({ id: m.id, name: m.name || m.id }))
                     .sort((a: any, b: any) => a.name.localeCompare(b.name));
+            } else if (providerId === 'qiniu') {
+                const res = await fetch('https://api.qnaigc.com/v1/models', {
+                    headers: { 'Authorization': `Bearer ${key}` },
+                    signal: AbortSignal.timeout(10000),
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                models = (data.data || [])
+                    .map((m: any) => ({ id: m.id, name: m.id }))
+                    .sort((a: any, b: any) => a.id.localeCompare(b.id));
+                if (models.length === 0) {
+                    models = [{ id: 'deepseek-v3', name: 'deepseek-v3' }];
+                }
             }
 
             if (models.length === 0) throw new Error('No models returned');
@@ -2574,7 +2593,7 @@ export default function SettingsPage() {
                                     <span className="text-base">🔧</span>
                                     <span>More LLM Providers</span>
                                     <span className="text-[10px] px-2 py-0.5 rounded-full font-medium" style={{ background: 'var(--surface-light)', color: 'var(--text-muted)' }}>
-                                        OpenAI · Anthropic · Google · Groq · Mistral · DeepSeek · xAI
+                                        OpenAI · Anthropic · Google · Groq · Mistral · DeepSeek · xAI · Qiniu
                                     </span>
                                 </div>
                                 <ChevronDown size={16} style={{ transform: moreLLMsOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', color: 'var(--text-muted)' }} />
@@ -2687,6 +2706,44 @@ export default function SettingsPage() {
                                                 {provider.id === 'xai' && (
                                                     <div className="mt-3 p-3 rounded-xl text-[11px]" style={{ background: 'rgba(155,93,229,0.06)', border: '1px solid rgba(155,93,229,0.2)', color: 'var(--text-muted)' }}>
                                                         🌌 Real-time knowledge via X/Twitter data. Get a key at <a href="https://console.x.ai" target="_blank" rel="noopener noreferrer" className="text-purple-400 underline">console.x.ai</a>.
+                                                    </div>
+                                                )}
+                                                {provider.id === 'qiniu' && (
+                                                    <div className="mt-3 space-y-2">
+                                                        <div className="p-3 rounded-xl text-[11px]" style={{ background: 'rgba(0,168,112,0.06)', border: '1px solid rgba(0,168,112,0.2)', color: 'var(--text-muted)' }}>
+                                                            OpenAI-compatible chat API. Keys are available from the Qiniu console; you can also set <code className="text-[10px]">QINIU_API_KEY</code> in the environment as a fallback.
+                                                        </div>
+                                                        <div className="p-3 rounded-xl" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
+                                                            <div className="flex items-center justify-between mb-1">
+                                                                <span className="text-[11px] font-bold" style={{ color: 'var(--text-primary)' }}>
+                                                                    <RotateCcw size={11} className="inline mr-1" />Fetch available models
+                                                                </span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => fetchProviderModels('qiniu')}
+                                                                    disabled={fetchingModels.qiniu || !apiKeys.qiniu}
+                                                                    className="px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1 bg-lime-500/10 text-lime-500 hover:bg-lime-500/20 disabled:opacity-40"
+                                                                >
+                                                                    {fetchingModels.qiniu ? <Loader2 size={10} className="animate-spin" /> : <RotateCcw size={10} />}
+                                                                    Fetch
+                                                                </button>
+                                                            </div>
+                                                            {fetchedModels.qiniu?.length > 0 && (
+                                                                <select
+                                                                    value={models.qiniu}
+                                                                    onChange={e => setModels(prev => ({ ...prev, qiniu: e.target.value }))}
+                                                                    className="w-full p-2 rounded-lg text-xs outline-none transition-all focus:ring-1 focus:ring-lime-500 appearance-none cursor-pointer mt-1"
+                                                                    style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                                                                >
+                                                                    {fetchedModels.qiniu.map(m => (
+                                                                        <option key={m.id} value={m.id}>{m.name || m.id}</option>
+                                                                    ))}
+                                                                </select>
+                                                            )}
+                                                            {fetchModelError.qiniu && (
+                                                                <p className="text-[10px] mt-1 text-red-400">{fetchModelError.qiniu}</p>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 )}
                                                 <button onClick={() => handleTest(provider.id)} disabled={isTesting}

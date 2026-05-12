@@ -251,6 +251,7 @@ export async function callLlmSimple(
         if (provider === 'together') return 'https://api.together.xyz/v1';
         if (provider === 'deepseek') return 'https://api.deepseek.com/v1';
         if (provider === 'xai') return 'https://api.x.ai/v1';
+        if (provider === 'qiniu') return 'https://api.qnaigc.com/v1';
         // FIX C: standardise to localhost (127.0.0.1 can cause CORS issues on some setups)
         if (provider === 'ollama') return 'http://localhost:11434/v1';
         return 'https://openrouter.ai/api/v1';

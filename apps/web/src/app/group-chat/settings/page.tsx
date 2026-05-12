@@ -32,6 +32,7 @@ const KNOWN_PROVIDERS = [
     { id: 'deepseek', label: 'DeepSeek' },
     { id: 'xai', label: 'xAI (Grok)' },
     { id: 'together', label: 'Together AI' },
+    { id: 'qiniu', label: 'Qiniu' },
     { id: 'ollama', label: 'Ollama (local)' },
 ];
 

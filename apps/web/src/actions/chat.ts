@@ -23,7 +23,7 @@ function ensureDirs() {
 
 // ─── Types ───────────────────────────────────────────────────
 
-export type Provider = 'openrouter' | 'openai' | 'anthropic' | 'google' | 'ollama' | 'groq' | 'mistral' | 'deepseek' | 'xai' | 'together' | 'custom';
+export type Provider = 'openrouter' | 'openai' | 'anthropic' | 'google' | 'ollama' | 'groq' | 'mistral' | 'deepseek' | 'xai' | 'together' | 'qiniu' | 'custom';
 
 
 export interface ProviderConfig {
@@ -243,6 +243,12 @@ const DEFAULT_SETTINGS: SkalesSettings = {
             apiKey: '',
             baseUrl: 'https://api.together.xyz/v1',
             model: 'meta-llama/Llama-3-70b-chat-hf',
+            enabled: false,
+        },
+        qiniu: {
+            apiKey: '',
+            baseUrl: 'https://api.qnaigc.com/v1',
+            model: 'deepseek-v3',
             enabled: false,
         },
         custom: {

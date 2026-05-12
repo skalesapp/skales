@@ -240,6 +240,7 @@ async function _callLlmForTask(task: AgentTask, settings: any): Promise<string> 
             openrouter: 'https://openrouter.ai/api/v1/chat/completions',
             openai:     'https://api.openai.com/v1/chat/completions',
             groq:       'https://api.groq.com/openai/v1/chat/completions',
+            qiniu:      'https://api.qnaigc.com/v1/chat/completions',
         };
         const ep = endpointMap[provider] ?? 'https://openrouter.ai/api/v1/chat/completions';
 

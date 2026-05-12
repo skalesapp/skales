@@ -26,6 +26,10 @@ const PROVIDER_MODELS: Record<string, { value: string; label: string }[]> = {
         { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' },
         { value: 'gemini-1.5-flash', label: 'Gemini 1.5 Flash' },
     ],
+    qiniu: [
+        { value: 'deepseek-v3', label: 'DeepSeek V3' },
+        { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+    ],
     ollama: [
         { value: 'llama3.2', label: 'Llama 3.2' },
         { value: 'mistral', label: 'Mistral 7B' },
@@ -397,6 +401,7 @@ export default function AgentsPage() {
                                         <option value="openai">{t('agents.providers.openai')}</option>
                                         <option value="anthropic">{t('agents.providers.anthropic')}</option>
                                         <option value="google">{t('agents.providers.google')}</option>
+                                        <option value="qiniu">{t('agents.providers.qiniu')}</option>
                                         <option value="ollama">{t('agents.providers.ollama')}</option>
                                     </select>
                                 </div>

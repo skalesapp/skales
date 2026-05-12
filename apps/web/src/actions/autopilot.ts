@@ -226,6 +226,7 @@ async function callLLM(settings: any, systemPrompt: string, userMessage: string)
         deepseek:   'https://api.deepseek.com/v1/chat/completions',
         xai:        'https://api.x.ai/v1/chat/completions',
         together:   'https://api.together.xyz/v1/chat/completions',
+        qiniu:      'https://api.qnaigc.com/v1/chat/completions',
         ollama:     (provCfg.baseUrl ?? 'http://localhost:11434/v1') + '/chat/completions',
     };
     const url = endpoints[provider] ?? endpoints.openrouter;
