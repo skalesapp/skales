@@ -14,6 +14,987 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## v12.9.26 - Grip
+
+### Added
+
+- **A paired device can now have this computer turn a recording into text.** A
+  phone transcribes on the phone, but a small paired device with a microphone
+  and no room for a speech model previously had to reach this machine at its
+  address on the local network - so it only worked at home. It now asks over the
+  same connection everything else uses, gets the transcript back, and the
+  recording never leaves that path. It runs through the same speech setup the
+  microphone in Skales uses, so whichever provider you configured is the one
+  that answers, and a recording that is too large to travel is refused with a
+  reason instead of dropping the connection.
+- **The Studio render button now asks before it exports, and the export can go
+  through the server.** Pressing Render opens a card in the panel itself: how
+  many scenes, which aspect and size, how long, and what should happen to the
+  subtitles - nothing is written before that card is answered. Scenes you have
+  previewed or edited are still rendered from exactly what you saw; a
+  storyboard nobody has previewed goes to the render pipeline in one request,
+  which keeps running when you leave the page and is the same path the chat
+  tools take. Whatever produced the file, it ends up in the same place: the
+  download button, the gallery entry, the subtitle file, and the toast.
+- **Campaign, as a Flow template.** One brief, several finished pieces: a hook,
+  a main clip and a call to action by default, each its own file named by its
+  role, with one palette, one type pairing and the same closing frame across
+  all of them, plus a small index page to review the set in one place. It rides
+  the motion mode and the existing template picker - no new mode to learn.
+- **Skales asks before it exports a video - in every mode.** A render writes a
+  finished file and takes minutes of the machine, so the card comes up every
+  time and names what is about to come out: how many scenes, which aspect and
+  size, how long, and what happens to the subtitles. Auto and Unrestricted do
+  not lift it, and the card deliberately offers no "always allow this" button -
+  the next film is a new question. A preview frame still runs without asking:
+  it writes nothing anyone keeps.
+- **A rendered Studio video can carry its subtitles - as a file, burned in, or
+  both.** The captions come from the storyboard's own scene text and timing, so
+  nothing is transcribed and nothing is guessed: a scene without text still
+  holds its place on the clock, so no later line arrives early. The `.srt` is
+  written next to the MP4 and stays editable; burned in, the words survive an
+  upload to a network that throws sidecar files away. Off is still the default,
+  because burned-in pixels cannot be taken back out.
+- **Skales Code can see what is in its context, and shorten it.** The figure in
+  the status bar now opens a breakdown of the turn: what the system prompt
+  takes, what the tool definitions take and how many there are, what the
+  conversation itself takes, how much of that is the newest tool results, the
+  total against the model's own window, and what the session has cost so far.
+  Every number is the one measured on the payload as it went out, so the meter,
+  the breakdown and the hint cannot disagree about the same session. The meter
+  itself now counts the whole turn rather than only the transcript, which is
+  why it reads higher than before and why it now reads true.
+- **A shortened stretch of a coding session reads as a lid, not as a wall.**
+  `/compact` folds the older half of a conversation away and leaves one card in
+  its place saying how many turns went under it; opening the card shows the
+  summary. It survives a reload, because the session file carries it.
+- **The run line offers to shorten when the window fills up.** Past four fifths
+  of the model's context the line adds how full it is and that `/compact`
+  shortens it. A suggestion only: nothing is ever folded away without being
+  asked, because the conversation belongs to the person having it.
+- **An MCP server behind its own certificate authority is reachable.** A server
+  on a company network or a self-signed one takes a `CA certificate` in its
+  settings - the path to a .pem or .crt file, or the certificate pasted in - and
+  that certificate applies to that server's requests and to nothing else on the
+  machine. Verification is never switched off, and nothing else Skales talks to
+  starts trusting the new root. A certificate that cannot be read says which of
+  the three things is wrong - the path, the format or the date - when it is
+  saved rather than on the next failed connection, and a connection that fails
+  anyway now names the real reason instead of "fetch failed".
+
+- **Skales Code says what it is doing, step by step.** A coding run used to
+  show one word - usually "deciding" - for as long as it took, which looks the
+  same as a run that died. There is now one live line under the turn: which
+  step is on, which tool on which file, and for how long. Parked on a question
+  it says so; gone quiet longer than it should, it names what is hanging
+  instead of counting up under a word that is no longer true. When the run
+  stops, the same line becomes its receipt - steps, files, how long, and what
+  the turn cost - read from the session itself, so reopening the window later
+  shows the same one.
+- **A diff is no longer painted like a failure.** Removed lines and the minus
+  counters beside them come from the diff palette rather than from the red this
+  window keeps for a step that actually failed, everywhere they appear: on a
+  tool line, on a card head, in the status bar and in the session list. Failed
+  steps and script errors stay red, because those are errors. A long diff still
+  arrives folded, but never blind: its first three changed lines stay on screen
+  and the lid says how many are still behind it.
+- **Every step says how it ended, as a shape.** Tool steps carry the same tick,
+  cross or warning sign the live line uses, in the same slot and at the same
+  size, and the rows keep one height as their details fill in.
+- **A permission question says how far a yes reaches.** Each button on the card
+  now carries one sentence of its own: this call only; every action of that
+  kind until this session ends; or every one of them, in every session, until
+  you take it back in Settings. An unattended session that stops to ask anyway
+  says why, in the words of the check that stopped it.
+
+- **Devices: your other computers, under a name you can read.** The surface
+  that used to be called Agent Swarm is back in the menu as Devices, under
+  Tools. Devices are YOUR machines and Teams are other people, and that is the
+  whole difference between the two entries. It lists the Skales instances on
+  your network, takes a remote one by address, shows what was handed back and
+  forth, and delegates a task from a form. Nothing about how it works changed:
+  the /swarm command in the chat, the peer scan under Settings, Advanced and
+  the switch on the Add-Ons page are the same ones, and the old /swarm address
+  still answers - it forwards to the new one, so a bookmark keeps working.
+- **A long run says what it is doing, step by step.** The Skales Code window
+  used to show the word "deciding" for minutes at a time, which is the same
+  thing it shows when a run has died. Every step now records what it is - the
+  tool, the file or command, how long it has been at it - and the status bar
+  reads the newest one: "step 7 - write_file src/InputManager.ts - 12 s". A run
+  waiting on your approval says that instead of claiming to work. After 45
+  seconds of nothing at all (it used to be two minutes) the line names what went
+  quiet, so you can tell a hung command from a slow model without stopping the
+  run to find out. It survives a reload, because it is kept with the run and not
+  in the window. Skales can also now tell you which script interpreters your
+  machine actually has, rather than guessing and learning from the error.
+
+- **Fold the sidebar with Cmd/Ctrl+B, and it stays folded.** The column
+  remembers whether you folded it, across a restart and in both readings of the
+  sidebar. Before this, a window you had given the extra width back to came
+  back full-width every single time.
+
+
+- **Skales opens the page instead of telling you where it is.** When the chat
+  makes something that has a home - a poster or a video in Studio, a team run in
+  the Organization, a task in the Cockpit, a document or an older conversation -
+  it can now take you there. Ask to be shown something and the app goes; nothing
+  moves that is not really there, because the addresses come from the navigation
+  itself, and a surface whose add-on is switched off says which switch rather
+  than opening a page that would only turn you away. In a Telegram or WhatsApp
+  conversation, and while a job runs with nobody at the screen, nothing is moved
+  at all - the place is named instead.
+
+- **Your teams can be started from the chat.** The Organization no longer needs
+  its own screen to be used: ask which teams there are, give one a job, or ask
+  what a team is doing right now. A run started this way is the same run the
+  Organization surface shows - it appears there while it happens - and it asks
+  before it begins, because a team is minutes of work and one model call per
+  member.
+
+- **Each agent in a team run uses its own model again.** An agent card has had a
+  provider and a model of its own for a long time, and a team run ignored both:
+  every member answered from one shared model, however different their roles.
+  Now a card's own model is used when it names a provider that has a key on this
+  machine, and when it does not, the run log says so in a line instead of
+  quietly falling back.
+
+- **Four more places the conversation can reach.** The Group Chat room can be
+  looked into and asked a question from the chat; the Desktop Buddy can be asked
+  how it is and given a line for its bubble; your own Custom Widgets can be
+  listed and read, so an answer about one is about the real thing; and the
+  Discover feed can be read, with an honest "offline" instead of an invention
+  when the machine has no connection.
+
+- **Every conversation shows what it costs, and can stop itself at a ceiling.**
+  A running price sits beside the context meter in the composer footer, each
+  answer carries its own price in its token line, and the hover card says how
+  much of the input came out of the provider's cache instead of being paid for
+  a second time. Under Settings, Goals you can give a conversation a ceiling:
+  at half of it and again at the ceiling itself Skales stops and asks, with
+  three answers - carry on, switch to a cheaper model, or stop - and the
+  question is answered here rather than by the model, so being asked costs
+  nothing. A fresh installation starts with five dollars; a machine that
+  already has settings is left exactly as it was.
+
+- **Mail does what a mail program does.** Attachments are named on every
+  listing and can be fetched into the workspace, a message can be read whole
+  instead of as a preview, the mailbox can be searched on the server rather
+  than by pulling everything down first, and a message can be put back to
+  unread. Searching, reading whole and unread need a mailbox reached over IMAP;
+  a Google account connected through Google says which of the four it cannot
+  do, instead of answering as though it had.
+
+- **Retrieval over your indexed documents has an off switch.** It sits at the
+  top of the block that used to only ask which vector database to use, above
+  that choice, because whether anything is looked up comes before where from.
+  Switched off, nothing is read from disk and no embedding is paid for, the
+  chat command for it says it is switched off instead of "no results", and
+  Skales stops offering a search it would not run. A profile that never touched
+  the switch keeps retrieval on.
+
+- **The permission window in Skales Code says what a yes never covers.** Every
+  window that asks you to allow a step now carries a line you can unfold: the
+  handful of things that are always asked, whatever you allow, with one
+  sentence each. A session-wide yes is a yes to the ordinary work and not to
+  everything, and now it reads that way.
+
+- **Searching your Code sessions finds what they say.** The box in the session
+  column searches what was written in a session, not only its title, and the
+  results replace the list in the same column: title, folder, date, and the
+  passage the hit sits in with the found words marked. The box itself used to
+  be two rows tall with the magnifier stranded above the field; it is one row.
+
+- **The scratch folder a coding session works in has a door.** Skales gives
+  every coding session a private folder for working files, and nothing in the
+  window ever showed it. A line under the All tab of the file column names it
+  with its file count and size, opens it in the same file tree the project
+  uses, and a file in it opens in the same frame a project file does. It
+  appears only when something is really in there, and clearing the session
+  empties it.
+
+- **The meter counts the model calls you never see a bubble for.** Two of them
+  were free as far as the footer was concerned: the summariser that shortens a
+  long conversation to keep it inside the model's window, and the vision model
+  that describes a screenshot for a browser or computer-use step. Both are real
+  charges on your key, and on a screenshot-heavy afternoon they are the larger
+  half of the bill. They now ride on the step that made them and appear on their
+  own line in the hover card over the token badge - never folded into the
+  sub-agent line, which would name work that never happened. A price that cannot
+  be known (a local vision model) still says nothing rather than showing a zero.
+- **A sub-agent may not spend past the ceiling its conversation was given.**
+  run_subagent and dispatch_subtasks had a step budget and no money budget at
+  all - forty steps per child, as many children at once as the model asked for,
+  and the session ceiling only saw the bill when they were all back. Each child
+  now runs against what the conversation has left, and a child that reaches it
+  says so in words instead of coming back with a bare "did not finish".
+
+- **A recording that could not be transcribed is no longer lost with it.** A
+  dictation that failed - a refused key, an empty balance, a dropped
+  connection - printed "Transcription failed." and threw the clip away, so the
+  only way forward was to say the whole sentence again at the worst possible
+  moment. The recording is now held and the error offers to send it once more,
+  through the same path that would have sent it the first time.
+
+### Changed
+
+- **Every Skales window now closes the way your operating system closes
+  windows, and nothing else.** Iris Orbit had no title bar at all and drew its
+  own small close disc - and only once it was listening, so during the intro
+  and the name question there was no visible way out. Flow drew one too, in the
+  corner Windows draws its own Close button into. Both are gone: Iris, Flow,
+  Code and the main window now carry the same title bar - the traffic lights on
+  macOS, the window buttons on Windows, the native frame on Linux - and the
+  page paints nothing into that corner. Escape, Cmd/Ctrl+W and the right-click
+  menu still close what they always closed.
+- **On Windows, the window buttons no longer sit on top of anything.** Every
+  header, rail and floating panel that reaches the top edge of a window now
+  reserves the width the caption buttons actually take, measured from the
+  system rather than guessed - on the left as well, for a right-to-left
+  install. A window opened after you switch themes also opens in that theme
+  instead of coming up with a black title bar until the page loads.
+- **Studio Classic is down to what it is for: Media, Audio, Type and Gallery.**
+  The Design and Scenes tabs are gone. Flow does that work now - it writes the
+  same pieces from a conversation, and the multi-scene video lives there as
+  Motion, with the timeline, the audio and the export card. The 3D room is
+  untouched and still opens from the same door. An old link to one of the two
+  retired tabs lands on Flow instead of an empty stage, and a scene render that
+  was still running when you updated finishes into the gallery.
+
+- **"Lean prompt" is now its own switch, so a hosted endpoint can send less
+  without pretending to be local.** How much goes out per request - the short
+  system prompt, the capped tool set, the rest a `load_tools` call away - used
+  to hang entirely off "this endpoint runs on my own machine". That single
+  question was doing two jobs: the tick decides privacy and what runs where,
+  and it was also deciding your bill. There is a second switch next to it now,
+  on by default for an endpoint that runs on your machine and off for a hosted
+  one, settable either way per endpoint, per provider, or per model in an LLM
+  profile. The line the model reads when its tool list was shortened names that
+  switch instead of blaming "local models".
+
+- **Reading a file no longer drags ninety tools in behind it.** The always-on
+  tools ship on every turn anyway, but each is filed under a category, and the
+  bookkeeping read "read_file was called" as "the whole core group is in use" -
+  so the first file the model opened put ninety-odd extra schemas into every
+  step that followed, paid for on all of them. A tool from the always-on set now
+  brings itself and nothing else; the group behind it is still one load_tools
+  call away. Measured over twelve steps of ordinary file work: 8.618 to 2.862
+  tool tokens a step.
+- **A missing tool costs one group, not the whole catalog.** When the model
+  reached for a tool that was not in front of it, Skales reopened every schema it
+  has for that turn. The refusal names the tool, though, and a named tool has a
+  group - so that group is loaded and the turn runs again, which is the road the
+  model would have taken itself. Only a name that belongs to no tool at all still
+  opens the full list, because for that there is nothing to load.
+- **The skill tools are one family again.** create_skill, test_skill, read_skill,
+  list_skills, delete_skill and the two switches sat in a different group from
+  the one the app said they were in, so asking for that group handed the model
+  half a family. They are all in `system` now.
+- **Running one at a time is now a property of the model, not a switch for the
+  whole app.** The ask was to be able to run requests to a model one after
+  another; a global switch would have taken parallel conversations away from
+  everybody who runs a cloud model, which is most people. So the run order
+  follows the model that will actually answer: a local runtime, or a model small
+  enough that the machine is the ceiling, takes turns by default, and everything
+  else stays parallel. A choice made in Settings still overrules that, and an
+  LLM Profile overrules both - it says `one at a time` on the profile's own line,
+  beside the other properties of that model. A team run whose seats do not agree
+  takes turns, because the card that holds one model decides for the run.
+- **Asked how it is built, Skales answers instead of refusing.** The prompt used
+  to forbid the model outright to look at Skales' own source, which made it
+  stonewall even a user who had bound that very folder as a project. It now asks
+  for honesty: answer from the docs, the changelog and check_capabilities as far
+  as they reach, say "not documented" when they do not, invent no internals - and
+  a bound Skales source folder is a folder like any other.
+- **The Cockpit reads as one screen again.** The board no longer grows without
+  a ceiling: at fifteen cards it took most of the page and pushed everything
+  under it out of sight. The four columns now stop at a share of the window and
+  each one scrolls itself - and a board with three cards on it is still three
+  cards tall, not a fixed grey rectangle. Under it, Goals, Schedule and Tasks
+  are the same accordion with the same shape: the name is said once, in the lid,
+  and the page headings that stood one line below it are gone, along with
+  Schedule's screen-high floor and the second "Goals" inside the Goals lid.
+  Each lid now carries the same one-line summary - how much is moving, how much
+  is done, when the next run fires and what it has cost - with the words in the
+  tooltip. On their own routes the three pages are unchanged.
+
+- **"Beta" is said in one place, so it means something again.** The word stood
+  on the Plugins page, on the Teams surface, on navigation rows and under the
+  Skales+ waitlist - five marks for surfaces that have shipped. It now sits
+  beside one heading only: Skales Local, under Settings, which brings its own
+  inference server and its own models. The bundled manual carries the same one
+  mark, and no menu row carries any.
+
+- **Choosing Auto is the whole answer.** Auto mode pre-approves file and shell
+  work inside the folder a coding session is bound to - that is what it is for -
+  but it only did so when a second, separate opt-in had been recorded somewhere
+  else. The Code window never asked for it, so a session started there on Auto
+  stopped on the first write into its own bound folder, and the card explained
+  the stop with *Auto waves through changes inside the folder, and this is not
+  one of those* about a file that was inside it. Picking the mode is now the
+  consent, on every surface that offers it. Nothing else moved: work that
+  reaches outside the folder, a push, a deploy, a destructive command and every
+  network tool still ask, and the folder rules and the blocked-command list are
+  untouched.
+- **Every mode says what it may do.** Ask, Code, Plan and Auto are four words on
+  four small pills that decide how much a session can do without you. Each one
+  now carries its own sentence, on the pill, so the reach of a mode is readable
+  where the mode is chosen.
+
+- **Organization, Browser and Playbooks have their doors back.** Two people
+  asked for Organization in one week after it lost its menu entry, which is the
+  answer to whether taking it out was right. All three stand under Tools and in
+  the chat column's More block, and each opens the same surface its own page
+  renders.
+- **An add-on you switch off takes its menu entry with it.** Turning Wrapped or
+  Skales Code off left the entry standing in the sidebar and the page answering
+  as though nothing had been decided. Now every surface with a card on the
+  Add-Ons page obeys that card everywhere: out of both sidebars, out of Cmd+K,
+  out of the pins. The page itself stays reachable and says where the switch is
+  instead of showing you a blank screen.
+- **The Cockpit's Control Room is gone, and its eight controls are where they
+  belong.** The deep-dive interview, the daily stand-up and the button that
+  lifts a spending pause are at the head of the Cockpit, beside Pause and
+  Resume. When the autopilot may be awake, what it may spend in an hour and
+  when it stops by itself are settings rows under Settings, Goals. The line you
+  type straight into the queue is at the head of Tasks, over the queue it
+  writes into. The reset for a wedged scheduler is under Settings, Advanced,
+  Diagnostics, where a person looks when something is stuck.
+- **One popup frame instead of two.** The settings jump out of the Guide had a
+  hand-copied frame of its own, which is why it kept clinging to the window
+  edges on a wide screen while every other panel had learned to keep a margin.
+  There is one frame now and both open it.
+- **The Guide has one door.** It lives in the System button in the sidebar
+  foot, with Diagnose, Update and Report Bug - the four things about the
+  machine itself. The row that said the same thing a second time is gone.
+
+- **The prompt behind every turn got smaller.** Skales handed every model the
+  full description of every tool it might want, on every single turn, plus a
+  few lists that only matter on the rare turn they are about. The permanent set
+  is a third smaller, the rest is fetched by group the moment a turn needs it,
+  and every promise the prompt makes about a tool that is not in the turn yet
+  names the group it comes from, so a model asks for it instead of guessing at
+  a name. On a provider that charges for the prompt, that is money back on
+  every step of a long run.
+
+- **A sub-agent runs on the model you chose for it, and says what it cost.**
+  Handing work to a sub-agent allowed exactly two answers, the parent's model
+  or one fixed fast one; any model you have configured can be named now,
+  including one written the way your provider writes it. Each child appears in
+  the chat as its own chip with its state, its model and its price, so a step
+  that quietly ran on the expensive model is visible while it happens instead
+  of arriving as a line on the bill.
+
+- **Telegram and WhatsApp count money per conversation and per day.** The
+  spending leash started again at zero for every incoming message, which is no
+  leash at all on a channel where messages arrive one after another. It runs
+  over a conversation and over a day now, and when it stops a run it says in
+  half a sentence which of the two you met and how it differs from the ceiling
+  that governs a conversation at the computer.
+
+- **A new installation starts with memory switched on.** The knowledge graph
+  and the nightly distilling of finished conversations shipped switched off, so
+  the two features that make Skales remember you were only ever found by people
+  who went looking. They are on for a fresh install, each row says what it
+  costs before you decide to leave it on, and a machine that already has
+  settings keeps every choice it made.
+
+- **A long diff arrives folded, and Keep and Revert appear only where they mean
+  something.** A change of a hundred and fifty lines unrolled into the
+  transcript in full; it comes folded now, with a line saying how much is
+  behind it, and a short one stays open. The two decision buttons used to show
+  under anything that vaguely resembled a file, including text that was not
+  one; they appear on a real change to a real file, and each says what it does
+  when you rest on it.
+
+- **A tool group that nobody uses stops riding along.** Loading tools on demand
+  only ever added: a group the model pulled on the third step was still being
+  paid for on the fiftieth, because the whole conversation was re-read as
+  "loaded" on every turn. Now a group nobody has asked for or called in four
+  steps is dropped, and pulling it back is the same one-step request it always
+  was. A group in genuine use refreshes itself with every call and never
+  expires. Measured over a twelve-step run with three loaded groups, the tool
+  payload falls by up to 22% per step; over a fifty-step one, by 20% on average.
+- **A model that keeps asking for tools gets the ones it asked for.** When a
+  weaker model loops on the load-tools request without ever using what it
+  loaded, Skales steps in so it cannot stall. It used to do that by handing over
+  the entire catalogue for the rest of the turn - the most expensive corner of a
+  turn, on the model least able to use it. It now hands over exactly the groups
+  the model named. The full catalogue stays for the one case the narrow answer
+  cannot serve: a model that named nothing that exists.
+
+- **A voice you picked is only ever sent to the service it belongs to.** The
+  voice Iris and Call Mode speak with was stored as a bare name with no record
+  of which service it came from, so an ElevenLabs voice went out to OpenAI as
+  if it were one of theirs, came back refused, and was reported as "the chosen
+  voice produced no audio" about a voice that works. A voice now carries its
+  engine, and a choice made for one service is never handed to another.
+- **The female Spanish voice is on the phone's list again.** It shipped in the
+  app and was missing from the list the relay serves, and the served list wins -
+  so the voice disappeared from the download screen the moment a device came
+  online. The list now carries it, states which speaker of that archive is the
+  woman, and says of every voice whether a listener hears a woman or a man, so
+  a surface that asks for a female voice can be answered instead of guessed at.
+- **One voice, one name.** The same archive was called three things across the
+  desktop catalogue, the relay's list and the phone's - somebody who had heard
+  of a voice under one name could not find it under another. Every voice is now
+  named once, in the spelling that was already published, and a gate holds the
+  lists to it.
+
+### Fixed
+
+- **A Studio visual that animates in now plays instead of freezing on its first
+  frame.** A headline arriving word by word is invisible at its own start; the
+  guard that rescues a page whose entrance never fired read that as a failure
+  and switched the animation off. A page whose text is animating right now is
+  left alone, and only the last-resort check seven seconds in still overrides it.
+- **The feed no longer names a surface Skales does not have.** A finished
+  Codework run posted "completed a Codework session" - and posted the project
+  folder's name with it, into a public feed. It now posts the same content-free
+  coding event the Code window posts, and the folder name stays in the private
+  local log. The Buddy is the Buddy, not the "Desktop Buddy", and the example
+  the post-writer is shown says Skales Code like every other line already did.
+- **A Playground Space you share actually arrives.** The share sent an event
+  name the feed had never heard of, so the post was refused and disappeared
+  without a word.
+- **`http_request` no longer gets turned away by sites that refuse nameless
+  robots.** The tool sent no User-Agent at all, so Wikipedia and other Wikimedia
+  sites answered a perfectly correct call with 403. It now identifies itself as
+  Skales, the same way the page-reading tools already did. A User-Agent you set
+  yourself still wins, and no browser is impersonated.
+- **A conversation carried over from Iris keeps its bill.** The transcript Iris hands to the runner now travels with what each turn cost and which rows were Skales' own cards, the way the Code window already does - so the session ceiling counts an Iris conversation too, and its stop card is never read back to the model as ordinary text.
+
+- **The closing report of a coding run counts your work, not your
+  dependencies.** A run that installed packages in a folder without a
+  .gitignore signed off with "2109 files changed (+956818)" - a number about
+  npm. Dependencies and build output are now left out of the count whatever the
+  folder's ignore rules say, and a lock file counts as the one file it is
+  rather than as forty thousand lines.
+- **The spending ceiling's card has its buttons in the Code window.** The
+  session ceiling stopped a coding turn with the sentence "nothing more will be
+  sent until you decide" and nothing to decide with: the three answers were
+  written into the session and this window drew only the prose. Continue,
+  Cheaper model and Stop are now on the window's own question card, answered
+  the way the chat and the phone answer them - Continue re-runs the turn that
+  was refused rather than sending the word "Continue", Cheaper model opens the
+  picker in the composer, Stop stays stopped - and none of the three costs a
+  model call. The card also loses its "something else" box wherever Skales is
+  the one asking, on both surfaces: free text there was read as "carry on".
+
+- **A budget notice appears while you are looking at it.** A turn the ceiling
+  refuses is over before it starts, so the Code window - which re-read the
+  session only when a run visibly moved - showed an unanswered question and no
+  reply until the next reload, which looks exactly like a hang. The window now
+  follows the turn it just started, and hears it end even when it never saw it
+  running.
+
+- **Raising a spending ceiling wakes the conversation it stopped.** After the
+  ceiling was lifted the next turn started and the assistant answered "I can't
+  run that, this session has passed its cost ceiling" - to the person who had
+  just raised it. The stop card is a message from Skales to you, with three
+  answers this computer reads itself; it was also being handed to the model,
+  which read the transcript refusing to spend and refused again. It now stays
+  in your transcript, where you need to see it, and out of what goes to the
+  model. The same on the phone.
+
+- **A project folder inside a bigger checkout no longer reports the whole
+  checkout as its own work.** Point a coding session at a folder that has no
+  `.git` of its own and git answers for the repository above it - so the
+  changed-file list, the +N -M counter and the "commit N files" button were all
+  describing a checkout this session had never touched, and pressing commit
+  would have staged it. The list, the counter, the suggested message and the
+  commit are now scoped to the folder you bound, the files are named as you
+  would open them, and a line under the branch says the repository root is
+  further up.
+
+- **A sub-agent can use the tools it was given, whichever name it types for
+  them.** Every child gets a file listing, and children were being told the
+  listing was not available to them - so they ran `ls` through the shell
+  instead and stopped to ask permission for it. The permission gate compared
+  the name the model wrote against a list that only holds one spelling per
+  tool, while the tool itself has always answered to both. It now resolves the
+  name first, and only through the fixed alias table: a nickname can open a
+  door your run already holds open, never one it holds shut.
+
+- **Sub-agents started together each get asked, instead of the first one taking
+  the only card.** A fan-out whose children all wanted to write a file used to
+  finish one of three: the first child's question went on the card, and the
+  other two were told there was nobody to ask and wrote nothing. Children now
+  queue for that card and you answer them one after the other, so all three
+  finish - or the ones you said no to say so by name.
+
+- **The Code window comes back to the session you had open.** Reloading was
+  meant to reopen the transcript, and after visiting any other view it stopped
+  doing so: arriving at the Code start screen threw away the pointer to what
+  should come back. Opening Code from the sidebar still starts fresh; a reload
+  now finds the conversation again, mid-run card included.
+
+- **The spending ceiling applies in the Code window too.** A coding session
+  handed its transcript to the runner without the prices on it, so the ceiling
+  counted a conversation that had never paid for anything and never showed its
+  card - on the surface that spends the most, because a coding turn pays for
+  its sub-agents as well as itself. The meter, the warning and the stop card
+  now see the same dollars the context panel shows.
+
+- **A Flow project says what it is doing while its tab is closed.** The run
+  itself always kept going on the server and reopening the project picked it
+  back up - but from the project grid a working project looked exactly like a
+  stopped one, and a project parked on its scoping questions looked like one
+  that had given up. Cards now say "Still working" or "Waiting for you".
+
+- **A new conversation is named once, not twice, and not with the whole agent
+  prompt.** Two title passes ran for every session; one of them sent the entire
+  agent identity along to produce six words. There is one now, it carries a
+  two-line prompt of its own, and it runs at most once per session - the chat
+  page, the Code window and the run itself all ask, and only the first ask
+  reaches a model. A naming pass that came back with nothing usable is not
+  repeated over the same unchanged first exchange either.
+
+- **The part of the prompt that describes you stops changing under the
+  conversation.** The identity paragraph carried three counters that are
+  incremented the moment a turn ends - how many conversations there have been,
+  how many interactions, a trust percentage - and a list of recent-conversation
+  summaries that gains an entry per turn. So turn two of a conversation sent a
+  different paragraph than turn one, and it sits in the cached part of the
+  prompt. Those values are now held still for the length of a session. Anything
+  you changed on purpose - a saved fact, a learning, the character settings -
+  still arrives on the very next turn, and the clock still says the real time.
+
+- **The planner no longer generates a plan just because you opened it.**
+  Finishing the setup - "Skip to Calendar" included - started a paid day-plan
+  request. A plan is made when you press Generate Plan.
+
+- **The clock in the prompt tells the actual time.** It said "this is the real
+  current time NOW" while being rounded to the top of the hour, so an assistant
+  asked at 05:55 wrote 05:00 into a file, and a whole hour of requests read the
+  same time. It is accurate to the minute again, and it sits where being
+  accurate costs nothing.
+
+- **A long run stops paying for its own prompt again on every step.** The live
+  working-state note - step number, last result, the file ledger - was written
+  into the system prompt, which made the prompt a different string on every
+  step, so no provider's prefix cache could ever match it: one measured build
+  went from 9k to 58k input tokens per call with not a single cache hit, about a
+  million input tokens for one job. The note now sits at the end of the
+  conversation where it belongs. The model reads exactly the same thing; the
+  prompt stays identical from step to step, and providers that cache it charge
+  for it once.
+
+- **`src/systems` and `src/scenes` are your folders again.** A project folder
+  whose name merely resembled a system location - every game, ECS, Unity or
+  Phaser project, and any folder called `dev/` - was refused with a security
+  message, and the model quietly built the project under different names. Real
+  system locations and credential folders still refuse wherever they sit; your
+  own project folders are yours.
+
+- **Setting up your own endpoint now asks which model it serves.** An endpoint
+  saved without one made the chat send a hosted catalogue's model id to a
+  personal server - which either answered as something it is not, or refused
+  with "model not found" - and sent Studio to OpenRouter with a Claude model,
+  telling people whose only provider is their own server to add a key for a
+  service they never chose. The setup card asks for the model, with a Fetch that
+  reads the list off the endpoint and fills the field, and it asks whether the
+  endpoint really is a small model on this machine. A turn with no model set
+  says so instead of guessing, and Studio stays on your provider.
+
+- **Your Brand Kit actually reaches the design that gets built.** Flow said a
+  kit was active, then asked what colours you wanted and built a deck and a logo
+  animation in colours the kit does not contain: the kit was never in the
+  prompt, and the tool that reads it was the first thing every tool budget threw
+  away. Flow now opens with your saved kit selected, the tool that reads it is
+  protected the way the file and shell tools are, and the kit's colours, fonts,
+  tone and logo go into the run.
+
+- **A custom endpoint is local only if you say it is.** An address on your own
+  machine was taken as proof of a small model, so a proxy, tunnel or relay in
+  front of a large one was served a compact prompt and a quarter of its tools -
+  and then blamed "Max tools for local models" for a tool it had never lost. The
+  switch on the endpoint decides now, and an endpoint you have not marked as
+  local is treated as a full one.
+
+- **A sub-agent's approval reaches you, and a sub-agent that never got one does
+  not claim it finished.** Two helpers were sent off to write a file each; both
+  writes needed your yes, no card was ever shown, and the report came back
+  "2 of 2 finished" over two files that did not exist. A helper's question now
+  lands on the same approval card as the run that started it, saying which
+  helper is asking, which tool and which file. Answer once and the helper
+  carries on; say no, or send the work off to run unattended where nobody can be
+  asked, and it stops and tells you that is what happened - counted as
+  unfinished, on the report and on the Tasks page.
+
+- **A long build is no longer mistaken for a stalled one.** A goal that had
+  written fifteen modules and got its build green was stopped at step forty
+  with "nothing produced", because only bookkeeping counted and a build run
+  does its work long before a step is checkpointed. Every file written, every
+  edit applied, every command that ran and came back clean now counts as
+  progress, and it travels with the goal, so a reloaded run keeps what it
+  built. A run that only reads and searches still stops and asks, which is the
+  case the halt was built for.
+
+- **A skills repository is imported in one download.** The batch import asked
+  GitHub for the branch listing and then pulled every file of every skill one
+  request at a time, so a repository of nineteen skills was several hundred
+  calls: slow on a good line, and on a bad one a skill landed without the
+  scripts its own instructions point at. The whole branch now arrives as a
+  single archive, folders and all, and the file-by-file route stays as the
+  fallback for what the archive cannot serve. When GitHub does refuse, the
+  answer reads its headers and says how long the wait really is instead of
+  guessing an hour.
+- **A typed "Stop" stops the run, at once.** The word was let past the queue
+  and then walked the ordinary send path, which asks the server a question
+  before it does anything else - so the word sat in the composer, nothing was
+  drawn, and the turn carried on while the Stop button beside it worked. It now
+  presses the same switch that button presses, before anything else happens,
+  and clears what you typed. With nothing running the word is an ordinary
+  message again.
+- **A typed "Stop" is answered where you can see it.** The confirmation was
+  written into the conversation right after the run it stopped, which is the
+  same shape a further step of that run has, so the transcript folded it into
+  the bubble above and drew nothing. The stop had worked and read as ignored -
+  the exact complaint the stop word exists to end.
+
+- **A finished coding run no longer claims Skales was closed under it.** A
+  Skales Code run that ended normally, with the window still open, could put
+  "Skales was closed while this session was working" over its own summary line
+  and leave it standing until the session was reopened. Nothing had crashed: a
+  turn ends in two writes, and the window happened to look between them. The
+  writes now happen in the order that never spells a death, a run whose last
+  moments are still being written is read as finishing rather than interrupted,
+  and the window asks twice more before it puts the notice up. A real
+  interruption - the app killed mid-run - still says so.
+
+- **A run that ends without you stopping it says so.** A model call that sent
+  nothing back for five minutes - a local model finding its first word, a long
+  hidden deliberation - was taken for dead and swept away, even though the wait
+  Skales allows for exactly that is ten minutes. The run then ended in complete
+  silence: no answer, no reason, your question still on screen. Two things
+  changed. A step waiting on the model now keeps the run marked alive, the way
+  the tool calls around it always did. And when a run is ended by something
+  nobody pressed - the sweep, a crashed runner, a restart mid-work - it writes a
+  line into the conversation naming which of the three it was, and says that
+  nothing above it was lost. A stop you pressed yourself still says nothing
+  extra: you already know.
+
+- **Skales no longer asks permission for something it will refuse anyway.** A
+  coding session bound to a folder outside your file access rules worked for
+  minutes, stopped and asked to write a file, waited for the yes - and then the
+  file guard refused the write, because that had been decided before the first
+  word was written. The rule is asked first now: when it forbids the path there
+  is no card, just the refusal, naming the folders that are allowed and where
+  the list is widened.
+- **A folder Skales may not write in says so at the top, not at the end.**
+  Opening a project that lies outside the file access rules now puts one line
+  above the composer saying exactly that, with the folder and where to add it.
+  It was already the empty state of the file column, which is not open while you
+  type.
+- **A permission card names the real reason it appeared.** Under Auto the card
+  had one explanation for every stop, including stops that had nothing to do
+  with folders. It now says *this reaches outside the folder* only when the gate
+  actually decided that, gives the gate's own reason when there is one, and says
+  nothing extra when the question already speaks for itself.
+- **A run that stops to ask reaches the window you left open.** The Code window
+  stopped listening while it was not the window in front of you - which is
+  exactly how a coding run is watched: send the job, do something else, come
+  back. A run that parked on a permission question went on showing *the model is
+  answering* with a frozen clock until the session was closed and reopened. The
+  window now keeps following a live run wherever it sits, and a run waiting for
+  you counts as live, so the card arrives on its own and the time it has been
+  waiting keeps counting.
+
+- **Skales stops telling you it has no Node.** On a machine without a separate
+  Node.js install, asking for a script to be checked answered *Interpreter
+  "node" not found on this system* - from an application that is itself made of
+  Node. It now falls back to the runtime it already runs on: a Node you
+  installed yourself is still used first, and only when there is none does
+  Skales offer its own. That reaches the shell too, so a command that spells
+  `node` finds one as well, and MCP servers and language servers that need
+  `npx` stop failing on a fresh Windows machine. npm is the honest exception -
+  Skales ships a Node runtime and not npm, so when npm is genuinely missing it
+  says so and tells you to install Node.js, instead of failing with a stack
+  trace. If a script fails now, the error names which interpreter actually ran.
+
+- **Auto mode stops asking permission for Skales' own scratch folder.** A coding
+  session has a working folder of its own that the assistant is told to use, that
+  is deleted with the session, and that has nothing to do with your files - and
+  Auto raised an approval card every time anything was written there. It was the
+  one card that could only ever be answered yes. Writing outside the project,
+  pushing, deploying and every destructive command still ask, exactly as before.
+
+- **The work a provider interrupted actually comes back.** After a turn died on
+  a 402 or a rate limit, Skales was supposed to put the unfinished items from
+  its own checklist in front of the model on the next turn, so "continue" was
+  not a word it had to interpret. It never did: the check looked at the end of
+  the conversation, and the end of the conversation was the message you had just
+  typed, so the answer was always "nothing to resume". The message being sent is
+  no longer mistaken for the conversation moving on - and tapping "Not now" on
+  the offer still means not now.
+
+- **The session budget also holds for a chat sent from your phone.** The ceiling
+  under Settings, Goals is a ceiling on a conversation, but it was only checked
+  for turns started at the computer. A turn typed on the phone runs through a
+  different path and walked straight past it, on the same conversation and the
+  same money. Both paths now ask the same ceiling and produce the same card, and
+  the card reaches the phone. The ceiling and the per-day budget on Telegram and
+  WhatsApp each say in one half-sentence which of the two you just met.
+
+- **A local model with tools switched off can write a document again.** Skales
+  told every model to put documents in the Document panel by calling a tool -
+  including models that have no tools at all, because the tool budget or the
+  endpoint switch turned them off. Those models followed the other half of the
+  instruction, the half that says not to put the document in the chat, and the
+  answer arrived nowhere. A turn without tools is now told about the other way
+  into the panel, and told to answer in the chat if even that is not possible.
+
+- **Gemini speech models can speak.** Picking a Google text-to-speech model
+  under OpenRouter produced "OpenRouter returned no audio" every time. Those
+  models accept only raw samples, Skales asked every model for MP3, and the
+  400 that came back said so in a sentence nobody ever saw. The request format
+  now follows the model - raw samples for the Google family, MP3 for the rest -
+  the samples get a WAV header from the rate the answer itself states, and the
+  browser, the Studio, the AIPointer overlay and the Telegram and WhatsApp
+  voice notes all play what actually arrived instead of what was assumed.
+- **A voice that will not speak says why.** The reason OpenRouter gives -
+  a refused key, an empty balance, an account setting that rules an endpoint
+  out, a format it does not take - now reaches the preview line and the note
+  under the answer, in OpenRouter's own words. "Returned no audio" is kept for
+  the one case that means it: an answer that really was empty.
+- **Settings says who is speaking.** A line at the top of the speech block
+  names the voice that will actually be heard, resolved the way the cascade
+  resolves it. An on-device voice set as the main one speaks before any
+  provider you picked, deliberately, and the line now says that instead of
+  leaving a screen where the highlighted tile, the hint underneath it and the
+  voice coming out of the speaker were three different answers.
+- **The speech voice is chosen where it is heard.** The voice for OpenRouter
+  moved out of the provider card into the speech block, and it offers the names
+  the chosen model accepts - the six OpenAI names, or the Gemini names for a
+  Google model. The block used to show a browser voice list that did nothing
+  while the working field sat on another screen.
+- **Iris keeps her voice on the on-device path.** Iris asks for a female voice.
+  The request stopped at the door of the on-device engine, so she spoke with
+  whichever single voice was installed. The catalogue now states the gender of
+  each voice, the preference picks among the voices for the language being
+  spoken, and when there is no matching one the answer says which voice spoke
+  and why instead of quietly swapping her.
+- **Listening can be switched on.** Setting the on-device engine as the ear
+  needs a model, and the model picker only appeared once the ear was already
+  on - a circle with no way in, which sent the setting back to off without a
+  word. The picker is always there, a click carries the only installed model
+  with it, and a role the store refuses is now said out loud.
+
+- **Stop stops.** Pressing Stop wrote "stopped" into the record and left the
+  work running: a script that had been started kept going, everything it had
+  started kept going, the next tool in the batch still ran, and the chat could
+  sit there looking idle while money was still going out. Whoever ends a run
+  now ends the runner with it, on every route into it - the button, the word
+  "stop" typed into the chat in any of the twelve languages Skales ships, and
+  the sweep that retires a run nobody is watching. The signal is checked before
+  every single tool of a batch, a running command is taken down together with
+  the processes it spawned, and a browser step closes its page. A long tool
+  call no longer looks abandoned while it works, so it is not retired out from
+  under you, and while any loop is alive the chat says it is running instead of
+  reading a record that says otherwise. Quitting Skales takes the whole tree
+  with it, and a server whose app is gone ends itself.
+
+- **Skales no longer hands out its own stored credentials.** The file holding
+  your mail login was refused to the file reader and to nothing else: a script
+  or a shell command could open it, a search one folder up printed it line by
+  line, and Skales' own instructions actually named the file as something worth
+  inspecting. In one reported run a model read the password out of it, logged
+  into the mailbox by itself and marked seven hundred and sixty-three messages
+  as read. Every stored credential file is refused now to the file tools, to
+  the shell, to scripts and to search, in every mode including the unrestricted
+  one; a search skips them rather than printing what reading them would have
+  refused, and the instructions say to work through the mail and integration
+  tools instead of signing in by hand.
+
+- **Your mail password is no longer written down in plain text.** Provider keys
+  have been kept encrypted for a long time; the mailbox password sat beside
+  them readable, in the file and in every copy of it - a backup, a sync folder,
+  a screenshot, a transcript. It is encrypted at rest now, in both places it
+  was kept, and an existing account is converted the next time Skales loads it,
+  with nothing for you to do. Honest about the reach: this stops the password
+  from being readable, it is not protection against somebody who already has
+  your machine.
+
+- **Nothing changes twenty things in your mailbox without asking.** One
+  instruction can carry a loop, and a loop is where a small mistake becomes a
+  large one. Past twenty changed messages in a session Skales stops and asks,
+  and it asks in the unrestricted mode too, because that mode is about trusting
+  your judgement rather than about not being told. The count is kept on disk,
+  so it survives a restart in the middle of a run, and a yes covers what was
+  asked and not everything after it.
+
+- **Marking a message read works, and so do moving and deleting.** On a mailbox
+  reached over IMAP the step that changes a message never opened the mailbox it
+  was about to change, so the change went nowhere and the answer said it had
+  worked. It hit the three most common ways of naming folders, which is to say
+  most of the mailboxes people actually have, and the same one cause broke
+  moving to another folder and moving to trash. All three do what they say now,
+  and the connection is closed even when a step fails.
+
+- **An answer written while the phone bridge was down is delivered when it
+  comes back.** If Skales was closed in the middle of a WhatsApp job the job
+  was picked up again at the next start, and its finished answer was thrown
+  away with a line in a log, because the restart that revived the job had not
+  brought the bridge up yet. The answer is kept now and sent once, with the
+  time it was written and a note saying it is arriving late.
+
+- **A Telegram message waiting for your permission stays visible.** A turn that
+  stopped to ask you something closed its own record on the way out, so the
+  list of what is running showed nothing and the run looked finished. It shows
+  as waiting for permission with the time it started waiting, it closes when
+  you answer, and a run that was waiting when Skales was killed comes back
+  waiting rather than as something to continue.
+
+- **A screenshot is handed over once, not on every step afterwards.** Every
+  further step of a turn re-sent the whole picture, so a run that took a
+  screenshot early paid for it again and again. The picture goes into the turn
+  once; after that the step carries the description and where the file is.
+
+- **A retired model says that it is retired.** A model its operator has
+  switched off answers with a status that fell through every rule and arrived
+  as a bare error, so it read like a fault in Skales or in your key. It is
+  named for what it is now, in twelve languages, with the advice to pick
+  another model. An account without credit is deliberately not called a dead
+  model: that is a different problem with a different fix.
+
+- **A tool that twice returns nothing useful is not asked a third time.** A run
+  could spend its whole budget rephrasing the same fruitless lookup. After two
+  empty answers from the same tool that channel is closed with a sentence
+  saying what could not be verified and why, and the run carries on with what
+  it has. A real find resets the count, and nothing is taken away from a run
+  that is getting somewhere.
+
+- **Right-click, Download in Skales Code saves the file.** It worked most of
+  the time and failed the rest, for a reason that had nothing to do with you:
+  the download was cleaned up in the same breath it was started, so whether it
+  arrived depended on how busy the machine happened to be. It arrives now, and
+  a download that genuinely fails says so on the screen instead of nowhere.
+
+- **"Always allow, this session" survives a reload.** The answer was held only
+  in memory, so reloading the window, or Skales rebuilding a piece of itself in
+  the background, threw it away and the same question came back a few steps
+  later. It is written to the session now and comes back with it. It still
+  covers only that session, it still lifts no guard, and clearing the session
+  throws it away in both places.
+
+- **Switching Skales Code off closes Skales Code.** The switch on the Add-Ons
+  page left the window and its address working exactly as before. The surface
+  says which switch turns it back on, and it waits until the add-on list has
+  really been read, so the notice does not flash up on every start.
+
+- **A reload reopens the session you were in.** Reloading the Code window
+  dropped you on the start screen, with the session you had been working in one
+  click away and no reason given. A reload comes back to it; opening the window
+  fresh still starts where it always did.
+
+- **A command you run gets your shell, not the app's build environment.**
+  Skales handed its own build settings down to everything it started, so an
+  install inside your own project quietly skipped the development dependencies
+  and left you with a project that would not build. The build settings stay
+  with the app now, and anything you run sees what it would see in your own
+  terminal.
+
+- **A command that did its work and returned a non-zero code no longer reads as
+  a total failure.** Plenty of useful commands end with a non-zero code and a
+  perfectly good answer on their output, and that answer was replaced with
+  "command failed", which sent the model looking for a problem that was not
+  there. A run like that says which code it ended with and shows what it
+  printed. "Failed" is kept for the cases that earn it: no output at all, an
+  error stream, or a timeout.
+
+- **A file you attach to a coding session can be found by it.** A session bound
+  to a folder was told the file's name and nothing else, so the first thing it
+  did was hunt for it, sometimes in the wrong place. The note carries the full
+  location now, for video, documents, spreadsheets, archives and anything
+  binary alike.
+
+- **The GPU badge in Skales Local now says what happened, not what was hoped.**
+  It used to read "GPU" whenever the bundled engine had been built with a
+  graphics backend, whatever the machine then did with it - so two Linux users
+  with an RTX 3070 watched it say GPU while llama-server was reporting that it
+  had asked for 999 layers on the card and put nothing there, and the whole
+  model was running on the processor. The badge is now read from what the engine
+  actually loaded. Until a model has been loaded it says "GPU build" instead of
+  claiming a run that has not happened, and when nothing goes across it says CPU
+  with the reason underneath: no Vulkan driver found on this machine, no
+  graphics device found, or a card that was found and given no layers - each
+  with the next step, which is a different one in every case.
+
+- **A local model on the processor is given the time it needs, and the message
+  says so.** A model computing on the processor takes minutes a turn, and the
+  fixed request budget cut it and reported "the connection to the provider
+  closed before the model finished answering". Nothing had closed. Skales now
+  measures how long this machine is actually taking with this model and lets the
+  budget follow it, and a turn that is still cut short says how many seconds a
+  turn has been taking and where to look, instead of blaming a network that was
+  never involved.
+
+- **Qwen 3.5 no longer prints its own tool calls into the chat.** Served through
+  llama.cpp, Qwen 3.5 writes a tool call in a dialect the endpoint does not
+  translate, so the raw markup arrived in the answer and the tool never ran -
+  reported by a user whose model tried to read an image and printed the attempt
+  instead. Those calls are now recognised and executed like any other, and
+  anything left over is cleaned out of the answer. Skales Local also reads what
+  the running engine says about a model's image support, so a local model with
+  its projector in place is no longer judged by its name alone.
+
+- **Updating no longer leaves processes behind.** The restart that applies an
+  update tore the app down with a shorter routine than an ordinary quit uses -
+  one that stopped the web server and the bots and never touched the local model
+  engine. Two Linux users were left with Skales and llama-server processes still
+  running after the update finished. The update now uses the same teardown as a
+  normal quit, including the sweep for orphaned engines.
+
+- **On-device voices no longer fail with "Please check your config!"** Every
+  Piper voice on a machine could refuse to speak because the shared speech data
+  had once been half-created: Skales checked that the folder existed rather than
+  that it was complete, so the full copy inside each newly downloaded voice was
+  deleted on arrival and the broken folder was kept. It is now checked for the
+  files the speech engine actually validates and replaced when any are missing,
+  and if a voice still refuses, the message names the folder and the missing
+  file instead of four words that point nowhere.
+
+- **A browser click that moves nothing is no longer called a success.** Asked
+  to post on X, Skales wrote the text into the composer, clicked Post at
+  coordinates a vision model had guessed, and the page did not move - and the
+  click was still reported as having worked. Reading the timeline afterwards,
+  the model found a post from a year earlier and announced that it had
+  published. Nothing had gone out. A click is now measured on both sides on
+  every route it can take, and a page that did not move is a failure that says
+  so and says what to do instead. A click aimed at Post, Send or Submit comes
+  back with either the address that changed or the words "publication
+  unconfirmed", and the answer states plainly that a post visible in a
+  screenshot is not proof that yours went out - it may be an older one, or
+  somebody else's.
+
+### Security
+
+- **Every connected account's credential is encrypted on disk.** The mail
+  password already was; the Telegram bot token, the Google account's refresh
+  token, the Discord, Slack, Signal, Notion, Todoist, Spotify, YouTube, Home
+  Assistant, Twitter/X, Outlook and VirusTotal keys and the webhook secret were
+  written in clear text beside it. All of them now go through one gate on the
+  way to disk and back, with the per-installation key the rest of Skales
+  already uses. A store that still holds a clear-text key is sealed the first
+  time it is read and never again after that, so nothing has to be re-entered.
+  A backup still travels as portable plaintext and a restored one is sealed
+  again with this machine's key, so moving an install keeps every connection.
+- **Publishing asks once, in every safety mode.** Unrestricted Mode says "stop
+  asking me whether this is risky"; it never said "publish in my name without
+  telling me". The first call of a conversation that puts content where other
+  people can see it - a tweet, a WordPress post or page, a Slack, Discord,
+  Signal, WhatsApp or Telegram message, an FTP upload, or a browser click on
+  Post, Send or Submit - comes back as the same approval card the mailbox
+  volume check uses. Answer it once and the rest of the run goes through; the
+  answer survives a reload, so a resumed run cannot publish without ever having
+  asked. There is no new setting, and Auto cannot turn it into a standing yes.
+- **The blanket "approve everything in this session" answer survives a
+  reload.** Its marker was an invisible character, which the session file's own
+  cleanup quietly rewrote into something the reader no longer recognised - so
+  the card came back after a reload even though it had been answered. The
+  marker is now written out in full, and an answer given by an older build
+  still counts.
+
 ## v12.9.25 - Backbone
 
 ### Added

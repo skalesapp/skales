@@ -15,7 +15,7 @@ The private AI that lives on your computer and does real work, not just chat.
   <img width="960" height="580" alt="Dashboard" src="https://github.com/user-attachments/assets/bba3411e-85eb-44e8-ab58-be2a5a88a650" />
 </p>
  <p>
-    <a href="https://github.com/skalesapp/skales/releases/latest"><img src="https://img.shields.io/badge/version-12.9.25-10b981?style=flat-square" alt="Version 12.9.25" /></a>
+    <a href="https://github.com/skalesapp/skales/releases/latest"><img src="https://img.shields.io/badge/version-12.9.26-10b981?style=flat-square" alt="Version 12.9.26" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/license-BSL_1.1-10b981?style=flat-square" alt="License" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/Windows_+_macOS_+_Linux_+_Android_+_iOS-10b981?style=flat-square&logo=windows&logoColor=white" alt="Platform" /></a>
     <a href="https://github.com/skalesapp/skales/stargazers"><img src="https://img.shields.io/github/stars/skalesapp/skales?style=flat-square&color=10b981" alt="Stars" /></a>
@@ -74,6 +74,8 @@ An AI agent that runs on your own computer, with access to your files, browser, 
   - [👁️ Iris Orbit](#️-iris-orbit)
   - [🧠 Memory](#-memory)
   - [📱 Mobile](#-mobile)
+  - [⌚ Skales Pocket](#-skales-pocket)
+  - [🧩 Plugins](#-plugins)
   - [🌍 Discover and Wrapped](#-discover-and-wrapped)
   - [⚙️ Settings and Add-Ons](#️-settings-and-add-ons)
 - [🤖 What you can ask it to do](#-what-you-can-ask-it-to-do)
@@ -156,6 +158,7 @@ The front door. Ask a question, or hand over a task and let it run.
 - **HTML the model writes renders live** in a sandboxed frame right in the conversation, with Show Code, Download, Save as Image, and a mute that silences every preview in every chat at once. A block tagged `html`, `htm`, `svg`, `xhtml` or `html5`, or one that simply opens with a document, all count; `text` and `xml` never do, so markup you asked for as source stays source.
 - **Diagrams, formulas and coloured code.** A ```` ```mermaid ```` block is drawn as a diagram (flowchart, sequence, state, ER, gantt, pie, xychart) in your accent and your theme, and downloads as SVG. Maths in `$$` is typeset. Every code block is syntax-coloured with a copy button. Skales knows it can do all of this, in every mode, so asking for a diagram gets you one instead of a paragraph describing it.
 - **A recommendation arrives as cards.** Ask for the good beaches near Funtana or six recipes for a Tuesday and the written answer keeps its place, with a row of cards under it: the page's own preview picture, the name, one sentence, tags and the link. A row of *places* also gets **Open in Maps** on every card and a **Map** button that draws the whole row over OpenStreetMap - no key needed for any of that. With a Google Places key a place card additionally shows the real photograph, the rating and whether it is open right now; ratings and opening times are never invented.
+- **You can see the bill while it is being run up.** A running price sits beside the context meter, every answer carries its own, and the hover card says what came out of the provider's cache instead of being paid for twice - including the calls you never see a bubble for, like the summariser and the vision model behind a screenshot. Give a conversation a ceiling under Settings → Goals and it stops at half of it and again at the ceiling to ask: carry on, switch to a cheaper model, or stop. The question is answered locally, so being asked costs nothing, and the ceiling follows the session into the Code window, into Iris and onto your paired phone.
 - **Voice works both ways.** A speaker icon on every reply, or "read responses aloud" for continuous flow: device voices (free), OpenAI Speech, ElevenLabs, Azure, or any OpenAI-compatible endpoint, and on the phone the voices installed on your paired Mac. Speech in via Groq or OpenAI Whisper. 55 languages.
 
 ### 💻 Code
@@ -177,7 +180,7 @@ Opens straight into **Flow**: describe what you want and the agent designs it as
 - **A motion piece is a timeline, not a stack of scenes.** A caption, a lower third, a chapter marker or a watermark has its own start, length and layer, so it runs across a scene change and comes back later. Voiceover, music and effects come from files in the project and are **mixed into the exported MP4**, not only heard in the preview. Six more transitions, a set of ready-made blocks, and a read-through before rendering that names a clip starting after the video ends or an audio file that was never downloaded, instead of exporting something silently missing.
 - **Point it at footage you already have.** Studio's Video Editor reads the whole recording in one pass first - shot changes, silences, what is said and when, none of the picture sent to a model - then names the stretches that make the film with one sentence of reasoning each, and lays them into the timeline. Ask for a change and the plan on screen changes; there is only ever one per project.
 
-One door below the composer keeps the whole of **Studio Classic**: **Design** (a prompt or a web address to production-ready HTML + CSS + Tailwind, with palette and font extraction), **Media** (Skales Visuals, Replicate, HuggingFace, DALL·E, ComfyUI, local Stable Diffusion, fal.ai for images; Veo, Kling, Runway, fal.ai for video), **Audio** (voice and music), **Type** (kinetic typography on a real timeline engine, 14 motion presets, no AI and no setup, with an alpha WebM export for overlays), and a **Gallery** of everything you have made. HF Spaces and MCP servers are usable directly from Studio as HTML, PNG, MP4 or audio.
+One door on Flow's home screen keeps the direct generators as **Studio Classic**, four of them: **Media** (Skales Visuals, Replicate, HuggingFace, DALL·E, ComfyUI, local Stable Diffusion, fal.ai for images; Veo, Kling, Runway, fal.ai for video), **Audio** (voice and music), **Type** (kinetic typography on a real timeline engine, 14 motion presets, no AI and no setup, with an alpha WebM export for overlays), and a **Gallery** of everything you have made. Two more doors sit beside it: the **3D** room, and the **Video Editor**. Designs, decks and multi-scene films are Flow's work, written from a brief with the timeline, the audio and an export card that names what is about to come out before a single file is written. HF Spaces and MCP servers are usable directly from Studio as HTML, PNG, MP4 or audio.
 
 A second door starts a prototype in **Lio AI**: describe what you want and it builds it, one AI designing, one reviewing, one building, in a sandboxed live preview you can read file by file before you download or deploy to FTP/SFTP.
 
@@ -214,6 +217,10 @@ Skales remembers you across every surface you talk to it on - the desktop chat, 
 <p align="left">📱 <a href="https://play.google.com/store/apps/details?id=app.skales.mobile"><b>Google Play (Android)</b></a> · <a href="https://apps.apple.com/us/app/skales/id6763328966"><b>App Store (iOS)</b></a></p>
 
 Pair via QR and the phone gets this desktop's full tool set (260+ tools: shell, files, browser control, email, calendar, Studio, everything) over an end-to-end encrypted relay, with keys that never leave the devices. Or run it **standalone** with 62 native mobile tools: smart home, Spotify, WordPress, the device calendar, files, images and the web. Models run on the phone itself, image generation included, a Flow motion piece renders to a real MP4 on the device with hardware encoders and no upload, and a reply started on the phone finishes with the screen off and announces itself. Same Discover feed, same Custom Agents, same Skills.
+
+#### ⌚ Skales Pocket
+
+Skales on an **M5Stick S3**: a screen the size of a stamp, two buttons and a microphone, with Iris Orbit's particle eye as its face. It pairs to one desktop exactly the way a phone does - confirmed on the computer, over the same end-to-end encrypted relay - so it needs no open port, no address on the local network and no shared Wi-Fi, and it carries no provider key and does no thinking of its own. Hold **B** and talk, let go and it sends; the answer comes back out loud. When something needs your permission the approval card comes to your wrist and the two buttons are the answer: **A** yes, **B** no. **Dictation mode** makes it one-way for loud rooms and for anything nobody should overhear - you read the text it understood, **A** sends it and **B** throws it away, and the reply is text only. What you said is turned into text by the computer it is paired with, through the same speech setup the microphone in Skales uses. It dims, sleeps, and any button wakes it.
 
 ### 🧩 Plugins
 
