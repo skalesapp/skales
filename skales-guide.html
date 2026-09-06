@@ -1,44 +1,4 @@
 <!DOCTYPE html>
-<!--
-  THIS IS USER HELP. RELEASE NOTES BELONG IN CHANGELOG.md AND IN THE CHANGELOG
-  VIEW, NEVER HERE.
-
-  Written into the file because saying it elsewhere has not worked: release
-  chapters have grown back into this guide three times, and by 12.5.76 there
-  were five of them ("What's New in 12.5.7", "12.5.6", "12.5.1 to 12.5.5",
-  "12.5.0", "12.4.5"). They were removed in 12.5.8 after checking that every one
-  of those versions is in CHANGELOG.md.
-
-  The distinction is not bookkeeping. This document answers "how do I do X" and
-  is read by someone with a question in front of them; a changelog answers "what
-  changed in version N" and is read once, by someone who already knows the
-  product. A guide that carries both ages badly in a specific way - the newest
-  release chapter sits at the top, so the first thing a new user reads is a list
-  of things they have no idea they were missing.
-
-  If a release adds something worth explaining, explain it in the CHAPTER FOR
-  THAT FEATURE. That is the change the guide should carry.
-
-  ---------------------------------------------------------------------------
-  STRUCTURE (12.7.2). One file, on purpose, and the reasons are load-bearing:
-
-    * fetch_skales_docs (actions/orchestrator.ts) reads exactly
-      public/docs/skales-guide.html and splits it on h1-h3. Splitting the guide
-      into chapter files would take the app's own manual away from the app.
-    * docs.skales.app and the public repo carry this single file too.
-
-  So the chapters are inside it. Every chapter is a <section data-lead> landing
-  page followed by its own <section id>s; the sidebar is the table of contents;
-  one chapter is on screen at a time; the search at the top of the sidebar
-  indexes every heading and every paragraph of every chapter, including the
-  ones that are not currently shown. Pure CSS and inline script, nothing
-  fetched, so it behaves identically inside the app and in a browser, online or
-  off.
-
-  Adding a chapter: add a <div class="section-label" data-chapter="x"> plus its
-  links to the nav, and give the sections the same ids. Everything else - the
-  routing, the search index, the prev/next footer - follows from the nav.
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
