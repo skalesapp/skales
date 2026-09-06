@@ -1,11 +1,3 @@
----
-summary: Every released version of Skales Desktop with its user-visible changes, newest first.
-read_when:
-  - you need to know what changed in a specific version, or when a feature first shipped
-  - you are writing release notes and need the established wording and section format
-  - a user reports behaviour that changed and you want to find the release that changed it
----
-
 # **Changelog**
 
 All notable changes to Skales will be documented in this file.
