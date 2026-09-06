@@ -1,10 +1,3 @@
----
-summary: "The public front door of the repository: what Skales is, what it does, and how to get it running."
-read_when:
-  - you need the current public positioning, feature list or supported platforms
-  - you are updating the public repository presentation or a badge, screenshot or link in it
----
-
 <div align="center">
     <h1><img width="45" height="45" alt="image" src="https://github.com/user-attachments/assets/c3e88872-6fb4-449d-84a8-4789acf3ef02"/><br>S K A L E S
 </h1>
