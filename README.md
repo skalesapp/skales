@@ -7,9 +7,9 @@ The private AI that lives on your computer and does real work, not just chat.
 <p align="center">
   <a href="#-skales-scout-beta-a-helper-that-keeps-working-while-you-do-something-else"><img width="960" alt="Skales Scout: runs on your desk, locked in its own virtual machine" src="docs/readme/scout-banner.webp" /></a>
 </p>
-<p><b>🐡 New in 12.9.60: Skales Scout (Beta)</b>, AI agents that keep working on your desk while you do something else. <a href="#-skales-scout-beta-a-helper-that-keeps-working-while-you-do-something-else">What a scout does →</a></p>
+<p><b>✨ New in 12.9.61 Polish:</b> plans before builds, games made in Flow, a phone that steers your computer's chats, code and scouts, chats shared as files and memory you can see and correct. <a href="https://github.com/skalesapp/skales/releases/latest">What's new →</a> · <a href="#-skales-scout-beta-a-helper-that-keeps-working-while-you-do-something-else">What a scout does →</a></p>
  <p>
-    <a href="https://github.com/skalesapp/skales/releases/latest"><img src="https://img.shields.io/badge/version-12.9.60-10b981?style=flat-square" alt="Version 12.9.60" /></a>
+    <a href="https://github.com/skalesapp/skales/releases/latest"><img src="https://img.shields.io/badge/version-12.9.61-10b981?style=flat-square" alt="Version 12.9.61" /></a>
     <a href="https://skales.app/licence"><img src="https://img.shields.io/badge/licence-proprietary-10b981?style=flat-square" alt="Licence" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/Windows_+_macOS_+_Linux_+_Android_+_iOS-10b981?style=flat-square&logo=windows&logoColor=white" alt="Platform" /></a>
     <a href="https://github.com/skalesapp/skales/stargazers"><img src="https://img.shields.io/github/stars/skalesapp/skales?style=flat-square&color=10b981" alt="Stars" /></a>
