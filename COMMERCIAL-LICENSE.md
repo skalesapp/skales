@@ -1,7 +1,7 @@
 # Commercial Licensing - Skales
 
 Skales is proprietary software, licensed and not sold, under the
-[Skales End User Licence Agreement](./LICENSE), version 1.2 of 14 September
+[Skales End User Licence Agreement](./LICENSE), version 1.3 of 9 November
 2026. It is not open source, and no source code is provided or promised. This
 page is the short reading of the licence; where the two could be read
 differently, the licence decides. The current version of the agreement is
@@ -11,32 +11,63 @@ published at https://skales.app/licence.
 
 The following uses are **free of charge** and require no licence agreement:
 
-- **Private individuals** using Skales for personal, non-commercial purposes
+- **Private individuals** using Skales for personal purposes
 - **Students, teachers and non-commercial educational institutions** using
-  Skales for learning or academic work
+  Skales for learning, teaching or academic work
+- **Freelancers, the self-employed and businesses of up to two people**,
+  including commercial use and work for your own clients
+
+## Freelancers and Two-Person Businesses
+
+If no more than two people work in or for your business, Skales is free for
+that business. Everyone counts: owners, partners, managing directors,
+employees including part-time staff, and freelancers who work for you
+regularly. A subcontractor for a single project does not count. A business
+that belongs to a larger organisation counts together with it.
+
+What that covers:
+
+- Building, adapting and using your own workflows, plugins, skills and
+  automations for your own business
+- Doing paid work for your clients with Skales. What you create with it is
+  yours, and you may deliver it and charge for it
+
+What needs a short written okay from us first (an email is enough):
+
+- Handing your own workflows, plugins, skills or automations to a client, or
+  setting them up for or with a client
+
+What this does not cover:
+
+- White-labelling, reselling or sublicensing Skales, or the plugins, skills
+  and other extensions Skales supplies
+
+Your clients need their own licence to install or use Skales themselves; a
+client of up to two people falls under the same free use. If your business
+grows past two people, you have thirty (30) days to move to a written
+commercial licence.
 
 ## Evaluation
 
-Any organisation may install Skales to **evaluate it for thirty (30) days**.
-After that, the use is either covered by a written commercial licence or it
-ends.
+Any larger organisation may install Skales to **evaluate it for thirty (30)
+days**. After that, the use is either covered by a written commercial licence
+or it ends.
 
 ## Commercial Use Requires a Licence
 
 Any of the following requires a **written commercial licence** from the author:
 
-- Use by or for a company, a business, a team, or a public body
+- Use by a company, a business or a team of more than two people, or by a
+  public body (doing your own client work as a freelancer or two-person
+  business stays free, whoever the client is)
 - Offering Skales, or any service built on it, as a hosted, managed or
   software-as-a-service offering
 - Rebranding, white-labelling, reselling, sublicensing, renting or
-  redistributing Skales, in whole or in part
+  redistributing Skales, in whole or in part, including the plugins, skills
+  and other extensions Skales supplies
 - Bundling Skales with another product, brokering access to it, or submitting
   it to an app store or any other distribution channel
 - Managed distribution of the mobile application inside an organisation
-- Any use in exchange for money or other consideration
-
-Using Skales in any of these ways without a written licence is a breach of the
-licence and ends it.
 
 ## What No Licence Covers
 
@@ -59,14 +90,14 @@ factually that your setup runs or installs Skales.
 
 ## Contact
 
-To obtain a commercial licence or inquire about pricing:
+For a commercial licence, or the written okay to pass your own workflows or
+plugins on to a client:
 
 **Mario Simic**
 Email: request@skales.app
 Website: https://skales.app
 
-Pricing is determined individually based on use case and scale. Contact us to
-discuss your needs.
+Terms for larger teams are agreed individually, based on use case and scale.
 
 ---
 
