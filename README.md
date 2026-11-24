@@ -5,11 +5,11 @@
 The private AI that lives on your computer and does real work, not just chat.
 
 <p align="center">
-  <a href="#-skales-scout-beta-a-helper-that-keeps-working-while-you-do-something-else"><img width="960" alt="Skales Scout: runs on your desk, locked in its own virtual machine" src="docs/readme/scout-banner.webp" /></a>
+  <a href="#-skales-scout-a-helper-that-keeps-working-while-you-do-something-else"><img width="960" alt="Skales Scout: runs on your desk, locked in its own virtual machine" src="docs/readme/scout-banner.webp" /></a>
 </p>
-<p><b>✨ New in 12.9.65 Close-Up:</b> scouts that keep working on their own, Flow that takes your files and zips, phone and computer in one conversation, errors that name their reason, and Skales free for freelancers and businesses of up to two people. <a href="https://github.com/skalesapp/skales/releases/latest">What's new →</a> · <a href="#-skales-scout-beta-a-helper-that-keeps-working-while-you-do-something-else">What a scout does →</a></p>
+<p><b>✨ New in 12.9.70 Primetime:</b> Scout leaves the beta: a scout set up in three cards, one control for how freely it works, a calm thread with a Log, API keys that leave a backup only sealed with your password, and a lighter phone app. <a href="https://github.com/skalesapp/skales/releases/latest">What's new →</a> · <a href="#-skales-scout-a-helper-that-keeps-working-while-you-do-something-else">What a scout does →</a></p>
  <p>
-    <a href="https://github.com/skalesapp/skales/releases/latest"><img src="https://img.shields.io/badge/version-12.9.65-10b981?style=flat-square" alt="Version 12.9.65" /></a>
+    <a href="https://github.com/skalesapp/skales/releases/latest"><img src="https://img.shields.io/badge/version-12.9.70-10b981?style=flat-square" alt="Version 12.9.70" /></a>
     <a href="https://skales.app/licence"><img src="https://img.shields.io/badge/licence-proprietary-10b981?style=flat-square" alt="Licence" /></a>
     <a href="https://skales.app"><img src="https://img.shields.io/badge/Windows_+_macOS_+_Linux_+_Android_+_iOS-10b981?style=flat-square&logo=windows&logoColor=white" alt="Platform" /></a>
     <a href="https://github.com/skalesapp/skales/stargazers"><img src="https://img.shields.io/github/stars/skalesapp/skales?style=flat-square&color=10b981" alt="Stars" /></a>
@@ -54,7 +54,7 @@ The private AI that lives on your computer and does real work, not just chat.
 
 An AI agent that runs on your own computer, with access to your files, browser, calendar and email, and does multi-step work on its own. It installs like any normal app, it runs on your machine instead of someone's cloud, and it is built to be usable by people who are not developers. Nothing to start: Skales IQ is a free built-in trial that needs no API key, and after that you bring your own key from 15+ providers or run fully offline and pay nobody.
 
-- 🐡 **Give it a scout (Beta).** A lasting agent with its own thread, memory and rhythm, optionally in its own virtual machine, that keeps rounds, brings suggestions and asks before anything risky.
+- 🐡 **Give it a scout.** A lasting agent with its own thread, memory and rhythm, optionally in its own virtual machine, that keeps rounds, brings suggestions and asks before anything risky.
 - 🎯 **Hand it a goal and close the lid.** `/goal build me a trading bot` runs in the background across many steps and picks up where it left off.
 - 💻 **Point it at a folder and let it code.** `/code` binds a folder to any chat, with inline diffs and one-click undo.
 - 📱 **Reach it from your phone.** Pair via QR and your phone drives this desktop's full tool set, or run the phone standalone.
@@ -72,7 +72,7 @@ An AI agent that runs on your own computer, with access to your files, browser, 
 
 - [Demo](#demo)
 - [⚡ Why Skales?](#-why-skales)
-- [🐡 Skales Scout (Beta)](#-skales-scout-beta-a-helper-that-keeps-working-while-you-do-something-else)
+- [🐡 Skales Scout](#-skales-scout-a-helper-that-keeps-working-while-you-do-something-else)
 - [🚪 The eleven places Skales lives](#-the-eleven-places-skales-lives)
   - [💬 Chat](#-chat)
   - [💻 Code](#-code)
@@ -149,14 +149,15 @@ Skales is an AI agent that lives on your desktop. Not in a browser tab, not behi
 
 ---
 
-## 🐡 Skales Scout (Beta): a helper that keeps working while you do something else
+## 🐡 Skales Scout: a helper that keeps working while you do something else
 
 A scout is a lasting agent that lives on your computer with its own thread, memory and rhythm. It has a name, a role and a personality, stays in one thread for months without losing track, and remembers what it learned.
 
+- **Set up in three cards.** Pick its fish, pick a job from a shelf of nine ready-made scouts or write your own in one sentence, choose how freely it works, and it starts on its first task at once. What it does on its own goes to the Log on its page, and a finished task ends in its answer.
 - **Its own small computer.** On a Mac, on Windows and on Linux a scout can get a virtual machine that reaches the internet but never your home network. You watch it work live, take over when you want, and its results come back as files you can open.
 - **A day of its own.** Without being asked it keeps rounds, a standup and an evening summary, splits goals over several days into parts, and brings suggestions you answer with Go or Wait.
 - **A team when the job is bigger.** A lead scout shares work with its sub-scouts and short-lived helpers. Each scout can have its own model and a daily budget, the cost of every run is in view, and a fallback model is never used in silence.
-- **You decide how far it goes.** Approvals say how far your yes reaches. Sites, purchases, the apps you connected and a mailbox of its own are allowed per scout, and sign-ins stored once in Skales Vault are handed out entry by entry.
+- **You decide how far it goes.** One control sets Asks first, Balanced or Auto; sending, deleting, paying and vault logins always ask. Approvals say how far your yes reaches. Sites, purchases, the apps you connected and a mailbox of its own are allowed per scout, and sign-ins stored once in Skales Vault are handed out entry by entry.
 - **On your phone too.** The same Scout page, questions, approvals and settings, with a scout that can live on the phone alone when there is no computer.
 
 **Automations** sit right beside it: switch a chat to the **Automation** mode and Skales builds the automation next to the conversation, on the same canvas Flow opens. Start it by hand, on a schedule, from a file or folder, by a webhook or from another run.

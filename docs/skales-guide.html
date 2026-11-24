@@ -1,50 +1,4 @@
 <!DOCTYPE html>
-<!--
-summary: "The chaptered end-user guide rendered inside the app: what every feature is and how a user drives it."
-read_when:
-  - you shipped a user-visible feature and the guide must describe it
-  - you need the established wording for a feature as users see it, not as the code names it
--->
-<!--
-  THIS IS USER HELP. RELEASE NOTES BELONG IN CHANGELOG.md AND IN THE CHANGELOG
-  VIEW, NEVER HERE.
-
-  Written into the file because saying it elsewhere has not worked: release
-  chapters have grown back into this guide three times, and by 12.5.76 there
-  were five of them ("What's New in 12.5.7", "12.5.6", "12.5.1 to 12.5.5",
-  "12.5.0", "12.4.5"). They were removed in 12.5.8 after checking that every one
-  of those versions is in CHANGELOG.md.
-
-  The distinction is not bookkeeping. This document answers "how do I do X" and
-  is read by someone with a question in front of them; a changelog answers "what
-  changed in version N" and is read once, by someone who already knows the
-  product. A guide that carries both ages badly in a specific way - the newest
-  release chapter sits at the top, so the first thing a new user reads is a list
-  of things they have no idea they were missing.
-
-  If a release adds something worth explaining, explain it in the CHAPTER FOR
-  THAT FEATURE. That is the change the guide should carry.
-
-  ---------------------------------------------------------------------------
-  STRUCTURE (12.7.2). One file, on purpose, and the reasons are load-bearing:
-
-    * fetch_skales_docs (actions/orchestrator.ts) reads exactly
-      public/docs/skales-guide.html and splits it on h1-h3. Splitting the guide
-      into chapter files would take the app's own manual away from the app.
-    * docs.skales.app and the public repo carry this single file too.
-
-  So the chapters are inside it. Every chapter is a <section data-lead> landing
-  page followed by its own <section id>s; the sidebar is the table of contents;
-  one chapter is on screen at a time; the search at the top of the sidebar
-  indexes every heading and every paragraph of every chapter, including the
-  ones that are not currently shown. Pure CSS and inline script, nothing
-  fetched, so it behaves identically inside the app and in a browser, online or
-  off.
-
-  Adding a chapter: add a <div class="section-label" data-chapter="x"> plus its
-  links to the nav, and give the sections the same ids. Everything else - the
-  routing, the search index, the prev/next footer - follows from the nav.
--->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -750,7 +704,7 @@ read_when:
       <div class="logo-mark">S</div>
       <div>
         <div class="logo-text">Skales</div>
-        <div class="logo-version">v<span data-skales-version>12.9.65</span> User Guide</div>
+        <div class="logo-version">v<span data-skales-version>12.9.70</span> User Guide</div>
       </div>
     </a>
 
@@ -940,7 +894,7 @@ read_when:
 
     <!-- Hero: the front page only -->
     <div class="hero">
-      <div class="hero-badge">📖 Official Documentation &middot; v<span data-skales-version>12.9.65</span></div>
+      <div class="hero-badge">📖 Official Documentation &middot; v<span data-skales-version>12.9.70</span></div>
       <h1>Skales <span>User Guide</span></h1>
       <p>Your personal AI operating system. Set a goal, automate, create, all running locally on your machine.</p>
     </div>
@@ -3251,15 +3205,15 @@ read_when:
 
     <section id="scout">
       <h2>Scout</h2>
-      <p><strong>Scout</strong> sits right under Chat in the sidebar. A scout is a helper that keeps working in the background, with its own name, thread, memory, budget and, if your computer can run it, a small computer of its own.</p>
+      <p><strong>Scout</strong> sits right under Chat in the sidebar. It is a pin like Business: unpin it (right-click it, or the pin that appears when you reach for the row) and it moves under <strong>More</strong>; your scouts keep working either way. A scout is a helper that keeps working in the background, with its own name, thread, memory, budget and, if your computer can run it, a small computer of its own.</p>
       <h3 id="scout-setup">Setting up a scout</h3>
-      <p>The first time you open <strong>Scout</strong>, a short introduction shows what a scout does: it keeps working in the background while Skales runs, it knows your Skales (memory, skills, connected apps), it has a computer of its own where yours can run one, you keep control with approvals, a budget and a stop, and it tells you when something needs you. <strong>Watch the introduction</strong> on the Scout page plays it again. The setup follows: a name (the dice suggest one), the colour and pattern of its fish, its personality, a role if you want one, Eco, how many rounds a day (1, 3, 6 or 12), the time of its morning standup and its budget. Then its thread opens: the scout writes how it will help you and asks what it should mainly help with, and your answer becomes a line of its profile for you to confirm. Without a model set up it cannot greet you, and the page says to add a provider.</p>
+      <p>A new scout is set up in three cards. <strong>1 Fish</strong>: its name (the dice suggest one), the colour and pattern of its fish. <strong>2 Job</strong>: a place on the shelf of ready-made scouts: <strong>Inbox brief</strong>, <strong>Research desk</strong>, <strong>Market lookout</strong>, <strong>Meeting wrap</strong>, <strong>Social media</strong>, <strong>Content and blog</strong>, <strong>Developer buddy</strong>, <strong>Shopping and everyday</strong>, or <strong>Own job</strong> in one sentence. <strong>3 Freedom</strong>: how freely it may work, <strong>Asks first</strong>, <strong>Balanced</strong> (the default) or <strong>Auto</strong>; sending, deleting, paying and vault logins always ask. Card 3 also says whether it gets its own computer (with <strong>Change</strong>, since that cannot change later) and its budget for a day and for a month. Everything else (personality, rounds, standup, rules, network, Eco, models) comes from the shelf place and is changed on the scout page. <strong>Start</strong> creates it, its thread opens and it begins at once on the place's example task, or on your sentence. Without a model set up it is created anyway and waits, and the page says to add a provider.</p>
       <h3 id="scout-computer">Its own computer</h3>
       <p>A scout works in a computer of its own: a small Linux system built on Debian that runs as a virtual machine on your computer. The Scout workspace image (about 0.5 GB to download, about 1.7 GB on disk) is downloaded once on the Scout page, shared by all scouts and checked against its signature before every start. Each scout gets its own disk layer over it, with 2 CPUs, 2 GB of memory and 12 GB of disk where there is room, less on a small computer. Its computer has no network card, no shared folder, no clipboard, no USB and no sound: everything it reaches goes through Skales. A file goes in only when you give it, and what it makes comes out as copied files, shown as file cards in its thread. Skills a scout makes for itself run only inside its computer. It starts when it is needed, can be paused or stopped at any time and stops when Skales quits.</p>
-      <p>In the side panel of its thread you can watch its screen live (beta) and take over by hand for a login or a captcha; the scout waits until you hand it back, and what you type is never stored. A failed task can be rolled back. The panel shows its memory, disk and CPU against the limits and how much room your computer has left. <strong>Reset workspace</strong> gives it a fresh computer and keeps its thread, memory and files; <strong>End scout</strong> ends it and can delete its computer too.</p>
+      <p>In the side panel of its thread you can watch its screen live and take over by hand for a login or a captcha; the scout waits until you hand it back, and what you type is never stored. A failed task can be rolled back. The panel shows its memory, disk and CPU against the limits and how much room your computer has left. <strong>Reset workspace</strong> gives it a fresh computer and keeps its thread, memory and files; <strong>End scout</strong> ends it and can delete its computer too.</p>
       <p><strong>Its browser, and taking it over.</strong> A scout browses in a browser inside its own computer, never in yours: it opens, reads, clicks, types and scrolls there, and the live picture shows each step as it happens. When a site needs you, for a login, a captcha or a choice only you can make, press <strong>Take over</strong> on the live picture in its thread, on the Scout page or on your phone. Keyboard and mouse then reach its computer, and the scout holds every browser step until you press <strong>Give back</strong>. A step that waited and would act on the page reads the page again first, so it never clicks on something you changed. What you type while you have the computer is never stored. If Skales closes while you have it, the scout's work waits for you when Skales opens again. A sign-in from Skales Vault is typed by Skales itself, so the password never passes through the scout.</p>
       <p><strong>Disk space and updates.</strong> A scout's computer never fills your disk: with less than about 2 GB free nothing new starts there and no snapshot is taken, and with less than 1 GB a running scout computer pauses and goes on by itself once there is room; its thread says why. Where your disk copies every snapshot in full, two are kept unless you set another number. When an update brings a newer base, a scout on an older one moves to it at its next start, with its home, its tasks and its browser logins; the old snapshots go. If its files cannot come over, it stays on the old base as it was and says why.</p>
-      <p><strong>Checked answers.</strong> Before every step a scout knows what the step should give: a file written, a command that ends without error, a page from the site it asked for, a mail that went out. When a step goes otherwise, it looks at the current state again before it changes anything and plans from what is true. When it is done, "done" needs the step that shows it: if the task asked for a mail, a file or a calendar entry and the run cannot show that step, its answer says "Done, not proven" and names what is missing. Criteria you give a task ("report.md exists") are checked when it ends; one that is not met gets one more pass. An answer it is not sure about says so under the answer, on the computer and on the phone. A step the task never asked for, such as a mail, a payment or a calendar entry, it does not take: it asks you first. What went wrong in a run it keeps as a short lesson for the next similar task; its core memory changes only when you confirm it.</p>
+      <p><strong>Checked answers.</strong> Before every step a scout knows what the step should give: a file written, a command that ends without error, a page from the site it asked for, a mail that went out. When a step goes otherwise, it looks at the current state again before it changes anything and plans from what is true. When it is done, "done" needs the step that shows it: if the task asked for a mail, a file or a calendar entry and the run cannot show that step, its answer says "Done, not proven" and names what is missing. Criteria you give a task ("report.md exists") are checked when it ends; one that is not met gets one more pass. A finished task ends in its answer, with nothing stuck under it; when a step went other than planned or the scout was not sure, that line goes to its Log on the scout page, on the computer and on the phone. A step the task never asked for, such as a mail, a payment or a calendar entry, it does not take: it asks you first. What went wrong in a run it keeps as a short lesson for the next similar task; its core memory changes only when you confirm it.</p>
       <p><strong>Rhythm and attention.</strong> A scout keeps a day: the standup in the morning, work during the day, an evening summary at 18:00 (or the time you pick under Rhythm, or off) and rest at night. The evening summary says what got done, what it could not show, what it learned, what it skipped and what waits for you, in its thread with a notice that makes no sound; on a day with nothing in it, nothing comes. At night its rounds rest, while your answers to its questions and anything urgent still reach it. New mail and files that wake a scout are weighed before any model looks at them: newsletters and bulk mail on a trigger you did not narrow, and files that are still being written, never wake it and are named in the evening summary; something marked urgent or due goes first, also at night. A trigger of the kind <strong>Message</strong> (Schedule page, or ask in the chat) lets a WhatsApp or Telegram message to you wake a scout, optionally only from one sender; the chat answers the message as before, and the same weighing applies. A scout learns from what you do when you are usually around and which topics you turned down, and keeps results for the hours you are back; anything urgent still speaks up. Before it changes anything on its computer it looks at it first. Its own work starts as a quick first pass, and when that pass cannot show its result or goes in circles, the same task goes once to the thorough model, paid from the same budget. Its fish shows what presses right now: a little puffed up when something is urgent, slow and floating at rest, matt when its budget or this computer runs short; the tip on the glass says why.</p>
       <p><strong>When your computer cannot run it.</strong> The setup checks first and names the reason with the fix: on Windows the Windows Hypervisor Platform is off (Skales switches it on after an administrator's confirmation and a restart, then the setup goes on), virtualization is switched off in the BIOS/UEFI, on Linux your user is not in the <code>kvm</code> group (<code>sudo usermod -aG kvm $USER</code>, then log in again), or Skales itself runs inside a virtual machine without nested virtualization, where no scout computer is possible. A Mac needs macOS 12 or later. You can still set up a scout <strong>without a computer</strong>: it works on this computer with the chat's tools, runs a command or opens the browser only after you approve it on a card, and has no live picture, takeover, snapshots or skills. You choose this when you set it up.</p>
       <h3 id="scout-privacy">What stays on your computer</h3>
@@ -3302,7 +3256,8 @@ read_when:
       <p>In the desktop app you can pin a scout to your screen: on the Scout page open the scout, then <strong>Settings &rarr; Scout Floating Bubble</strong>, or press the pin beside its name on the Scout view of its thread. The bubble is a small round glass in its own window that floats over every app, whether Skales is open, minimised or closed to the tray. Drag it by its name, resize it from the corner; it keeps its place and size on each screen. It shows the fish (and its sub-scouts and working helpers as small fish), its name and state, the last three steps of what it is working on and, on the rim, a count of what needs you. The count opens the approvals, answered on the same card as in the chat and on the phone; the bell shows recent notices; the arrow on the rim opens the thread. It never takes a chat message. A click on the glass makes ripples and startles the fish, a right click feeds it. It knocks only when something new needs you, and never in the scout's quiet hours.</p>
       <p>While the bubble is on, the Desktop Buddy is off, and <strong>Settings &rarr; General &rarr; Desktop Buddy</strong> says so; unpin the scout and the buddy comes back as it was. Only one live fish swims at a time: in the scout's thread the panel shows it, otherwise the bubble, and when the bubble is off a small glass sits at the bottom right of the chat start page. <strong>Screen saver</strong> fills the screen with the aquarium, the running steps and open approvals; start it with <em>Show now</em> or after an idle time you pick (off by default). Esc or a click ends it.</p>
       <h3 id="scout-roles">Scout roles</h3>
-      <p>When you set up a scout, you can start it from a role: <strong>Social media</strong>, <strong>Content &amp; creator</strong>, <strong>Research</strong>, <strong>Admin &amp; inbox</strong>, <strong>Shopping &amp; everyday</strong> or <strong>Development</strong>. <strong>No role</strong> is preselected, and a scout without a role can do everything. A role is only a starting pack: a personality, how often it looks around on its own, which target lists its network may reach, how far it may go in which service (Admin &amp; inbox, for example, only drafts mail), a few standing rules, the apps worth connecting and ideas for its first tasks, which its welcome offers you. Everything stays changeable.</p>
+      <p>Each shelf place is a role: Inbox brief is <strong>Admin &amp; inbox</strong>, Content and blog is <strong>Content &amp; creator</strong>, Developer buddy is <strong>Development</strong>, the others carry their own name; Own job has no role. A role is only a starting pack: a personality, how often it looks around on its own, which target lists its network may reach, how far it may go in which service (Admin &amp; inbox, for example, only drafts mail; Meeting wrap only reads mail and calendars), a few standing rules, the apps worth connecting and an example task to start with. Everything stays changeable, and on the scout page a scout can switch to any role or to <strong>No role</strong>.</p>
+      <p><strong>How freely it works</strong> sits on the scout page too, above its rights. It moves the rights it already has together: Asks first allows nothing ahead, Balanced lets it write files and run commands and draft in your apps, Auto adds web actions and acting in apps. An app you set to off or read only stays so. A scout whose rights sit between the steps shows <strong>Custom</strong>, and nothing changes until you move the control.</p>
       <p>You can switch the role later in the scout's settings. Skales then lists every change the new role would make; what you chose yourself is marked and starts unticked, a rule or list you added is never removed, and only what you tick is applied. Roles work the same on the phone.</p>
       <h3 id="scout-sources">Open-source components</h3>
       <p>The workspace image and QEMU contain free software under GPL, LGPL and other licences. The complete source code of these components is here: <a href="https://github.com/skalesapp/skales/releases">github.com/skalesapp/skales/releases</a> (the releases named <code>scout-image-v&lt;version&gt;</code>, with their <code>sources</code> parts and <code>SOURCES.txt</code>). The Scout page links the same place under <strong>Open-source components</strong>, and <code>THIRD-PARTY-NOTICES</code> lists every component with its licence. These components are under their own licences.</p>
@@ -4753,13 +4708,15 @@ read_when:
       <p>One-click ZIP backup of all settings, memories, and integrations. Export to restore on another machine or create versioned backups.</p>
 
       <h3>Full Data Export</h3>
-      <p>Download a ZIP archive containing all your Skales data: conversations, memory, agent definitions, custom skills, settings, and integration credentials.</p>
+      <p>Download a ZIP archive containing your Skales data: conversations, memory, agent definitions, custom skills and settings. API keys and other credentials stay out unless you include them, sealed with a password (see below).</p>
 
       <h3>Restore</h3>
       <p>Importing a backup restores everything it contains. Your Workspace, your WhatsApp session and widgets or plugins you already have are kept, and an imported widget or plugin with the same name lands beside yours instead of over it.</p>
 
       <h3>With or without secrets</h3>
-      <p>Keys and passwords are encrypted on your computer, with a key that never leaves it. That key is held by your system&rsquo;s key store: the macOS Keychain, the Windows credential protection or the Linux secret service. <strong>Settings &rarr; System &rarr; Backup &amp; moving</strong> says where it is: in the key store; in a file only your user account can read, because the system has no key store or the key store would not take it; or, in red, that the key store will not open it on this computer, with the way out (restore a backup or enter the keys again). A backup <strong>with secrets</strong> opens them for the trip so they work on another computer, which then encrypts them again with its own key. Keep such a file as safe as the keys themselves. A backup <strong>without secrets</strong> is the one to hand to somebody else: provider keys, integration tokens, your Skales IQ sign-in, MCP sign-ins and the remote access token are left out, the second-factor setup and the secret vault are not included, server profiles (FTP, SFTP and SSH) keep their server and user name without the password, a pasted SSH key or its passphrase, and the signed-in browser profiles (the browser the agent drives and the one that publishes to Moodle) stay on this computer.</p>
+      <p>Keys and passwords are encrypted on your computer, with a key that never leaves it. That key is held by your system&rsquo;s key store: the macOS Keychain, the Windows credential protection or the Linux secret service. <strong>Settings &rarr; System &rarr; Backup &amp; moving</strong> says where it is: in the key store; in a file only your user account can read, because the system has no key store or the key store would not take it; or, in red, that the key store will not open it on this computer, with the way out (restore a backup or enter the keys again).</p>
+      <p>A backup leaves your keys out by default. That is the one to hand to somebody else: provider keys, integration tokens, your Skales IQ sign-in, MCP sign-ins and the remote access token are left out, the second-factor setup and the secret vault are not included, server profiles (FTP, SFTP and SSH) keep their server and user name without the password, a pasted SSH key or its passphrase, and the signed-in browser profiles (the browser the agent drives and the one that publishes to Moodle) stay on this computer.</p>
+      <p>To take your keys along, turn on <strong>Include API keys</strong> above the export button and type a password twice. Every file that holds a key is then sealed with that password (AES-256-GCM); without it nobody can read the keys, not even Skales. Restoring such a backup asks for the password first and names a wrong one before anything is restored. Keep the password apart from the file.</p>
       <p>Restoring a backup without secrets never replaces a working key with a placeholder. Where the backup left a credential out, the one already on this computer stays. Where there is none, the field stays empty, and the import tells you how many to enter again. Skales IQ is then signed out, MCP servers ask you to sign in, and the second factor counts as not set up.</p>
 
       <h3>Version Control</h3>
@@ -4981,7 +4938,7 @@ read_when:
     </section>
 
     <footer>
-      <span>Skales v<span data-skales-version>12.9.65</span> &middot; © 2024-2026 Mario Simic &middot; Proprietary licence</span>
+      <span>Skales v<span data-skales-version>12.9.70</span> &middot; © 2024-2026 Mario Simic &middot; Proprietary licence</span>
       <a href="https://skales.app">skales.app</a>
     </footer>
 
